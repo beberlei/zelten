@@ -142,5 +142,14 @@ HTML
 
         $this->assertEquals('Test!', $bookmark->getSiteName());
     }
+
+    public function testReadabililty()
+    {
+        $bookmark = new Bookmark("https://tent.io/blog/introducing-tent");
+        $parser = new BookmarkParser();
+        $parser->readablityContent($bookmark, file_get_contents(__DIR__ . "/_files/tentio_introduction.html"));
+
+        $this->assertNotNull($bookmark->getContent());
+    }
 }
 

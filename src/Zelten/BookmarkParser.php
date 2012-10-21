@@ -4,6 +4,7 @@ namespace Zelten;
 
 use DOMDocument;
 use DOMXPath;
+use Readability\Readability;
 
 class BookmarkParser
 {
@@ -57,6 +58,29 @@ class BookmarkParser
         if ( ! $bookmark->getSiteName() && isset($openGraphProperties['og:site_name'])) {
             $bookmark->setSiteName($openGraphProperties['og:site_name']);
         }
+    }
+
+    public function readablityContent(Bookmark $bookmark, $pageContent)
+    {
+        if (function_exists('tidy_parse_string')) {
+            $tidy = tidy_parse_string($pageContent, array(), 'UTF8');
+            $tidy->cleanRepair();
+            $pageContent = $htmltidy->value;
+        }
+
+        $readability = new Readability($pageContent, $bookmark->getUrl());
+        $readability->convertLinksToFootnotes = true;
+
+        if (!$readability->init()) {
+            return;
+        }
+
+        $title   = $readability->getTitle()->textContent;
+        $content = $readability->getContent()->innerHTML;
+
+        $bookmark->setContent(
+            "<h1>" . $title . "</h1>\n" . $content
+        );
     }
 
     /**
