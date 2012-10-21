@@ -1,9 +1,12 @@
 {% extends "layout.html" %}
 
-{% block content %}
-    <h3>Get started</h3>
+{% block title %}Bookmarks{% endblock %}
 
-    <form method="post" action="#">
-        <input type="text" name="entity" size="60" placeholder="Your Tent Username or URL" />
-    </form>
+{% block content %}
+<h3>Get started</h3>
+
+<form method="post" action="{{ path('login') }}">
+    <input type="text" name="entity_url" size="60" placeholder="Your Tent Username or URL" />
+</form>
 {% endblock %}
+
