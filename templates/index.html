@@ -3,10 +3,35 @@
 {% block title %}Bookmarks{% endblock %}
 
 {% block content %}
-<h3>Get started</h3>
+<div class="row">
+    <div class="span8">
+        <h3>Get started</h3>
 
-<form method="post" action="{{ path('login') }}">
-    <input type="text" name="entity_url" size="60" placeholder="Your Tent Username or URL" />
-</form>
+        <form method="post" action="{{ path('login') }}" class="form-inline">
+            <input type="text" name="entity_url" size="60" placeholder="Your Tent Username or URL" class="span7" />
+            <input type="submit" class="btn btn-primary" value="Login" />
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="span4">
+        <h3>Tent.io what?</h3>
+
+        <p>
+            <a href="http://tent.io" target="_blank">Tent.io</a> is decentralized protocol to share and store data.
+            A tent server acts a data-store for your personal data. You can install your own tent server or use a free one, such as <a href="http://tent.is" target="_blank">Tent.is</a>.
+        </p>
+    </div>
+
+    <div class="span4">
+        <h3>Bookmaks on Tent?</h3>
+
+        <p>
+            Zelten Bookmarks saves bookmarks on your tent server. You have full control over all
+            the bookmark data. Except authentcation data Zelten saves no data itself.
+        </p>
+    </div>
+</div>
 {% endblock %}
 
