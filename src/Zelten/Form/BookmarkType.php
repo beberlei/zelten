@@ -16,7 +16,6 @@ class BookmarkType extends AbstractType
             ->add('image', 'hidden', array('required' => false, 'attr' => array('class' => 'image')))
             //->add('siteName', 'text', array('required' => false))
             ->add('privacy', 'choice', array('choices' => array('private' => 'Private', 'public' => 'public')))
-            ->add('backup', 'checkbox', array('required' => false))
         ;
     }
 
