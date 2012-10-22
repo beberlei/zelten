@@ -6,10 +6,12 @@ var Bookmark = Backbone.Model.extend({
 });
 
 var BookmarksCollection = Backbone.Collection.extend({
-    initialize: function(args) {
-        if (args.filter) {
-            var filter = (args.filter.length > 0) ? '?' + args.filter : '';
-            this.url   = this.url + filter;
+    initialize: function(models, args) {
+        if (typeof(args) != 'undefined' && args.filterMode) {
+            var filter = (args.filterMode.length > 0) ? ('?' + args.filterMode) : '';
+            this.url = function() {
+                return '/bookmarks' + filter;
+            }
         }
     },
     url: '/bookmarks'
@@ -175,8 +177,8 @@ var BookmarkApplication = Backbone.View.extend({
         });
 
         this.publicBookmarks = new BookmarkList({
-            collection: new BookmarksCollection({
-                filter: 'mode=public'
+            collection: new BookmarksCollection([], {
+                filterMode: 'mode=public'
             }),
             el: this.$el.find('#public').find('.list')
         });
