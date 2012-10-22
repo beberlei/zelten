@@ -134,7 +134,7 @@ var BookmarkApplication = Backbone.View.extend({
             dataType: 'json',
             success: _.bind(this.showBookmarkDetails, this),
             error: function(data) {
-                alert('Error: Invalid url');
+                alert('Error: Invalid url or the entered page returns something other than a valid result.');
             }
         });
         return false;
