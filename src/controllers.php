@@ -164,6 +164,12 @@ $app->post('/login', function (Request $request) use ($app) {
         return new RedirectResponse($app['url_generator']->generate('homepage'));
     }
 
+    if (strpos($entityUrl, ".") === false) {
+        $entityUrl = "https://" . $entityUrl . ".tent.is";
+    } else if (strpos($entityUrl, "http") === false) {
+        $entityUrl = "https://" . $entityUrl;
+    }
+
     $callbackUrl = $app['url_generator']->generate('oauth_accept', array(), true);
     $loginUrl    = $app['tent.client']->getLoginUrl($entityUrl, null, $callbackUrl, null, array(
         'http://www.beberlei.de/tent/bookmark/v0.0.1'
