@@ -70,7 +70,7 @@ class BookmarkParser
         if (function_exists('tidy_parse_string')) {
             $tidy = tidy_parse_string($pageContent, array(), 'UTF8');
             $tidy->cleanRepair();
-            $pageContent = $htmltidy->value;
+            $pageContent = $tidy->value;
         }
 
         $readability = new Readability($pageContent, $bookmark->getUrl());
