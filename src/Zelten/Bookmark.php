@@ -20,7 +20,7 @@ namespace Zelten;
  * save alot of additional metadata or have them
  * parsed from the page (using OpenGraph spec).
  *
- * Tent Post Type Details: http://beberlei.de/tent/v0.0.1/bookmark
+ * Tent Post Type Details: http://beberlei.de/tent/bookmark/v0.0.1
  *
  * url          Required    String  Url of the bookmark
  * title        Required    String  Title of the page
@@ -42,15 +42,25 @@ class Bookmark
     private $siteName;
     private $tags = array();
     private $content;
+    private $privacy;
 
-    public function __construct($url)
+    public function __construct($url = null)
     {
-        $this->url = $url;
+        $this->setUrl($url);
     }
 
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setUrl($url)
+    {
+        if (strpos($url, "http://") === false) {
+            $url = "http://" . $url;
+        }
+
+        $this->url = filter_var($url, FILTER_VALIDATE_URL);
     }
 
     public function getUrl()
@@ -126,6 +136,31 @@ class Bookmark
     public function setContent($content)
     {
         $this->content = $content;
+    }
+
+    public function setPrivacy($privacy)
+    {
+        $this->privacy = $privacy;
+    }
+
+    public function getPrivacy()
+    {
+        return $this->privacy;
+    }
+
+    public function toArray()
+    {
+        return array_filter(array(
+            'id'          => $this->id,
+            'url'         => $this->url,
+            'title'       => $this->title,
+            'image'       => $this->image,
+            'description' => $this->description,
+            'locale'      => $this->locale,
+            'site_name'   => $this->siteName,
+            'tags'        => $this->tags,
+            'content'     => $this->content,
+        ));
     }
 }
 

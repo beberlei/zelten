@@ -1,0 +1,30 @@
+body {
+    margin: 0px;
+    font-family: 'Overlock', cursive;
+}
+
+.image_picker {
+    margin-left: 10px;
+    border: 1px solid #000;
+    background-color: #fff;
+    height: 100px;
+    width: 100px;
+}
+.image_picker_controls {
+    margin-left: 16px;
+}
+
+.bookmark-add {
+    background-color: #f2f2f2;
+}
+
+.bookmark {
+    border-top: 1px solid #DDDDDD;
+}
+.bookmark:nth-child(2n+1) {
+    background-color: #f9f9f9;
+}
+.bookmark .link {
+    font-weight: bold;
+    font-size: 120%;
+}

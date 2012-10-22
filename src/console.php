@@ -17,7 +17,8 @@ $console
         $conn       = $app['db'];
         $fromSchema = $conn->getSchemaManager()->createSchema();
         $toSchema   = $app['tent.application_state']->createSchema();
-        $diff       = Comparator::compare($fromSchema, $toSchema);
+        $comp       = new Comparator();
+        $diff       = $comp->compare($fromSchema, $toSchema);
 
         foreach ($diff->toSQL($conn->getDatabasePlatform()) as $sql) {
             $output->writeln($sql);
@@ -25,5 +26,16 @@ $console
         }
     })
 ;
+
+$console
+    ->register('tent:application')
+    ->addArgument('server', InputArgument::REQUIRED, null, null)
+    ->setDescription('Show details of the application on a given tent server')
+    ->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
+        $serverUrl = $input->getArgument('server');
+        $client = $app['tent.client'];
+        $client->updateApplication($serverUrl);
+        var_dump($client->getApplication($serverUrl));
+    });
 
 return $console;

@@ -55,8 +55,13 @@ class BookmarkParser
             }
         }
 
-        if ( ! $bookmark->getSiteName() && isset($openGraphProperties['og:site_name'])) {
-            $bookmark->setSiteName($openGraphProperties['og:site_name']);
+        if ( ! $bookmark->getSiteName()) {
+            if (isset($openGraphProperties['og:site_name'])) {
+                $bookmark->setSiteName($openGraphProperties['og:site_name']);
+            } else {
+                $urlParts = parse_url($bookmark->getUrl());
+                $bookmark->setSiteName($urlParts['host']);
+            }
         }
     }
 
@@ -78,20 +83,25 @@ class BookmarkParser
         $title   = $readability->getTitle()->textContent;
         $content = $readability->getContent()->innerHTML;
 
-        $bookmark->setContent(
-            "<h1>" . $title . "</h1>\n" . $content
-        );
+        $bookmark->setContent($content);
     }
 
     /**
      * Extract all images from a DOMDocument and make them absolute
      *
      * @param string $pageUrl
-     * @param DOMDocument $dom
+     * @param string|DOMDocument $pageContent
      * @return array
      */
-    public function extractAllImages($pageUrl, DOMDocument $dom)
+    public function extractAllImages($pageUrl, $pageContent)
     {
+        if ($pageContent instanceof DOMDocument) {
+            $dom = $pageContent;
+        } else {
+            $dom = new DOMDocument();
+            $dom->loadHtml($pageContent);
+        }
+
         $imageElements = $dom->getElementsByTagName('img');
         $images        = array();
 
@@ -113,6 +123,14 @@ class BookmarkParser
 
         foreach ($imageElements as $image) {
             $imageUrl = $image->getAttribute('src');
+            $width    = $image->getAttribute('width') ?: 200;
+            $height   = $image->getAttribute('height') ?: 200;
+            $ratio    = $width / $height;
+
+            if ($width < 50 || $height < 50 || $ratio > 3 || $ratio < 0.33) {
+                continue;
+            }
+
             if (strpos($imageUrl, "http") === false) {
                 if (strpos($imageUrl, "/") === 0) {
                     $imageUrl = $hostUrl . $imageUrl;

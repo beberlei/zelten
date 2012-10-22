@@ -20,10 +20,17 @@
         "symfony/validator": "2.1.*",
         "doctrine/dbal": "*",
         "guzzle/guzzle": "*",
-        "beberlei/tent-php": "dev-master"
+        "beberlei/tent-php": "dev-master",
+        "zendframework/zend-escaper": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": { "": "src/" }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.zendframework.com/"
+        }
+    ]
 }

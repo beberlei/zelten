@@ -3,12 +3,31 @@
     <head>
         <title>{% block title '' %} - Zelten</title>
 
-        <link href="{{ app.request.basepath }}/css/main.css" rel="stylesheet" type="text/css" />
+        <link href="http://fonts.googleapis.com/css?family=Overlock" rel="stylesheet" type="text/css" />
+        <link href="{{ app.request.basepath }}/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="{{ app.request.basepath }}/css/bookmarks.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <h1>Zelten Bookmarks</h1>
-        <h2>A tent.io bookmarking service</h2>
+        <div class="container">
+            <div class="row">
+                <div class="span8 offset2">
+                    <div class="content">
+                        <div class="header">
+                            <h1>Zelten Bookmarks</h1>
+                            <p>A tent.io bookmarking service</p>
+                        </div>
 
-        {% block content %}{% endblock %}
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/underscore-min.js"></script>
+        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/backbone-min.js"></script>
+        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/bookmarks.js"></script>
+        {% block javascripts %}{% endblock %}
     </body>
 </html>

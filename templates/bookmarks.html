@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block title %}Bookmarks{% endblock %}
+
+{% block content %}
+<div id="bookmarks">
+    <form class="bookmark-add add" method="post" action="{{ path('save_bookmark') }}">
+        <div class="form-inline">
+            {{ form_widget(form.url, {'attr': {'class': 'url span7'}}) }}
+            <a href="#" class="url-load btn pull-right">Load</a>
+        </div>
+
+        <div class="details form-horizontal" style="display:none">
+            <div class="row">
+                <div class="span6">
+                    <div class="control-group">
+                        <label for="bookmark_title" class="control-label">Title</label>
+                        <div class="controls">
+                            {{ form_widget(form.title, {'attr': {'class': 'span4'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="bookmark_description" class="control-label">Description</label>
+                        <div class="controls">
+                            {{ form_widget(form.description, {'attr': {'class': 'span4'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="bookmark_privacy" class="control-label">Privacy</label>
+                        <div class="controls">
+                            {{ form_widget(form.privacy, {'attr': {'class': 'span4'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <a href="#" class="btn reset">Reset</a>
+                        </div>
+                    </div>
+
+                    {{ form_rest(form) }}
+                </div>
+                <div class="span2">
+                    <div class="image_picker"></div>
+                    <div class="image_picker_controls">
+                        <a class="btn image-backward"><i class="icon-backward"></i></a>
+                        <a class="btn image-forward"><i class="icon-forward"></i></a>
+                        <a class="btn image-none"><i class="icon-remove"></i> No image</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+
+    <div class="list"></div>
+</div>
+
+
+<script type="text/html" id="bookmark-template">
+<div class="bookmark">
+    <div class="row">
+        <div class="span6">
+            <% if (content.image) { %><img style="float:left; margin-right: 8px;" src="<%- content.image %>" width="100" /><% } %>
+
+            <p>
+                <a class="link" href="<%- content.url %>" target="_blank"><%- content.title %></a> <small><%- content.site_name %></small>
+            </p>
+
+            <p>
+                <%- content.description %>
+            </p>
+        </div>
+        <div class="span2">
+            <div class="pull-right">
+                <a href="#" class="bookmark-read btn"><i class="icon-eye-open"></i> Read</a>
+                <a href="#" class="bookmark-delete btn btn-danger"><i class="icon-trash"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="read span8"></div>
+    </div>
+</div>
+</script>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+<!--
+    $(document).ready(function() {
+        var col = new BookmarksCollection({{ posts|json_encode|raw }});
+        var app = new BookmarkApplication({
+            collection: col,
+            el: $("#bookmarks")
+        });
+        app.render();
+    });
+-->
+</script>
+{% endblock %}

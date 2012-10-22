@@ -5,6 +5,9 @@ use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
+use Silex\Provider\SessionServiceProvider;
+use Silex\Provider\FormServiceProvider;
+use Silex\Provider\TranslationServiceProvider;
 
 $app = new Application();
 $app->register(new DoctrineServiceProvider(), array(
@@ -16,6 +19,11 @@ $app->register(new DoctrineServiceProvider(), array(
         'dbname'   => 'zelten',
     ),
 ));
+$app->register(new TranslationServiceProvider(), array(
+    'locale_fallback' => 'en',
+));
+$app->register(new FormServiceProvider());
+$app->register(new SessionServiceProvider());
 $app->register(new UrlGeneratorServiceProvider());
 $app->register(new ValidatorServiceProvider());
 $app->register(new TwigServiceProvider(), array(

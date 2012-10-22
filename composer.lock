@@ -1,5 +1,5 @@
 {
-    "hash": "4c316207c9874ce6351ef09fb58d2205",
+    "hash": "2db85a584b2f8c5f4b776b3bf3079798",
     "packages": [
         {
             "name": "beberlei/tent-php",
@@ -7,12 +7,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:beberlei/TentPHP.git",
-                "reference": "3dded9f1e5240c2ee49212d357b9aae30b35f3a1"
+                "reference": "a147cb0290ba27cb019b1f9d75b500a85f13a9c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/beberlei/TentPHP/zipball/3dded9f1e5240c2ee49212d357b9aae30b35f3a1",
-                "reference": "3dded9f1e5240c2ee49212d357b9aae30b35f3a1",
+                "url": "https://github.com/beberlei/TentPHP/zipball/a147cb0290ba27cb019b1f9d75b500a85f13a9c6",
+                "reference": "a147cb0290ba27cb019b1f9d75b500a85f13a9c6",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,7 @@
             "suggest": {
                 "doctrine/dbal": "*"
             },
-            "time": "1350806915",
+            "time": "1350900740",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -176,12 +176,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle",
-                "reference": "ef7fe4f8628414741079babc78b1f9dc3be47f46"
+                "reference": "d98b846bfd4e9d9ca0ee33be9336ad577275e349"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/guzzle/zipball/ef7fe4f8628414741079babc78b1f9dc3be47f46",
-                "reference": "ef7fe4f8628414741079babc78b1f9dc3be47f46",
+                "url": "https://github.com/guzzle/guzzle/zipball/d98b846bfd4e9d9ca0ee33be9336ad577275e349",
+                "reference": "d98b846bfd4e9d9ca0ee33be9336ad577275e349",
                 "shasum": ""
             },
             "require": {
@@ -227,7 +227,7 @@
                 "zend/zend-cache": "2.0.0beta3",
                 "zend/zend-log": "2.0.0beta3"
             },
-            "time": "1350589043",
+            "time": "1350880248",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -285,7 +285,7 @@
             "suggest": {
                 "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server"
             },
-            "time": "2012-04-23 03:27:40",
+            "time": "2012-04-22 15:27:40",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1553,6 +1553,111 @@
             "keywords": [
                 "templating"
             ]
+        },
+        {
+            "name": "zendframework/zendframework",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/zendframework/zf2.git",
+                "reference": "0e70e048a402fe73fd6ff51613d47fa8b6589c63"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/zendframework/zf2/zipball/master",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "replace": {
+                "zendframework/zend-acl": "self.version",
+                "zendframework/zend-authentication": "self.version",
+                "zendframework/zend-barcode": "self.version",
+                "zendframework/zend-cache": "self.version",
+                "zendframework/zend-captcha": "self.version",
+                "zendframework/zend-code": "self.version",
+                "zendframework/zend-config": "self.version",
+                "zendframework/zend-console": "self.version",
+                "zendframework/zend-crypt": "self.version",
+                "zendframework/zend-db": "self.version",
+                "zendframework/zend-di": "self.version",
+                "zendframework/zend-dom": "self.version",
+                "zendframework/zend-escaper": "self.version",
+                "zendframework/zend-eventmanager": "self.version",
+                "zendframework/zend-feed": "self.version",
+                "zendframework/zend-file": "self.version",
+                "zendframework/zend-filter": "self.version",
+                "zendframework/zend-form": "self.version",
+                "zendframework/zend-http": "self.version",
+                "zendframework/zend-i18n": "self.version",
+                "zendframework/zend-inputfilter": "self.version",
+                "zendframework/zend-json": "self.version",
+                "zendframework/zend-ldap": "self.version",
+                "zendframework/zend-loader": "self.version",
+                "zendframework/zend-log": "self.version",
+                "zendframework/zend-mail": "self.version",
+                "zendframework/zend-markup": "self.version",
+                "zendframework/zend-math": "self.version",
+                "zendframework/zend-memory": "self.version",
+                "zendframework/zend-mime": "self.version",
+                "zendframework/zend-modulemanager": "self.version",
+                "zendframework/zend-mvc": "self.version",
+                "zendframework/zend-navigation": "self.version",
+                "zendframework/zend-paginator": "self.version",
+                "zendframework/zend-progressbar": "self.version",
+                "zendframework/zend-serializer": "self.version",
+                "zendframework/zend-server": "self.version",
+                "zendframework/zend-servicemanager": "self.version",
+                "zendframework/zend-session": "self.version",
+                "zendframework/zend-soap": "self.version",
+                "zendframework/zend-stdlib": "self.version",
+                "zendframework/zend-tag": "self.version",
+                "zendframework/zend-text": "self.version",
+                "zendframework/zend-uri": "self.version",
+                "zendframework/zend-validator": "self.version",
+                "zendframework/zend-view": "self.version",
+                "zendframework/zend-xmlrpc": "self.version"
+            },
+            "require-dev": {
+                "doctrine/common": ">=2.1"
+            },
+            "suggest": {
+                "doctrine/common": "Doctrine\\Common >=2.1 for annotation features",
+                "ext-intl": "ext/intl for i18n features",
+                "pecl-weakref": "Implementation of weak references for Zend\\Stdlib\\CallbackHandler",
+                "zendframework/zendpdf": "ZendPdf for creating PDF representations of barcodes",
+                "zendframework/zendservice-recaptcha": "ZendService\\ReCaptcha for rendering ReCaptchas in Zend\\Captcha and/or Zend\\Form"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Zend\\": "library/",
+                    "ZendTest\\": "tests/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Zend Framework 2",
+            "keywords": [
+                "framework",
+                "zf2"
+            ],
+            "support": {
+                "email": "fw-general-subscribe@lists.zend.com",
+                "irc": "irc://irc.freenode.net/zftalk",
+                "issues": "https://github.com/zendframework/zf2/issues",
+                "source": "https://github.com/zendframework/zf2"
+            },
+            "time": "1350509831"
         }
     ],
     "packages-dev": null,
@@ -1561,6 +1666,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "beberlei/tent-php": 20
+        "beberlei/tent-php": 20,
+        "zendframework/zend-escaper": 20
     }
 }
