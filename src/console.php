@@ -23,6 +23,7 @@ $console
         $bookmarkStatsTable->addColumn('last_login', 'datetime');
         $bookmarkStatsTable->addColumn('login_count', 'integer', array('default' => 0));
         $bookmarkStatsTable->addColumn('bookmarks', 'integer', array('default' => 0));
+        $bookmarkStatsTable->setPrimaryKey(array('entity'));
 
         $comp = new Comparator();
         $diff = $comp->compare($fromSchema, $toSchema);

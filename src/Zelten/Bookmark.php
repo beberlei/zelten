@@ -56,7 +56,7 @@ class Bookmark
 
     public function setUrl($url)
     {
-        if (strpos($url, "http://") === false) {
+        if (strpos($url, "http") === false) {
             $url = "http://" . $url;
         }
 
