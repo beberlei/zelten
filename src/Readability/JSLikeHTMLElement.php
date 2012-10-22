@@ -36,6 +36,7 @@
 namespace Readability;
 
 use DOMElement;
+use DOMDocument;
 
 class JSLikeHTMLElement extends DOMElement
 {
