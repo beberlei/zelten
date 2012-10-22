@@ -46,7 +46,7 @@ $app->get('/bookmarks/parse', function(Request $request) use ($app) {
     $bookmark = new Bookmark($url);
 
     if (!$bookmark->getUrl()) {
-        return new Response('{"error": "Invalid url given"}', 400, array('Content-Type: application/json'));
+        return new Response('{"error": "Invalid url given"}', 400, array('Content-Type' => 'application/json'));
     }
 
     $client = new Guzzle\Http\Client();
@@ -58,7 +58,7 @@ $app->get('/bookmarks/parse', function(Request $request) use ($app) {
     return new Response(json_encode(array(
         'bookmark' => $bookmark->toArray(),
         'images'   => $parser->extractAllImages($bookmark->getUrl(), $html)
-    )), 200, array('Content-Type: application/json'));
+    )), 200, array('Content-Type' => 'application/json'));
 
 })->bind('bookmark_parse');
 
@@ -136,7 +136,7 @@ $app->post('/bookmarks', function(Request $request) use ($app) {
 
     if ( ! $form->isValid()) {
         $errors = array('error' => true, 'messages' => form_errors_array($form));
-        return new Response(json_encode($errors), 400, array('Content-Type: application/json'));
+        return new Response(json_encode($errors), 400, array('ContentType' => 'application/json'));
     }
 
     $client    = $app['tent.client']->getUserClient($entityUrl);
@@ -153,7 +153,7 @@ $app->post('/bookmarks', function(Request $request) use ($app) {
     $data = $client->createPost($post);
     $app['db']->executeUpdate('UPDATE bookmark_statistics SET bookmarks = bookmarks+1 WHERE entity = ?', array($entityUrl));
 
-    return new Response(json_encode(array('id' => $data['id'])), 200, array('Content-Type: application/json'));
+    return new Response(json_encode(array('id' => $data['id'])), 200, array('Content-Type' => 'application/json'));
 
 })->bind('save_bookmark');
 
