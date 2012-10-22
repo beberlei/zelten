@@ -6,6 +6,12 @@ var Bookmark = Backbone.Model.extend({
 });
 
 var BookmarksCollection = Backbone.Collection.extend({
+    initialize: function(args) {
+        if (args.filter) {
+            var filter = (args.filter.length > 0) ? '?' + args.filter : '';
+            this.url   = this.url + filter;
+        }
+    },
     url: '/bookmarks'
 });
 
@@ -35,6 +41,30 @@ var BookmarkView = Backbone.View.extend({
     }
 });
 
+var BookmarkList = Backbone.View.extend({
+    initialize: function() {
+        this.collection.bind('reset', _.bind(this.addAll, this));
+    },
+    addAll: function() {
+        this.$el.html('');
+        this.collection.each(_.bind(this.addOne, this));
+    },
+    addOne: function(bookmark) {
+        var view = new BookmarkView({
+            model: bookmark
+        });
+
+        this.$el.append(view.render());
+    },
+    prependTo: function(bookmark) {
+        var view = new BookmarkView({
+            model: bookmark
+        });
+
+        this.$el.prepend(view.render());
+    }
+});
+
 var BookmarkApplication = Backbone.View.extend({
     currentImages: [],
     currentImage: 0,
@@ -45,6 +75,7 @@ var BookmarkApplication = Backbone.View.extend({
         'click .image-none': 'imageNone',
         'submit form.add': 'saveBookmark',
         'click a.reset': 'resetForm',
+        'click #tabs a': 'clickTab'
     },
     resetForm: function() {
         this.$el.find('form.add').each(function() { this.reset(); });
@@ -69,12 +100,8 @@ var BookmarkApplication = Backbone.View.extend({
             }
         });
         bookmark.save();
-        this.collection.add(bookmark);
-        var view = new BookmarkView({
-            model: bookmark
-        });
 
-        this.$el.find('.list').prepend(view.render());
+        this.collection.add(bookmark);
         this.resetForm();
 
         return false;
@@ -139,18 +166,29 @@ var BookmarkApplication = Backbone.View.extend({
         });
         return false;
     },
-    render: function() {
-        this.addAll();
-    },
-    addAll: function() {
-        this.collection.each(_.bind(this.addOne, this));
-    },
-    addOne: function(bookmark) {
-        var view = new BookmarkView({
-            model: bookmark
+    initialize: function() {
+        this.myBookmarks = new BookmarkList({
+            collection: this.collection,
+            el: this.$el.find('#my').find('.list')
         });
 
-        this.$el.find('.list').append(view.render());
+        this.publicBookmarks = new BookmarkList({
+            collection: new BookmarksCollection({
+                filter: 'mode=public'
+            }),
+            el: this.$el.find('#public').find('.list')
+        });
+    },
+    render: function() {
+        this.myBookmarks.addAll();
+    },
+    clickTab: function(e) {
+        e.preventDefault();
+        $(this).tab('show');
+
+        if ($(e.currentTarget).attr('href') == '#public') {
+            this.publicBookmarks.collection.fetch();
+        }
     }
 });
 

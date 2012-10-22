@@ -19,7 +19,7 @@ $app->get('/', function () use ($app) {
 })
 ->bind('homepage');
 
-$app->get('/bookmarks', function () use ($app) {
+$app->get('/bookmarks', function (Request $request) use ($app) {
     $entityUrl = $app['session']->get('entity_url');
 
     if (!$entityUrl) {
@@ -28,12 +28,24 @@ $app->get('/bookmarks', function () use ($app) {
 
     $client = $app['tent.client']->getUserClient($entityUrl);
 
-    $posts = $client->getPosts(new TentPHP\PostCriteria(array(
-        'post_types' => 'http://www.beberlei.de/tent/bookmark/v0.0.1',
-        'entity'     => $entityUrl,
-    )));
+    $criteria = array('post_types' => 'http://www.beberlei.de/tent/bookmark/v0.0.1');
+
+    $status = $request->query->get('mode', 'my');
+    if ($status == 'my') {
+        $criteria['entity'] = $entityUrl;
+    }
+
+    $posts = $client->getPosts(new TentPHP\PostCriteria($criteria));
+
+    $posts = array_filter($posts, function ($post) use($entityUrl, $status) {
+        return !($status == 'public' && isset($post['permissions']['public']) && !$post['permissions']['public']);
+    });
 
     $app['db']->executeUpdate('UPDATE bookmark_statistics SET bookmarks = ? WHERE entity = ?', array(count($posts), $entityUrl));
+
+    if ($request->isXmlHttpRequest()) {
+        return new Response(json_encode($posts), 200, array('Content-Type' => 'application/json'));
+    }
 
     return $app['twig']->render('bookmarks.html', array(
         'posts' => $posts,
@@ -139,8 +151,8 @@ $app->post('/bookmarks', function(Request $request) use ($app) {
         return new Response(json_encode($errors), 400, array('ContentType' => 'application/json'));
     }
 
-    $client    = $app['tent.client']->getUserClient($entityUrl);
-    $post      = \TentPHP\Post::create('http://www.beberlei.de/tent/bookmark/v0.0.1');
+    $client = $app['tent.client']->getUserClient($entityUrl);
+    $post   = \TentPHP\Post::create('http://www.beberlei.de/tent/bookmark/v0.0.1');
 
     if ($bookmark->getPrivacy() == 'public') {
         $post->markPublic();
