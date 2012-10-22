@@ -11,7 +11,11 @@ use Zelten\BookmarkParser;
 use Zelten\Form\BookmarkType;
 
 $app->get('/', function () use ($app) {
-    return $app['twig']->render('index.html', array());
+    $stats = $app['db']->fetchAssoc(
+        'SELECT count(*) as total_users, sum(bookmarks) as total_bookmarks FROM bookmark_statistics'
+    );
+
+    return $app['twig']->render('index.html', array('stats' => $stats));
 })
 ->bind('homepage');
 
@@ -28,6 +32,8 @@ $app->get('/bookmarks', function () use ($app) {
         'post_types' => 'http://www.beberlei.de/tent/bookmark/v0.0.1',
         'entity'     => $entityUrl,
     )));
+
+    $app['db']->executeUpdate('UPDATE bookmark_statistics SET bookmarks = ? WHERE entity = ?', array(count($posts), $entityUrl));
 
     return $app['twig']->render('bookmarks.html', array(
         'posts' => $posts,
@@ -83,6 +89,7 @@ $app->get('/bookmarks/{id}', function($id) use ($app) {
     if (!$post) {
         throw new NotFoundHttpException();
     }
+
 
     $bookmark = new Bookmark($post['content']['url']);
 
@@ -144,6 +151,7 @@ $app->post('/bookmarks', function(Request $request) use ($app) {
     $post->setContent($bookmark->toArray());
 
     $data = $client->createPost($post);
+    $app['db']->executeUpdate('UPDATE bookmark_statistics SET bookmarks = bookmarks+1 WHERE entity = ?', array($entityUrl));
 
     return new Response(json_encode(array('id' => $data['id'])), 200, array('Content-Type: application/json'));
 
@@ -161,6 +169,16 @@ $app->post('/login', function (Request $request) use ($app) {
         'http://www.beberlei.de/tent/bookmark/v0.0.1'
     ));
 
+    $sql = "SELECT * FROM bookmark_statistics WHERE entity = ?";
+    $data = $app['db']->fetchAssoc($sql, array($entityUrl));
+
+    if (!$data) {
+        $app['db']->insert('bookmark_statistics', array(
+            'entity' => $entityUrl,
+            'last_login' => time(),
+        ));
+    }
+
     return new RedirectResponse($loginUrl);
 })->bind('login');
 
@@ -169,6 +187,8 @@ $app->get('/oauth/accept', function(Request $request) use ($app) {
         $request->query->get('state'),
         $request->query->get('code')
     ));
+
+    $app['db']->executeUpdate('UPDATE bookmark_statistics SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($app['session']->get('entity_url')));
 
     return new RedirectResponse($app['url_generator']->generate('bookmarks'));
 })->bind('oauth_accept');

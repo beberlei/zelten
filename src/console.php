@@ -17,8 +17,15 @@ $console
         $conn       = $app['db'];
         $fromSchema = $conn->getSchemaManager()->createSchema();
         $toSchema   = $app['tent.application_state']->createSchema();
-        $comp       = new Comparator();
-        $diff       = $comp->compare($fromSchema, $toSchema);
+
+        $bookmarkStatsTable = $toSchema->createTable('bookmark_statistics');
+        $bookmarkStatsTable->addColumn('entity', 'string');
+        $bookmarkStatsTable->addColumn('last_login', 'datetime');
+        $bookmarkStatsTable->addColumn('login_count', 'integer', array('default' => 0));
+        $bookmarkStatsTable->addColumn('bookmarks', 'integer', array('default' => 0));
+
+        $comp = new Comparator();
+        $diff = $comp->compare($fromSchema, $toSchema);
 
         foreach ($diff->toSQL($conn->getDatabasePlatform()) as $sql) {
             $output->writeln($sql);

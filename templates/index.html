@@ -29,7 +29,7 @@
 
         <p>
             Zelten Bookmarks saves bookmarks on your tent server. You have full control over all
-            the bookmark data. Except authentcation data Zelten saves no data itself.
+            the bookmark data. Except authentication and aggregate numbers Zelten saves no data itself.
         </p>
     </div>
 </div>
@@ -42,6 +42,14 @@
             Yes! The <a href="https://github.com/beberlei/zelten-bookmarks">application</a> is on Github
             as well as the <a href="https://github.com/beberlei/TentPHP">TentPHP</a> client library that
             is used internally.
+        </p>
+    </div>
+
+    <div class="span4">
+        <h3>Statistics</h3>
+
+        <p>There are <strong>{{ stats.total_users }}</strong> users on Zelten Bookmarks managing
+            a total of <strong>{{ stats.total_bookmarks }}</strong> bookmarks.
         </p>
     </div>
 </div>

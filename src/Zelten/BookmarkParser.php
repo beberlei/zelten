@@ -11,7 +11,10 @@ class BookmarkParser
     public function enrich(Bookmark $bookmark, $pageContent)
     {
         $dom = new DOMDocument();
+        libxml_use_internal_errors(true);
         $dom->loadHtml($pageContent);
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
 
         $openGraphProperties = $this->extractOpenGraphProperties($dom);
 
@@ -73,6 +76,7 @@ class BookmarkParser
             $pageContent = $tidy->value;
         }
 
+        libxml_use_internal_errors(true);
         $readability = new Readability($pageContent, $bookmark->getUrl());
         $readability->convertLinksToFootnotes = true;
 
@@ -82,6 +86,9 @@ class BookmarkParser
 
         $title   = $readability->getTitle()->textContent;
         $content = $readability->getContent()->innerHTML;
+
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
 
         $bookmark->setContent($content);
     }
@@ -99,7 +106,10 @@ class BookmarkParser
             $dom = $pageContent;
         } else {
             $dom = new DOMDocument();
+            libxml_use_internal_errors(true);
             $dom->loadHtml($pageContent);
+            libxml_clear_errors();
+            libxml_use_internal_errors(false);
         }
 
         $imageElements = $dom->getElementsByTagName('img');

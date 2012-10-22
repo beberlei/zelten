@@ -60,7 +60,11 @@ class Bookmark
             $url = "http://" . $url;
         }
 
-        $this->url = filter_var($url, FILTER_VALIDATE_URL);
+        if (strpos($url, "http") === false) {
+            throw new \InvalidArgumentException("Invalid Url");
+        }
+
+        $this->url = $url;
     }
 
     public function getUrl()
