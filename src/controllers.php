@@ -158,6 +158,12 @@ $app->post('/bookmarks', function(Request $request) use ($app) {
 })->bind('save_bookmark');
 
 $app->post('/login', function (Request $request) use ($app) {
+    $entityUrl = $app['session']->get('entity_url');
+
+    if ($entityUrl) {
+        return new RedirectResponse($app['url_generator']->generate('bookmarks'));
+    }
+
     $entityUrl = $request->request->get('entity_url');
 
     if (!$entityUrl) {
