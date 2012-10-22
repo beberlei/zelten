@@ -18,7 +18,7 @@ var BookmarksCollection = Backbone.Collection.extend({
 });
 
 var BookmarkView = Backbone.View.extend({
-    initialize: function() {
+    initialize: function(args) {
         this.template = _.template($("#bookmark-template").html());
     },
     events: {
@@ -40,7 +40,10 @@ var BookmarkView = Backbone.View.extend({
         this.remove();
     },
     render: function() {
-        this.$el.html(this.template(this.model.toJSON()));
+        var data = this.model.toJSON();
+        data.isOwner = (Zelten.entity == data.entity);
+        data.publishedDate = new Date(data.published_at*1000);
+        this.$el.html(this.template(data));
         return this.$el;
     }
 });

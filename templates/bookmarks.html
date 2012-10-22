@@ -86,16 +86,18 @@
             <p>
                 <%- content.description %>
             </p>
+
+            <% if (!isOwner) { %>
+                <p><small><a href="<%- entity %>" target="_blank"><%- entity %></a>
+                    on <%- publishedDate.toLocaleDateString() %></small></p>
+            <% } %>
         </div>
         <div class="span2">
             <div class="pull-right">
                 <a href="<%- content.url %>" target="_blank" class="btn"><i class="icon-eye-open"></i> Read</a>
-                <a href="#" class="bookmark-delete btn btn-danger"><i class="icon-trash"></i></a>
+                <% if (isOwner) { %><a href="#" class="bookmark-delete btn btn-danger"><i class="icon-trash"></i></a><% } %>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="read span8"></div>
     </div>
 </div>
 </script>
@@ -104,6 +106,9 @@
 {% block javascripts %}
 <script type="text/javascript">
 <!--
+    var Zelten = {
+        entity: '{{ app.session.get('entity_url') }}'
+    };
     $(document).ready(function() {
         var col = new BookmarksCollection({{ posts|json_encode|raw }});
         var app = new BookmarkApplication({
