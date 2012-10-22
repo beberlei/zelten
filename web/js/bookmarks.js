@@ -16,7 +16,9 @@ var BookmarksCollection = Backbone.Collection.extend({
 });
 
 var BookmarkView = Backbone.View.extend({
-    template: _.template($("#bookmark-template").html()),
+    initialize: function() {
+        this.template = _.template($("#bookmark-template").html()),
+    },
     events: {
         "click .bookmark-delete": "deletePost",
         "click .bookmark-read": "readPost"
