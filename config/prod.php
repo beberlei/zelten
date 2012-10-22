@@ -12,9 +12,10 @@ function envvar($name, $default)
 }
 
 $app['db.options'] = array(
-    'driver' => 'pdo_mysql',
-    'user'   => envvar('DB_USER', 'root'),
-    'host'   => envvar('DB_HOST', 'localhost'),
+    'driver'   => 'pdo_mysql',
+    'user'     => envvar('DB_USER', 'root'),
+    'host'     => envvar('DB_HOST', 'localhost'),
     'password' => envvar('DB_PASSWORD', ''),
-    'database' => envvar('DB_NAME', 'zelten'),
+    'dbname'   => envvar('DB_NAME', 'zelten'),
 );
+

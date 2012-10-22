@@ -39,8 +39,11 @@ $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
 $app['tent.application.options'] = array(
     'name'          => 'Zelten Bookmarks',
     'description'   => 'Save, share and manage your bookmarks using your Tent Profile',
-    'url'           => 'http://zelten.beberlei.de',
-    'redirect_uris' => array('http://zelten.beberlei.de/oauth/accept'),
+    'url'           => 'http://zelten.eu1.frbit.net/login',
+    'redirect_uris' => array(
+        'http://zelten.eu1.frbit.net/oauth/accept',
+        'http://zelten/login/oauth/accept'
+    ),
     'scopes'        => array(
         'read_posts'  => 'Read Bookmarks from your Tent Account',
         'write_posts' => 'Add and update Bookmarks',
