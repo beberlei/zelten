@@ -35,6 +35,27 @@ $app->get('/bookmarks', function () use ($app) {
     ));
 })->bind('bookmarks');
 
+$app->get('/bookmarks/parse', function(Request $request) use ($app) {
+    $url      = $request->query->get('url');
+    $bookmark = new Bookmark($url);
+
+    if (!$bookmark->getUrl()) {
+        return new Response('{"error": "Invalid url given"}', 400, array('Content-Type: application/json'));
+    }
+
+    $client = new Guzzle\Http\Client();
+    $html = $client->get($bookmark->getUrl())->send()->getBody();
+
+    $parser = new BookmarkParser();
+    $parser->enrich($bookmark, $html);
+
+    return new Response(json_encode(array(
+        'bookmark' => $bookmark->toArray(),
+        'images'   => $parser->extractAllImages($bookmark->getUrl(), $html)
+    )), 200, array('Content-Type: application/json'));
+
+})->bind('bookmark_parse');
+
 function form_errors_array($form, array $errors = array())
 {
     foreach ($form->getErrors() as $error) {
@@ -128,27 +149,6 @@ $app->post('/bookmarks', function(Request $request) use ($app) {
 
 })->bind('save_bookmark');
 
-$app->get('/bookmarks/parse', function(Request $request) use ($app) {
-    $url      = $request->query->get('url');
-    $bookmark = new Bookmark($url);
-
-    if (!$bookmark->getUrl()) {
-        return new Response('{"error": "Invalid url given"}', 400, array('Content-Type: application/json'));
-    }
-
-    $client = new Guzzle\Http\Client();
-    $html = $client->get($bookmark->getUrl())->send()->getContent();
-
-    $parser = new BookmarkParser();
-    $parser->enrich($bookmark, $html);
-
-    return new Response(json_encode(array(
-        'bookmark' => $bookmark->toArray(),
-        'images'   => $parser->extractAllImages($bookmark->getUrl(), $html)
-    )), 200, array('Content-Type: application/json'));
-
-})->bind('bookmark_parse');
-
 $app->post('/login', function (Request $request) use ($app) {
     $entityUrl = $request->request->get('entity_url');
 
@@ -156,7 +156,8 @@ $app->post('/login', function (Request $request) use ($app) {
         return new RedirectResponse($app['url_generator']->generate('homepage'));
     }
 
-    $loginUrl = $app['tent.client']->getLoginUrl($entityUrl, null, null, null, array(
+    $callbackUrl = $app['url_generator']->generate('oauth_accept', array(), true);
+    $loginUrl    = $app['tent.client']->getLoginUrl($entityUrl, null, $callbackUrl, null, array(
         'http://www.beberlei.de/tent/bookmark/v0.0.1'
     ));
 

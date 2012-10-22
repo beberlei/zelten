@@ -42,7 +42,8 @@ $app['tent.application.options'] = array(
     'url'           => 'http://zelten.eu1.frbit.net/login',
     'redirect_uris' => array(
         'http://zelten.eu1.frbit.net/oauth/accept',
-        'http://zelten/login/oauth/accept'
+        'http://zelten/oauth/accept',
+        'http://zelten/index_dev.php/oauth/accept',
     ),
     'scopes'        => array(
         'read_posts'  => 'Read Bookmarks from your Tent Account',
