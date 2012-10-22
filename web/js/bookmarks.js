@@ -54,6 +54,12 @@ var BookmarkApplication = Backbone.View.extend({
         return false;
     },
     saveBookmark: function() {
+        var url = $("#bookmark_url").val();
+
+        if (url.length == 0) {
+            return false;
+        }
+
         var bookmark = new Bookmark({
             content: {
                 url: $("#bookmark_url").val(),
