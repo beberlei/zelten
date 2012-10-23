@@ -13,6 +13,9 @@
 
 namespace Zelten;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 /**
  * A bookmark to foreign content.
  *
@@ -165,6 +168,12 @@ class Bookmark
             'tags'        => $this->tags,
             'content'     => $this->content,
         ));
+    }
+
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('url', new Assert\Url(array('message' => 'Invalid url given.')));
+        $metadata->addPropertyConstraint('title', new Assert\NotBlank(array('message' => 'Title has to be non-empty.')));
     }
 }
 

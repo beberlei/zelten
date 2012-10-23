@@ -106,12 +106,24 @@ var BookmarkApplication = Backbone.View.extend({
                 privacy: $("#bookmark_privacy").val()
             }
         });
-        bookmark.save();
-
-        this.collection.add(bookmark);
-        this.resetForm();
+        bookmark.save({}, {
+            success: _.bind(this.onBookmarkSaved, this),
+            error: _.bind(this.onBookmarkError, this)
+        });
 
         return false;
+    },
+    onBookmarkSaved: function(bookmark) {
+        this.collection.add(bookmark);
+        this.resetForm();
+    },
+    onBookmarkError: function(bookmark, response) {
+        var errors = jQuery.parseJSON(response.responseText);
+        this.showErrorMessage(errors);
+    },
+    showErrorMessage: function(errors) {
+        var template = _.template($("#error-message").html());
+        $(".errors").html(template(errors));
     },
     imageNone: function() {
         this.$el.find('.image_picker').html('');
@@ -167,11 +179,14 @@ var BookmarkApplication = Backbone.View.extend({
             type: 'GET',
             dataType: 'json',
             success: _.bind(this.showBookmarkDetails, this),
-            error: function(data) {
-                alert('Error: Invalid url or the entered page returns something other than a valid result.');
-            }
+            error: _.bind(this.onBookmarkParseError, this)
         });
         return false;
+    },
+    onBookmarkParseError: function() {
+        this.showErrorMessage({
+            messages: ['Invalid url or the entered page returns something other than a valid result.']}
+        );
     },
     initialize: function() {
         this.myBookmarks = new BookmarkList({

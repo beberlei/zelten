@@ -144,11 +144,11 @@ $app->post('/bookmarks', function(Request $request) use ($app) {
     $data = json_decode($request->getContent(), true);
 
     $form = $app['form.factory']->create(new BookmarkType(), $bookmark);
-    $form->bind($data['content']);
+    $form->bind(array_map('strip_tags', $data['content']));
 
     if ( ! $form->isValid()) {
         $errors = array('error' => true, 'messages' => form_errors_array($form));
-        return new Response(json_encode($errors), 400, array('ContentType' => 'application/json'));
+        return new Response(json_encode($errors), 400, array('Content-Type' => 'application/json'));
     }
 
     $client = $app['tent.client']->getUserClient($entityUrl);
