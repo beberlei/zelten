@@ -12,7 +12,7 @@ use Zelten\Form\BookmarkType;
 
 $app->get('/', function () use ($app) {
     $stats = $app['db']->fetchAssoc(
-        'SELECT count(*) as total_users, sum(bookmarks) as total_bookmarks FROM bookmark_statistics'
+        'SELECT count(*) as total_users, sum(bookmarks) as total_bookmarks FROM users'
     );
 
     return $app['twig']->render('index.html', array('stats' => $stats));
@@ -41,7 +41,7 @@ $app->get('/bookmarks', function (Request $request) use ($app) {
         return !($status == 'public' && isset($post['permissions']['public']) && !$post['permissions']['public']);
     }));
 
-    $app['db']->executeUpdate('UPDATE bookmark_statistics SET bookmarks = ? WHERE entity = ?', array(count($posts), $entityUrl));
+    $app['db']->executeUpdate('UPDATE users SET bookmarks = ? WHERE entity = ?', array(count($posts), $entityUrl));
 
     if ($request->isXmlHttpRequest()) {
         return new Response(json_encode($posts), 200, array('Content-Type' => 'application/json'));
@@ -163,11 +163,44 @@ $app->post('/bookmarks', function(Request $request) use ($app) {
     $post->setContent($bookmark->toArray());
 
     $data = $client->createPost($post);
-    $app['db']->executeUpdate('UPDATE bookmark_statistics SET bookmarks = bookmarks+1 WHERE entity = ?', array($entityUrl));
+    $app['db']->executeUpdate('UPDATE users SET bookmarks = bookmarks+1 WHERE entity = ?', array($entityUrl));
 
     return new Response(json_encode(array('id' => $data['id'])), 200, array('Content-Type' => 'application/json'));
 
 })->bind('save_bookmark');
+
+$app->get('/socialsync', function() use ($app) {
+    return $app['twig']->render('socialsync.html');
+})->bind('socialsync');
+
+$app->get('/socialsync/connect/twitter', function() use ($app) {
+    $entityUrl = $app['session']->get('entity_url');
+
+    if (!$entityUrl) {
+        return new RedirectResponse($app['url_generator']->generate('homepage'));
+    }
+
+    $twitter = $app['twitter'];
+    return new RedirectResponse($twitter->getAuthenticateUrl());
+})->bind('socialsync_connect_twitter');
+
+$app->get('/socialsync/oauth/accept/twitter', function(Request $request) use ($app) {
+    $entityUrl = $app['session']->get('entity_url');
+
+    if (!$entityUrl) {
+        return new RedirectResponse($app['url_generator']->generate('homepage'));
+    }
+
+    $twitter = $app['twitter'];
+    $twitter->setToken($request->query->get('oauth_token'));
+    $token = $twitter->getAccessToken();
+    $twitter->setToken($token->oauth_token, $token->oauth_token_secret);
+
+    $query = "UPDATE users SET twitter_oauth_token = ?, twitter_oauth_secret = ? WHERE entity = ?";
+    $app['db']->executeUpdate($query, array($token->oauth_token, $token->oauth_token_secret, $entityUrl));
+
+    return new RedirectResponse($app['url_generator']->generate('socialsync'));
+});
 
 $app->get('/logout', function() use ($app) {
     $entityUrl = $app['session']->set('entity_url', null);
@@ -198,11 +231,11 @@ $app->post('/login', function (Request $request) use ($app) {
         'http://www.beberlei.de/tent/bookmark/v0.0.1'
     ));
 
-    $sql = "SELECT * FROM bookmark_statistics WHERE entity = ?";
+    $sql = "SELECT * FROM users WHERE entity = ?";
     $data = $app['db']->fetchAssoc($sql, array($entityUrl));
 
     if (!$data) {
-        $app['db']->insert('bookmark_statistics', array(
+        $app['db']->insert('users', array(
             'entity' => $entityUrl,
             'last_login' => time(),
         ));
@@ -217,7 +250,7 @@ $app->get('/oauth/accept', function(Request $request) use ($app) {
         $request->query->get('code')
     ));
 
-    $app['db']->executeUpdate('UPDATE bookmark_statistics SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($app['session']->get('entity_url')));
+    $app['db']->executeUpdate('UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($app['session']->get('entity_url')));
 
     return new RedirectResponse($app['url_generator']->generate('bookmarks'));
 })->bind('oauth_accept');

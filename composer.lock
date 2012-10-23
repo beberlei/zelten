@@ -1,5 +1,5 @@
 {
-    "hash": "2db85a584b2f8c5f4b776b3bf3079798",
+    "hash": "c1555aae847e0d80a7144a1e944e9a38",
     "packages": [
         {
             "name": "beberlei/tent-php",
@@ -285,7 +285,7 @@
             "suggest": {
                 "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server"
             },
-            "time": "2012-04-22 13:27:40",
+            "time": "2012-04-22 11:27:40",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -310,6 +310,40 @@
                 "log",
                 "logging"
             ]
+        },
+        {
+            "name": "oyatel/twitter-async",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Oyatel/twitter-async",
+                "reference": "616b300460a705bda6c88bc81f0df30b50590059"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/Oyatel/twitter-async/zipball/616b300460a705bda6c88bc81f0df30b50590059",
+                "reference": "616b300460a705bda6c88bc81f0df30b50590059",
+                "shasum": ""
+            },
+            "time": "1332792746",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "classmap": [
+                    "./"
+                ]
+            },
+            "authors": [
+                {
+                    "name": "Even Andre Fiskvik",
+                    "email": "eaf@oyatel.com"
+                },
+                {
+                    "name": "Jaisen Mathai",
+                    "email": "jaisen@jmathai.com"
+                }
+            ],
+            "description": "Twitter-async is a high performance wrapper for Twitter's OAuth API which provides parallel/asynchronous calls. Follow @apiclient for commit updates"
         },
         {
             "name": "pimple/pimple",
@@ -1667,6 +1701,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "beberlei/tent-php": 20,
-        "zendframework/zend-escaper": 20
+        "zendframework/zend-escaper": 20,
+        "oyatel/twitter-async": 20
     }
 }

@@ -16,6 +16,7 @@
                     <a href="{{ path('homepage') }}" class="brand">Zelten</a>
                     <ul class="nav">
                         <li><a href="{{ path('bookmarks') }}">Bookmarks</a></li>
+                        <li><a href="{{ path('socialsync') }}">Social Sync</a></li>
                     </ul>
                     {% if app.session.get('entity_url') %}
                         <a href="{{ path('logout') }}" class="btn pull-right">Logout</a>

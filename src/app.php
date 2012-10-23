@@ -69,4 +69,14 @@ $app['tent.client'] = $app->share(function($app) {
     );
 });
 
+$app['twitter.options'] = array(
+    'key'    => null,
+    'secret' => null,
+);
+
+$app['twitter'] = $app->share(function($app) {
+    $options = $app['twitter.options'];
+    return new EpiTwitter($options['key'], $options['secret']);
+});
+
 return $app;

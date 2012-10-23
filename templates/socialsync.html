@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block title %}SocialSync{% endblock %}
+
+{% block content %}
+<h3>Synchronize your Tent with the outer world</h3>
+
+<p>
+    Every status post to your tent can be automatically sychronized with other social networks.
+</p>
+
+<p><a href="{{ path('socialsync_connect_twitter') }}" class="btn">Connect Twitter</a></p>
+{% endblock %}

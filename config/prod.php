@@ -19,3 +19,8 @@ $app['db.options'] = array(
     'dbname'   => envvar('DB_NAME', 'zelten'),
 );
 
+$app['twitter.options'] = array(
+    'key' => envvar('TWITTER_KEY', null),
+    'secret' => envvar('TWITTER_SECRET', null),
+);
+

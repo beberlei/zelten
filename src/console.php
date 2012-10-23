@@ -18,12 +18,14 @@ $console
         $fromSchema = $conn->getSchemaManager()->createSchema();
         $toSchema   = $app['tent.application_state']->createSchema();
 
-        $bookmarkStatsTable = $toSchema->createTable('bookmark_statistics');
-        $bookmarkStatsTable->addColumn('entity', 'string');
-        $bookmarkStatsTable->addColumn('last_login', 'datetime');
-        $bookmarkStatsTable->addColumn('login_count', 'integer', array('default' => 0));
-        $bookmarkStatsTable->addColumn('bookmarks', 'integer', array('default' => 0));
-        $bookmarkStatsTable->setPrimaryKey(array('entity'));
+        $userTable = $toSchema->createTable('users');
+        $userTable->addColumn('entity', 'string');
+        $userTable->addColumn('twitter_oauth_token', 'string', array('notnull' => false));
+        $userTable->addColumn('twitter_oauth_secret', 'string', array('notnull' => false));
+        $userTable->addColumn('last_login', 'datetime');
+        $userTable->addColumn('login_count', 'integer', array('default' => 0));
+        $userTable->addColumn('bookmarks', 'integer', array('default' => 0));
+        $userTable->setPrimaryKey(array('entity'));
 
         $comp = new Comparator();
         $diff = $comp->compare($fromSchema, $toSchema);
