@@ -92,6 +92,10 @@ class Bookmark
 
     public function setImage($image)
     {
+        if ($image && !getimagesize($image)) {
+            $image = null;
+        }
+
         $this->image = $image;
     }
 
@@ -174,6 +178,7 @@ class Bookmark
     {
         $metadata->addPropertyConstraint('url', new Assert\Url(array('message' => 'Invalid url given.')));
         $metadata->addPropertyConstraint('title', new Assert\NotBlank(array('message' => 'Title has to be non-empty.')));
+        $metadata->addPropertyConstraint('image', new Assert\Url(array('message' => 'Image is not a valid url.')));
     }
 }
 

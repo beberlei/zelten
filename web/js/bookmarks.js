@@ -51,24 +51,22 @@ var BookmarkView = Backbone.View.extend({
 var BookmarkList = Backbone.View.extend({
     initialize: function() {
         this.collection.bind('reset', _.bind(this.addAll, this));
+        this.collection.bind('add', _.bind(this.prependTo, this));
     },
     addAll: function() {
         this.$el.html('');
         this.collection.each(_.bind(this.addOne, this));
     },
-    addOne: function(bookmark) {
-        var view = new BookmarkView({
+    createView: function(bookmark) {
+        return new BookmarkView({
             model: bookmark
         });
-
-        this.$el.append(view.render());
+    },
+    addOne: function(bookmark) {
+        this.$el.append(this.createView(bookmark).render());
     },
     prependTo: function(bookmark) {
-        var view = new BookmarkView({
-            model: bookmark
-        });
-
-        this.$el.prepend(view.render());
+        this.$el.prepend(this.createView(bookmark).render());
     }
 });
 
@@ -98,6 +96,7 @@ var BookmarkApplication = Backbone.View.extend({
         }
 
         var bookmark = new Bookmark({
+            entity: Zelten.entity,
             content: {
                 url: $("#bookmark_url").val(),
                 title: $("#bookmark_title").val(),

@@ -26,20 +26,20 @@ $app->get('/bookmarks', function (Request $request) use ($app) {
         return new RedirectResponse($app['url_generator']->generate('homepage'));
     }
 
-    $client = $app['tent.client']->getUserClient($entityUrl);
-
+    $client   = $app['tent.client']->getUserClient($entityUrl);
     $criteria = array('post_types' => 'http://www.beberlei.de/tent/bookmark/v0.0.1');
 
     $status = $request->query->get('mode', 'my');
+
     if ($status == 'my') {
         $criteria['entity'] = $entityUrl;
     }
 
     $posts = $client->getPosts(new TentPHP\PostCriteria($criteria));
 
-    $posts = array_filter($posts, function ($post) use($entityUrl, $status) {
+    $posts = array_values(array_filter($posts, function ($post) use($entityUrl, $status) {
         return !($status == 'public' && isset($post['permissions']['public']) && !$post['permissions']['public']);
-    });
+    }));
 
     $app['db']->executeUpdate('UPDATE bookmark_statistics SET bookmarks = ? WHERE entity = ?', array(count($posts), $entityUrl));
 
