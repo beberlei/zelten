@@ -9,15 +9,25 @@
         <meta http-equiv='Content-Type' content='Type=text/html; charset=utf-8'>
     </head>
     <body>
+
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a href="{{ path('homepage') }}" class="brand">Zelten</a>
+                    <ul class="nav">
+                        <li><a href="{{ path('bookmarks') }}">Bookmarks</a></li>
+                    </ul>
+                    {% if app.session.get('entity_url') %}
+                        <a href="{{ path('logout') }}" class="btn pull-right">Logout</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <div class="row">
                 <div class="span8 offset2">
                     <div class="content">
-                        <div class="header">
-                            <h1>Zelten Bookmarks</h1>
-                            <p>A tent.io bookmarking service</p>
-                        </div>
-
                         <div class="errors"></div>
 
                         {% block content %}{% endblock %}

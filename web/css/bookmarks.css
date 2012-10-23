@@ -1,8 +1,8 @@
 body {
     margin: 0px;
     font-family: 'Overlock', cursive;
+    padding: 60px;
 }
-
 .image_picker {
     margin-left: 10px;
     border: 1px solid #000;

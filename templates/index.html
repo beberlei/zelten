@@ -7,11 +7,19 @@
     <div class="span8">
         <h3>Get started</h3>
 
+        {% if app.session.get('entity_url') %}
+        <p>
+            You are logged in as <strong>{{ app.session.get('entity_url') }}</strong>.
+            <a href="{{ path('bookmarks') }}">Continue to bookmarks</a>.
+        </p>
+
+        {% else %}
         <form method="post" action="{{ path('login') }}" class="form-inline">
             <input type="text" name="entity_url" size="60" placeholder="Your Tent Username or URL" class="span6" />
             <input type="submit" class="btn btn-primary" value="Login" />
             <a href="https://tent.is" class="btn">Register</a>
         </form>
+        {% endif %}
     </div>
 </div>
 

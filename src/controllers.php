@@ -169,6 +169,11 @@ $app->post('/bookmarks', function(Request $request) use ($app) {
 
 })->bind('save_bookmark');
 
+$app->get('/logout', function() use ($app) {
+    $entityUrl = $app['session']->set('entity_url', null);
+    return new RedirectResponse($app['url_generator']->generate('homepage'));
+})->bind('logout');
+
 $app->post('/login', function (Request $request) use ($app) {
     $entityUrl = $app['session']->get('entity_url');
 
