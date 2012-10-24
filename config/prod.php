@@ -24,3 +24,6 @@ $app['twitter.options'] = array(
     'secret' => envvar('TWITTER_SECRET', null),
 );
 
+// CHANGE!!!
+$app['appsecret'] = envvar('APPSECRET', 'OoH8eevahThahyiinge');
+

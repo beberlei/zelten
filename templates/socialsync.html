@@ -9,5 +9,12 @@
     Every status post to your tent can be automatically sychronized with other social networks.
 </p>
 
-<p><a href="{{ path('socialsync_connect_twitter') }}" class="btn">Connect Twitter</a></p>
+<p>
+    {% if twitter_connected %}
+    <a href="#" class="btn btn-success">Twitter is connected</a>
+    {% else %}
+    <a href="{{ path('socialsync_connect_twitter') }}" class="btn">Connect Twitter</a>
+    {% endif %}
+</p>
+
 {% endblock %}
