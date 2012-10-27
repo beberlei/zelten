@@ -306,12 +306,15 @@ $app->post('/hook', function(Request $request) use ($app) {
     // do stuff! hacked now. make it event listener and such
     $userRow = $app['db']->fetchAssoc('SELECT * FROM users WHERE entity = ?', array($entityUrl));
     if ($userRow && $post['type'] == 'https://tent.io/types/post/status/v0.1.0') {
+        $sync    = strpos($post['content']['text'], '#social') !== false;
+        $message = str_replace('#social', '', $post['content']['text']);
+
         $hasTwitter = $userRow['twitter_oauth_token'] && $userRow['twitter_oauth_secret'];
 
-        if ($hasTwitter) {
+        if ($sync && $hasTwitter) {
             $twitter = $app['twitter'];
             $twitter->setTokens($userRow['twitter_oauth_token'], $userRow['twitter_oauth_secret']);
-            $twitter->post('statuses/update', array('status' => $post['content']['text']));
+            $twitter->post('statuses/update', array('status' => $message));
         }
     }
 
