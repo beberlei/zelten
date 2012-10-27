@@ -25,8 +25,8 @@ $app->register(new TranslationServiceProvider(), array(
 ));
 $app->register(new TentServiceProvider(), array(
     'tent.application.options' => array(
-        'name'          => 'Zelten Bookmarks',
-        'description'   => 'Save, share and manage your bookmarks using your Tent Profile',
+        'name'          => 'Zelten',
+        'description'   => 'Bookmarks, Social Sync and other Tent related services',
         'url'           => 'http://zelten.eu1.frbit.net/login',
         'redirect_uris' => array(
             'http://zelten.eu1.frbit.net/oauth/accept',
@@ -34,8 +34,8 @@ $app->register(new TentServiceProvider(), array(
             'http://zelten/index_dev.php/oauth/accept',
         ),
         'scopes'        => array(
-            'read_posts'  => 'Read Bookmarks from your Tent Account',
-            'write_posts' => 'Add and update Bookmarks',
+            'read_posts'  => 'Read Posts',
+            'write_posts' => 'Write Posts',
         ),
     )
 ));
