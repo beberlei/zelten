@@ -22,7 +22,7 @@
         "guzzle/guzzle": "*",
         "beberlei/tent-php": "dev-master",
         "zendframework/zend-escaper": "dev-master",
-        "oyatel/twitter-async": "dev-master"
+         "ruudk/twitter-oauth": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {

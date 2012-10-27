@@ -60,7 +60,7 @@ $app['twitter.options'] = array(
 
 $app['twitter'] = $app->share(function($app) {
     $options = $app['twitter.options'];
-    return new EpiTwitter($options['key'], $options['secret']);
+    return new \TwitterOAuth\Api($options['key'], $options['secret']);
 });
 
 return $app;

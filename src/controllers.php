@@ -192,7 +192,19 @@ $app->get('/socialsync/connect/twitter', function() use ($app) {
     }
 
     $twitter = $app['twitter'];
-    return new RedirectResponse($twitter->getAuthenticateUrl());
+
+    $request_token = $twitter->getRequestToken($app['url_generator']->generate('socialsync_accept_twitter', array(), true));
+
+    $token = $request_token['oauth_token'];
+    $app['session']->set('tw_oauth_token', $token);
+    $app['session']->set('tw_oauth_token_secret', $request_token['oauth_token_secret']);
+
+    switch ($twitter->http_code) {
+      case 200:
+        return new RedirectResponse($twitter->getAuthorizeURL($token));
+      default:
+        return new RedirectResponse($app['url_generator']->generate('homepage'));
+    }
 })->bind('socialsync_connect_twitter');
 
 $app->get('/socialsync/oauth/accept/twitter', function(Request $request) use ($app) {
@@ -202,16 +214,20 @@ $app->get('/socialsync/oauth/accept/twitter', function(Request $request) use ($a
         return new RedirectResponse($app['url_generator']->generate('homepage'));
     }
 
+    $token = $request->query->get('oauth_token');
+    if ($token !== $app['session']->get('tw_oauth_token')) {
+        return new RedirectResponse($app['url_generator']->generate('homepage'));
+    }
+
     $twitter = $app['twitter'];
-    $twitter->setToken($request->query->get('oauth_token'));
-    $token = $twitter->getAccessToken();
-    $twitter->setToken($token->oauth_token, $token->oauth_token_secret);
+    $twitter->setTokens($token, $app['session']->get('tw_oauth_token_secret'));
+    $accessToken = $twitter->getAccessToken($request->query->get('oauth_verifier'));
 
     $query = "UPDATE users SET twitter_oauth_token = ?, twitter_oauth_secret = ? WHERE entity = ?";
-    $app['db']->executeUpdate($query, array($token->oauth_token, $token->oauth_token_secret, $entityUrl));
+    $app['db']->executeUpdate($query, array($accessToken['oauth_token'], $accessToken['oauth_token_secret'], $entityUrl));
 
     return new RedirectResponse($app['url_generator']->generate('socialsync'));
-});
+})->bind('socialsync_accept_twitter');
 
 $app->get('/logout', function() use ($app) {
     $entityUrl = $app['session']->set('entity_url', null);
@@ -294,8 +310,8 @@ $app->post('/hook', function(Request $request) use ($app) {
 
         if ($hasTwitter) {
             $twitter = $app['twitter'];
-            $twitter->setToken($userRow['twitter_oauth_token'], $userRow['twitter_oauth_secret']);
-            $twitter->post_statusesUpdate(array('status' => $post['content']['text']));
+            $twitter->setTokens($userRow['twitter_oauth_token'], $userRow['twitter_oauth_secret']);
+            $twitter->post('statuses/update', array('status' => $post['content']['text']));
         }
     }
 
