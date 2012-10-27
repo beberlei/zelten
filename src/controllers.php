@@ -284,7 +284,7 @@ $app->get('/oauth/accept', function(Request $request) use ($app) {
 })->bind('oauth_accept');
 
 $app->post('/hook', function(Request $request) use ($app) {
-    $post       = json_decode($request->getContent(), true);
+    $post      = json_decode($request->getContent(), true);
     $entityUrl = $post['entity'];
 
     if ($request->query->get('hash') !== hash_hmac('sha256', $post['entity'], $app['appsecret'])) {
@@ -316,7 +316,7 @@ $app->post('/hook', function(Request $request) use ($app) {
     }
 
     return new Response('', 201);
-});
+})->bind('hook');
 
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {
