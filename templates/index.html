@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Bookmarks{% endblock %}
+{% block title %}Tent Services{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -10,7 +10,7 @@
         {% if app.session.get('entity_url') %}
         <p>
             You are logged in as <strong>{{ app.session.get('entity_url') }}</strong>.
-            <a href="{{ path('bookmarks') }}">Continue to bookmarks</a>.
+            <a href="{{ path('bookmarks') }}">Continue</a>.
         </p>
 
         {% else %}
@@ -38,7 +38,9 @@
 
         <p>
             Zelten Bookmarks saves bookmarks on your tent server. You have full control over all
-            the bookmark data. Except authentication and aggregate numbers Zelten saves no data itself.
+            the bookmark data. Except authentication (encrpyted) and aggregate numbers we save no data.
+            There are <strong>{{ stats.total_users }}</strong> users on Zelten Bookmarks managing
+            a total of <strong>{{ stats.total_bookmarks }}</strong> bookmarks.
         </p>
     </div>
 </div>
@@ -55,11 +57,10 @@
     </div>
 
     <div class="span4">
-        <h3>Statistics</h3>
+        <h3>SocialSync</h3>
 
-        <p>There are <strong>{{ stats.total_users }}</strong> users on Zelten Bookmarks managing
-            a total of <strong>{{ stats.total_bookmarks }}</strong> bookmarks.
-        </p>
+        <p>You can connect your Twitter account to this application and automatically push
+            tent status posts to Twitter.</p>
     </div>
 </div>
 
