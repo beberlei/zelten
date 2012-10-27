@@ -292,7 +292,7 @@ $app->post('/hook', function(Request $request) use ($app) {
     }
 
     $client = $app['tent.client']->getUserClient($post['entity']);
-    $client->validateMacAuthorizationHeader($app['url_generator']->generate('hook'));
+    #$client->validateMacAuthorizationHeader($app['url_generator']->generate('hook'));
 
     $serverPost = $client->getPost($post['id']);
 
