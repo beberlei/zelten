@@ -16,12 +16,12 @@ $console
     ->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
         $conn       = $app['db'];
         $fromSchema = $conn->getSchemaManager()->createSchema();
-        $toSchema   = $app['tent.application_state']->createSchema();
+        $toSchema   = $app['tent.user_storage']->createSchema();
 
         $userTable = $toSchema->createTable('users');
         $userTable->addColumn('entity', 'string');
-        $userTable->addColumn('twitter_oauth_token', 'string', array('notnull' => false));
-        $userTable->addColumn('twitter_oauth_secret', 'string', array('notnull' => false));
+        $userTable->addColumn('twitter_oauth_token', 'tentecstring', array('notnull' => false));
+        $userTable->addColumn('twitter_oauth_secret', 'tentecstring', array('notnull' => false));
         $userTable->addColumn('last_login', 'datetime');
         $userTable->addColumn('login_count', 'integer', array('default' => 0));
         $userTable->addColumn('bookmarks', 'integer', array('default' => 0));
@@ -45,7 +45,6 @@ $console
         $serverUrl = $input->getArgument('server');
         $client = $app['tent.client'];
         $client->updateApplication($serverUrl);
-        var_dump($client->getApplication($serverUrl));
     });
 
 return $console;

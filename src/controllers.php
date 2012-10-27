@@ -275,7 +275,9 @@ $app->post('/hook', function(Request $request) use ($app) {
         return new Response('', 403);
     }
 
-    $client     = $app['tent.client']->getUserClient($post['entity']);
+    $client = $app['tent.client']->getUserClient($post['entity']);
+    $client->validateMacAuthorizationHeader($app['url_generator']->generate('hook'));
+
     $serverPost = $client->getPost($post['id']);
 
     if ($serverPost['content'] != $post['content'] ||
@@ -306,7 +308,6 @@ $app->error(function (\Exception $e, $code) use ($app) {
     }
 
     $page = 404 == $code ? '404.html' : '500.html';
-    syslog(LOG_INFO, "Zelten Error: " . $e->getMessage());
 
     return new Response($app['twig']->render($page, array('code' => $code)), $code);
 });

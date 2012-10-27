@@ -8,6 +8,7 @@ use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
+use TentPHP\Silex\TentServiceProvider;
 
 $app = new Application();
 $app->register(new DoctrineServiceProvider(), array(
@@ -22,6 +23,22 @@ $app->register(new DoctrineServiceProvider(), array(
 $app->register(new TranslationServiceProvider(), array(
     'locale_fallback' => 'en',
 ));
+$app->register(new TentServiceProvider(), array(
+    'tent.application.options' => array(
+        'name'          => 'Zelten Bookmarks',
+        'description'   => 'Save, share and manage your bookmarks using your Tent Profile',
+        'url'           => 'http://zelten.eu1.frbit.net/login',
+        'redirect_uris' => array(
+            'http://zelten.eu1.frbit.net/oauth/accept',
+            'http://zelten/oauth/accept',
+            'http://zelten/index_dev.php/oauth/accept',
+        ),
+        'scopes'        => array(
+            'read_posts'  => 'Read Bookmarks from your Tent Account',
+            'write_posts' => 'Add and update Bookmarks',
+        ),
+    )
+));
 $app->register(new FormServiceProvider());
 $app->register(new SessionServiceProvider());
 $app->register(new UrlGeneratorServiceProvider());
@@ -35,39 +52,6 @@ $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
 
     return $twig;
 }));
-
-$app['tent.application.options'] = array(
-    'name'          => 'Zelten Bookmarks',
-    'description'   => 'Save, share and manage your bookmarks using your Tent Profile',
-    'url'           => 'http://zelten.eu1.frbit.net/login',
-    'redirect_uris' => array(
-        'http://zelten.eu1.frbit.net/oauth/accept',
-        'http://zelten/oauth/accept',
-        'http://zelten/index_dev.php/oauth/accept',
-    ),
-    'scopes'        => array(
-        'read_posts'  => 'Read Bookmarks from your Tent Account',
-        'write_posts' => 'Add and update Bookmarks',
-    ),
-);
-
-$app['tent.application'] = $app->share(function($app) {
-    return new TentPHP\Application($app['tent.application.options']);
-});
-
-$app['tent.application_state'] = $app->share(function ($app) {
-    return new TentPHP\DBAL\DoctrineDBALState($app['db']);
-});
-
-$app['tent.client'] = $app->share(function($app) {
-    $httpClient = new Guzzle\Http\Client();
-
-    return new TentPHP\Client(
-        $app['tent.application'],
-        $httpClient,
-        $app['tent.application_state']
-    );
-});
 
 $app['twitter.options'] = array(
     'key'    => null,

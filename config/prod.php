@@ -26,4 +26,5 @@ $app['twitter.options'] = array(
 
 // CHANGE!!!
 $app['appsecret'] = envvar('APPSECRET', 'OoH8eevahThahyiinge');
+TentPHP\DBAL\DoctrineUserStorage::registerTentEncryptionStringType($app['appsecret']);
 
