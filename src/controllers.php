@@ -307,6 +307,8 @@ $app->error(function (\Exception $e, $code) use ($app) {
         return;
     }
 
+    error_log(get_class($e) . ": " . $e->getMessage());
+
     $page = 404 == $code ? '404.html' : '500.html';
 
     return new Response($app['twig']->render($page, array('code' => $code)), $code);
