@@ -10,11 +10,7 @@ class BookmarkParser
 {
     public function enrich(Bookmark $bookmark, $pageContent)
     {
-        $dom = new DOMDocument();
-        libxml_use_internal_errors(true);
-        $dom->loadHtml($pageContent);
-        libxml_clear_errors();
-        libxml_use_internal_errors(false);
+        $dom = $this->createDocument($pageContent);
 
         $openGraphProperties = $this->extractOpenGraphProperties($dom);
 
@@ -34,11 +30,8 @@ class BookmarkParser
             if (isset($openGraphProperties['og:image'])) {
                 $bookmark->setImage($openGraphProperties['og:image']);
             } else {
-                $images = $this->extractAllImages($bookmark->getUrl(), $dom);
-
-                if (isset($images[0])) {
-                    $bookmark->setImage($images[0]);
-                }
+                $favicon = $this->extractFavIcon($bookmark->getUrl(), $dom);
+                $bookmark->setImage($favicon);
             }
         }
 
@@ -93,6 +86,50 @@ class BookmarkParser
         $bookmark->setContent($content);
     }
 
+    public function extractFavIcon($pageUrl, $pageContent)
+    {
+        if ($pageContent instanceof DOMDocument) {
+            $dom = $pageContent;
+        } else {
+            $dom = $this->createDocument($pageContent);
+        }
+
+        $parts = parse_url($pageUrl);
+
+        if (!isset($parts['path'])) {
+            $parts['path'] = '';
+        }
+
+        $port  = isset($parts['port']) ? ":" . $parts['port'] : "";
+        $hostUrl = $parts['scheme'] . "://" . $parts['host'] . $port;
+        $baseUrl = $hostUrl . dirname($parts['path']) . '/';
+
+        $linkElements = $dom->getElementsByTagName('link');
+
+        foreach ($linkElements as $linkElement) {
+            if ( ! $linkElement->hasAttribute('rel')) {
+                continue;
+            }
+
+            if (strpos($linkElement->getAttribute('rel'), 'icon') === false) {
+                continue;
+            }
+
+            $favicon = $linkElement->getAttribute('href');
+            if (strpos($favicon, 'http') === 0) {
+                return $favicon;
+            }
+
+            if (strpos($favicon, '/') === 0) {
+                return $hostUrl . $favicon;
+            } else {
+                return $baseUrl . $favicon;
+            }
+        }
+
+        return $hostUrl . '/favicon.ico';
+    }
+
     /**
      * Extract all images from a DOMDocument and make them absolute
      *
@@ -105,11 +142,7 @@ class BookmarkParser
         if ($pageContent instanceof DOMDocument) {
             $dom = $pageContent;
         } else {
-            $dom = new DOMDocument();
-            libxml_use_internal_errors(true);
-            $dom->loadHtml($pageContent);
-            libxml_clear_errors();
-            libxml_use_internal_errors(false);
+            $dom = $this->createDocument($pageContent);
         }
 
         $imageElements = $dom->getElementsByTagName('img');
@@ -174,6 +207,22 @@ class BookmarkParser
             }
             return $value;
         }, $properties);
+    }
+
+    /**
+     * Safely create a DOMDocument
+     *
+     * @return DOMDocument
+     */
+    private function createDocument($pageContent)
+    {
+        $dom = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHtml($pageContent);
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
+
+        return $dom;
     }
 }
 

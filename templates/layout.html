@@ -4,36 +4,58 @@
         <title>{% block title '' %} - Zelten</title>
 
         <link href="http://fonts.googleapis.com/css?family=Overlock" rel="stylesheet" type="text/css" />
-        <link href="{{ app.request.basepath }}/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="{{ app.request.basepath }}/css/bookmarks.css?v=2" rel="stylesheet" type="text/css" />
+        <link href="{{ app.request.basepath }}/bootstrap/css/bootstrap.min.css?v=3" rel="stylesheet" type="text/css" />
+        <link href="{{ app.request.basepath }}/css/bookmarks.css?v=3" rel="stylesheet" type="text/css" />
+        <link href="{{ app.request.basepath }}/font-awesome/css/font-awesome.css?v=3" rel="stylesheet" type="text/css" />
         <meta http-equiv='Content-Type' content='Type=text/html; charset=utf-8'>
     </head>
     <body>
 
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
-                <div class="container">
+                <div class="container-fluid">
                     <a href="{{ path('homepage') }}" class="brand">Zelten</a>
-                    <ul class="nav">
-                        <li><a href="{{ path('bookmarks') }}">Bookmarks</a></li>
-                        <li><a href="{{ path('socialsync') }}">Social Sync</a></li>
-                    </ul>
                     {% if app.session.get('entity_url') %}
-                        <a href="{{ path('logout') }}" class="btn pull-right">Logout</a>
+                    <div class="pull-right">
+                        <span class="help-inline"><strong>{{ app.session.get('entity_url') }}</strong></span>
+                        <a href="{{ path('logout') }}" class="btn"><i class="icon-signout"></i> Logout</a>
+                    </div>
                     {% endif %}
                 </div>
             </div>
         </div>
 
-        <div class="container">
-            <div class="row">
-                <div class="span8 offset2">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2">
+                    {% if app.session.get('entity_url') %}
+                    <ul class="sidebar">
+                        {#<li><i class="icon-inbox"></i> Messages</li>
+                        <li><i class="icon-user"></i> Profile</li>#}
+                        <li><a href="{{ path('bookmarks') }}"><i class="icon-link"></i> Bookmarks</a></li>
+                        {#<li><i class="icon-camera-retro"></i> Photos</li>
+                        <li><i class="icon-group"></i> Groups</li>#}
+                        <li><a href="{{ path('socialsync') }}"><i class="icon-random"></i> SocialSync</a></li>
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <div class="span8">
                     <div class="content">
                         <div class="errors"></div>
 
                         {% block content %}{% endblock %}
                     </div>
                 </div>
+            </div>
+
+            <div class="row-fluid">
+                <footer>
+                    <div class="span12">
+                        Developed by <a href="https://beberlei.tent.is">^beberlei</a>.
+                        Please sent Feedback on Tent
+                    </div>
+                </footer>
             </div>
         </div>
 
@@ -52,7 +74,7 @@
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/underscore-min.js"></script>
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/backbone-min.js"></script>
-        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/bookmarks.js?v=2"></script>
+        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/bookmarks.js?v=3"></script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

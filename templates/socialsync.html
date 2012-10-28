@@ -12,9 +12,9 @@
 
 <p>
     {% if twitter_connected %}
-    <a href="#" class="btn btn-success">Twitter is connected</a>
+    <a href="#" class="btn btn-success"><i class="icon-twitter"></i> Twitter is connected</a>
     {% else %}
-    <a href="{{ path('socialsync_connect_twitter') }}" class="btn">Connect Twitter</a>
+    <a href="{{ path('socialsync_connect_twitter') }}" class="btn"><i class="icon-twitter"></i> Connect Twitter</a>
     {% endif %}
 </p>
 

@@ -1,5 +1,5 @@
 var Bookmark = Backbone.Model.extend({
-    urlRoot: '/bookmarks',
+    urlRoot: '/bookmarks/',
     defaults: {
         content: {url: '#', title:'No title', description: ''}
     }
@@ -10,7 +10,7 @@ var BookmarksCollection = Backbone.Collection.extend({
         if (typeof(args) != 'undefined' && args.filterMode) {
             var filter = (args.filterMode.length > 0) ? ('?' + args.filterMode) : '';
             this.url = function() {
-                return '/bookmarks' + filter;
+                return '/bookmarks/' + filter;
             }
         }
     },
@@ -74,13 +74,17 @@ var BookmarkApplication = Backbone.View.extend({
     currentImages: [],
     currentImage: 0,
     events: {
+        'keypress #bookmark_url': 'bookmarkKeyPress',
         'click .url-load': 'addBookmark',
-        'click .image-forward': 'imageForward',
-        'click .image-backward': 'imageBackward',
-        'click .image-none': 'imageNone',
         'submit form.add': 'saveBookmark',
         'click a.reset': 'resetForm',
         'click #tabs a': 'clickTab'
+    },
+    bookmarkKeyPress: function(e) {
+         if (e.which == 13){
+             this.addBookmark(e);
+             return false;
+         }
     },
     resetForm: function() {
         this.$el.find('form.add').each(function() { this.reset(); });
@@ -124,55 +128,47 @@ var BookmarkApplication = Backbone.View.extend({
         var template = _.template($("#error-message").html());
         $(".errors").html(template(errors));
     },
-    imageNone: function() {
-        this.$el.find('.image_picker').html('');
-        this.$el.find('#bookmark_image').val('');
-    },
-    imageForward: function() {
-        this.currentImage++;
-        this.displayImage();
-        return false;
-    },
-    imageBackward: function() {
-        this.currentImage--;
-        this.displayImage();
-        return false;
-    },
-    displayImage: function() {
-        var url = this.currentImages[this.currentImage];
+    showBookmarkDetails: function(data) {
+        $("#bookmark_url").removeClass('bookmark-url-loading');
 
-        if (typeof(this.currentImages[this.currentImage-1]) == 'undefined') {
-            this.$el.find('.image-backward').attr('disable', true);
+        this.$el.find('.details').slideDown();
+        for (var key in data) {
+            this.$el.find('#bookmark_' + key).val(data[key]);
         }
+    },
+    validateUrl: function(url) {
+        var el = document.createElement('a');
+        el.href = url;
 
-        if (typeof(this.currentImages[this.currentImage+1]) == 'undefined') {
-            this.$el.find('.image-forward').attr('disable', true);
-        }
-
-        if (typeof(url) == 'undefined' || url.length == 0) {
+        if (el.protocol.indexOf('http') == -1 && el.protocol.indexOf('https') == -1) {
             return false;
         }
 
-        this.$el.find("#bookmark_image").val(url);
-
-        var image = $("<img />");
-        image.attr('src', url)
-             .attr('width', 100).
-             attr('height', 100);
-        this.$el.find('.image_picker').html(image);
-
-    },
-    showBookmarkDetails: function(data) {
-        this.$el.find('.details').slideDown();
-        for (var key in data.bookmark) {
-            this.$el.find('#bookmark_' + key).val(data['bookmark'][key]);
+        if (el.hostname.indexOf('.') == -1) {
+            return false;
         }
-        this.currentImages = data.images;
-        this.currentImage = 0;
-        this.displayImage();
+
+        return true;
     },
     addBookmark: function(e) {
-        var url = this.$el.find('input.url').val();
+        var el  = $(e.currentTarget);
+        var url = el.val();
+
+        if (url.indexOf('http') == -1) {
+            url = url = 'http://' + url;
+        }
+
+        if (!this.validateUrl(url)) {
+            return false;
+        }
+
+        if (url == $(el).data('last-value')) {
+            return false;
+        }
+
+        el.data('last-value', url);
+        el.addClass('bookmark-url-loading');
+
         $.ajax({
             url: '/bookmarks/parse?url=' + url,
             type: 'GET',
@@ -180,12 +176,14 @@ var BookmarkApplication = Backbone.View.extend({
             success: _.bind(this.showBookmarkDetails, this),
             error: _.bind(this.onBookmarkParseError, this)
         });
+
         return false;
     },
     onBookmarkParseError: function() {
         this.showErrorMessage({
             messages: ['Invalid url or the entered page returns something other than a valid result.']}
         );
+        $("#bookmark_url").removeClass('bookmark-url-loading');
     },
     initialize: function() {
         this.myBookmarks = new BookmarkList({

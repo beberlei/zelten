@@ -4,58 +4,52 @@
 
 {% block content %}
 <div id="bookmarks">
-    <form class="bookmark-add add" method="post" action="{{ path('save_bookmark') }}">
-        <div class="form-inline">
-            {{ form_widget(form.url, {'attr': {'class': 'url span7'}}) }}
-            <a href="#" class="url-load btn pull-right">Fetch</a>
-        </div>
-
-        <div class="details form-horizontal" style="display:none">
-            <div class="row">
-                <div class="span6">
-                    <div class="control-group">
-                        <label for="bookmark_title" class="control-label">Title</label>
-                        <div class="controls">
-                            {{ form_widget(form.title, {'attr': {'class': 'span4'}}) }}
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label for="bookmark_description" class="control-label">Description</label>
-                        <div class="controls">
-                            {{ form_widget(form.description, {'attr': {'class': 'span4'}}) }}
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label for="bookmark_privacy" class="control-label">Privacy</label>
-                        <div class="controls">
-                            {{ form_widget(form.privacy, {'attr': {'class': 'span4'}}) }}
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <div class="controls">
-                            <input type="submit" value="Save" class="btn btn-primary" />
-                            <a href="#" class="btn reset">Reset</a>
-                        </div>
-                    </div>
-
-                    {{ form_rest(form) }}
-                </div>
-                <div class="span2">
-                    <div class="image_picker"></div>
-                    <div class="image_picker_controls">
-                        <a class="btn image-backward"><i class="icon-backward"></i></a>
-                        <a class="btn image-forward"><i class="icon-forward"></i></a>
-                        <a class="btn image-none"><i class="icon-remove"></i> No image</a>
+    <div class="box box-highlight">
+        <div class="box-content">
+            <form class="add" method="post" action="{{ path('save_bookmark') }}">
+                <div class="form-inline row-fluid">
+                    <div class="span12">
+                    {{ form_widget(form.url, {'attr': {'class': 'url span12', 'placeholder': 'Enter a Link'}}) }}
                     </div>
                 </div>
-            </div>
 
+                <div class="row-fluid details form-horizontal" style="display:none">
+                    <div class="span12">
+                        <div class="control-group">
+                            <label for="bookmark_title" class="control-label">Title</label>
+                            <div class="controls">
+                                {{ form_widget(form.title, {'attr': {'class': 'span12'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="bookmark_description" class="control-label">Description</label>
+                            <div class="controls">
+                                {{ form_widget(form.description, {'attr': {'class': 'span12'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="bookmark_privacy" class="control-label">Privacy</label>
+                            <div class="controls">
+                                {{ form_widget(form.privacy, {'attr': {'class': 'span12'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="controls">
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                                <a href="#" class="btn reset">Reset</a>
+                            </div>
+                        </div>
+
+                        {{ form_rest(form) }}
+                    </div>
+                </div>
+
+            </form>
         </div>
-
-    </form>
+    </div>
 
     <ul class="nav nav-tabs" id="tabs">
         <li class="active"><a href="#my" data-toggle="tab">My Bookmarks</a></li>
@@ -74,29 +68,35 @@
 </div>
 
 <script type="text/html" id="bookmark-template">
-<div class="bookmark">
-    <div class="row">
-        <div class="span6">
-            <% if (content.image) { %><img style="float:left; margin-right: 8px;" src="<%- content.image %>" width="100" /><% } %>
-
-            <p>
-                <a class="link" href="<%- content.url %>" target="_blank"><%- content.title %></a> <small><%- content.site_name %></small>
-            </p>
-
-            <p>
-                <%- content.description %>
-            </p>
-
-            <% if (!isOwner) { %>
-                <p><small><a href="<%- entity %>" target="_blank"><%- entity %></a>
-                    on <%- publishedDate.toLocaleDateString() %></small></p>
-            <% } %>
-        </div>
-        <div class="span2">
-            <div class="pull-right">
-                <a href="<%- content.url %>" target="_blank" class="btn"><i class="icon-eye-open"></i> Read</a>
-                <% if (isOwner) { %><a href="#" class="bookmark-delete btn btn-danger"><i class="icon-trash"></i></a><% } %>
+    <div class="bookmark box">
+    <div class="box-content">
+        <div class="item-menu">
+            <div class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-caret-down"></i></a>
+                <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                    <li><a href="<%- content.url %>" target="_blank"><i class="icon-eye-open"></i> Read Bookmark</a></li>
+                    <% if (isOwner) { %><li><a href="#" class="bookmark-delete"><i class="icon-trash"></i> Delete Bookmark</a></li><% } %>
+                </ul>
             </div>
+        </div>
+
+
+        <p>
+            <a class="link" href="<%- content.url %>" target="_blank">
+                <% if (content.image) { %><img src="<%- content.image %>" width="16" height="16" /><% } %>
+                <%- content.title %>
+            </a> <small><%- content.site_name %></small>
+        </p>
+
+        <p>
+            <%- content.description %>
+        </p>
+
+        <% if (!isOwner) { %>
+            <p><small><a href="<%- entity %>" target="_blank"><%- entity %></a>
+                on <%- publishedDate.toLocaleDateString() %></small></p>
+        <% } %>
+        <div class="pull-right">
         </div>
     </div>
 </div>

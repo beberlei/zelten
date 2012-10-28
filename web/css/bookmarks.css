@@ -1,30 +1,78 @@
 body {
     margin: 0px;
-    font-family: 'Overlock', cursive;
     padding: 60px;
 }
-.image_picker {
-    margin-left: 10px;
-    border: 1px solid #000;
-    background-color: #fff;
-    height: 100px;
-    width: 100px;
+.sidebar, .navbar {
+    font-family: 'Overlock', cursive;
 }
-.image_picker_controls {
-    margin-left: 16px;
+.logindetails span {
+    padding-top: 4px;
+    margin-top: 4px;
+    display: block;
+    font-weight: bold;
+}
+.box {
+    border: 1px solid #C4C4C4;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+.box-highlight {
+    background-color: #f9f9f9;
+}
+.box-content {
+    padding: 4px;
+}
+.item-menu {
+    float: right;
+}
+.item-menu .dropdown-toggle {
+    font-size: 14px;
+    border: 1px solid #c4c4c4;
+    border-radius: 4px;
+}
+.item-menu a {
+    text-decoration: none;
+}
+.bookmark-image {
+    float: left;
+}
+.bookmark-with-image {
+    min-height: 100px;
 }
 
-.bookmark-add {
-    background-color: #f2f2f2;
+.bookmark-url-loading {
+    background-color: #f4f4f4;
 }
 
 .bookmark {
     border-top: 1px solid #DDDDDD;
 }
-.bookmark:nth-child(2n+1) {
-    background-color: #f9f9f9;
-}
+
 .bookmark .link {
     font-weight: bold;
     font-size: 120%;
+}
+.sidebar li {
+    list-style-type: none;
+    height: 28px;
+    display: block;
+    margin-bottom: 16px;
+    font-weight: bold;
+    color: #777;
+}
+.sidebar li:hover {
+    color: #000;
+}
+.sidebar i {
+    font-size: 32px;
+    align: center;
+}
+.sidebar a:hover {
+    text-decoration: none;
+}
+
+footer {
+    text-align: center;
+    font-size: 8pt;
+    color: #777777;
 }

@@ -3,16 +3,11 @@
 {% block title %}Tent Services{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="span8">
-        <h3>Get started</h3>
+<div class="row-fluid">
+    <div class="span12">
+        <h2>Get started</h2>
 
         {% if app.session.get('entity_url') %}
-        <p>
-            You are logged in as <strong>{{ app.session.get('entity_url') }}</strong>.
-            <a href="{{ path('bookmarks') }}">Continue</a>.
-        </p>
-
         {% else %}
         <form method="post" action="{{ path('login') }}" class="form-inline">
             <input type="text" name="entity_url" size="60" placeholder="Your Tent Username or URL" class="span6" />
@@ -23,8 +18,8 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="span4">
+<div class="row-fluid">
+    <div class="span6">
         <h3>Tent.io what?</h3>
 
         <p>
@@ -33,7 +28,7 @@
         </p>
     </div>
 
-    <div class="span4">
+    <div class="span6">
         <h3>Bookmaks on Tent?</h3>
 
         <p>
@@ -45,8 +40,8 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="span4">
+<div class="row-fluid">
+    <div class="span6">
         <h3>Is this OpenSource?</h3>
 
         <p>
@@ -56,7 +51,7 @@
         </p>
     </div>
 
-    <div class="span4">
+    <div class="span6">
         <h3>SocialSync</h3>
 
         <p>You can connect your Twitter account to this application and automatically push
@@ -64,7 +59,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row-fluid">
     <div class="span8">
         <h3>Tent.io PostType for Bookmarks</h3>
 
