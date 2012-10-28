@@ -115,3 +115,9 @@ footer {
 .people-list li {
     margin-bottom: 3px;
 }
+.loading {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/ajax-loader.gif');
+    height: 30px;
+}

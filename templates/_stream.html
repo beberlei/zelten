@@ -1,4 +1,6 @@
 <div id="stream">
+    <div class="stream-notifications"></div>
+    <div class="stream-messages">
     {% for message in messages.messages %}
     <div class="row-fluid stream-message" data-message-id="{{ message.id }}" data-entity="{{ message.entity.entity }}">
         <div class="span1">
@@ -66,5 +68,6 @@ This content is limited to the following groups and entities:
         </div>
     </div>
     {% endfor %}
+    </div>
 </div>
 
