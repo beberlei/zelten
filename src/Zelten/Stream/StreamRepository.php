@@ -127,8 +127,12 @@ class StreamRepository
             return $data;
         }
 
-        $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
-        $profile = $userClient->getProfile();
+        try {
+            $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
+            $profile = $userClient->getProfile();
+        } catch(\Guzzle\Http\Exception\CurlException $e) {
+            $profile = array();
+        }
 
         $data = array('entity' => $entity, 'name' => $entity, 'avatar' => null);
         if (isset($profile['https://tent.io/types/info/basic/v0.1.0'])) {
