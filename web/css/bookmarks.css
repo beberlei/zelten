@@ -97,6 +97,9 @@ footer {
     font-size: 8pt;
     color: #777777;
 }
+.stream-message {
+    max-width: 700px;
+}
 .stream-message header {
     font-size: 9pt;
     color: #777777;
