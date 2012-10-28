@@ -1,4 +1,4 @@
-# Zelten Bookmarks
+# Zelten
 
 A bookmark manager for tent.io
 
