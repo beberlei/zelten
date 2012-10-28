@@ -9,6 +9,7 @@ class StreamRepository
 {
     private $tentClient;
     private $urlGenerator;
+    private $currentEntity;
 
     private $supportedTypes = array(
         'https://tent.io/types/post/status/v0.1.0'    => 'status',
@@ -23,15 +24,16 @@ class StreamRepository
         'core'  => array('entity' => '', 'server' => ''),
     );
 
-    public function __construct($tentClient, $urlGenerator)
+    public function __construct($tentClient, $urlGenerator, $currentEntity)
     {
         $this->tentClient = $tentClient;
         $this->urlGenerator = $urlGenerator;
+        $this->currentEntity = $currentEntity;
     }
 
     public function getMessages($entityUrl, array $criteria = array())
     {
-        $client   = $this->tentClient->getUserClient($entityUrl);
+        $client   = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
         $criteria = array_merge(array(
                 'post_types' => 'https://tent.io/types/post/status/v0.1.0,http://www.beberlei.de/tent/bookmark/v0.0.1',
                 'limit'      => 10,
@@ -94,10 +96,10 @@ class StreamRepository
 
     public function getFullProfile($entity)
     {
-        $userClient = $this->tentClient->getUserClient($entity);
+        $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
         $data = $userClient->getProfile();
         $profile = array(
-            'name' => str_replace(array('https://', 'http://'), '', $entity),
+            'name'   => str_replace(array('https://', 'http://'), '', $entity),
             'entity' => $this->getEntityShortname($entity),
         );
 
@@ -125,7 +127,7 @@ class StreamRepository
             return $data;
         }
 
-        $userClient = $this->tentClient->getUserClient($entity);
+        $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
         $profile = $userClient->getProfile();
 
         $data = array('entity' => $entity, 'name' => $entity, 'avatar' => null);
@@ -141,7 +143,7 @@ class StreamRepository
 
     public function getFollowers($entity, $limit = 5)
     {
-        $userClient = $this->tentClient->getUserClient($entity);
+        $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
         $followers  = $userClient->getFollowers();
 
         return $this->preparePeopleList($followers, $limit);
@@ -149,7 +151,7 @@ class StreamRepository
 
     public function getFollowings($entity, $limit = 5)
     {
-        $userClient = $this->tentClient->getUserClient($entity);
+        $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
         $followings = $userClient->getFollowings();
 
         return $this->preparePeopleList($followings, $limit);

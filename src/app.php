@@ -64,7 +64,11 @@ $app['twitter'] = $app->share(function($app) {
 });
 
 $app['zelten.stream'] = $app->share(function ($app) {
-    return new \Zelten\Stream\StreamRepository($app['tent.client'], $app['url_generator']);
+    return new \Zelten\Stream\StreamRepository(
+        $app['tent.client'],
+        $app['url_generator'],
+        $app['session']->get('entity_url')
+    );
 });
 
 return $app;
