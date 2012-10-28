@@ -15,60 +15,6 @@ $app->get('/', function () use ($app) {
 })
 ->bind('homepage');
 
-$app->get('/logout', function() use ($app) {
-    $entityUrl = $app['session']->set('entity_url', null);
-    return new RedirectResponse($app['url_generator']->generate('homepage'));
-})->bind('logout');
-
-$app->post('/login', function (Request $request) use ($app) {
-    $entityUrl = $app['session']->get('entity_url');
-
-    if ($entityUrl) {
-        return new RedirectResponse($app['url_generator']->generate('bookmarks'));
-    }
-
-    $entityUrl = $request->request->get('entity_url');
-
-    if (!$entityUrl) {
-        return new RedirectResponse($app['url_generator']->generate('homepage'));
-    }
-
-    if (strpos($entityUrl, ".") === false) {
-        $entityUrl = "https://" . $entityUrl . ".tent.is";
-    } else if (strpos($entityUrl, "http") === false) {
-        $entityUrl = "https://" . $entityUrl;
-    }
-
-    $callbackUrl = $app['url_generator']->generate('oauth_accept', array(), true);
-    $loginUrl    = $app['tent.client']->getLoginUrl($entityUrl, null, $callbackUrl, null, array(
-        'http://www.beberlei.de/tent/bookmark/v0.0.1',
-        'https://tent.io/types/post/status/v0.1.0',
-    ), 'http://zelten.eu1.frbit.net/hook?hash='.hash_hmac('sha256', $entityUrl, $app['appsecret']));
-
-    $sql = "SELECT * FROM users WHERE entity = ?";
-    $data = $app['db']->fetchAssoc($sql, array($entityUrl));
-
-    if (!$data) {
-        $app['db']->insert('users', array(
-            'entity' => $entityUrl,
-            'last_login' => time(),
-        ));
-    }
-
-    return new RedirectResponse($loginUrl);
-})->bind('login');
-
-$app->get('/oauth/accept', function(Request $request) use ($app) {
-    $app['session']->set('entity_url', $app['tent.client']->authorize(
-        $request->query->get('state'),
-        $request->query->get('code')
-    ));
-
-    $app['db']->executeUpdate('UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($app['session']->get('entity_url')));
-
-    return new RedirectResponse($app['url_generator']->generate('bookmarks'));
-})->bind('oauth_accept');
-
 $app->post('/hook', function(Request $request) use ($app) {
     $post      = json_decode($request->getContent(), true);
     $entityUrl = $post['entity'];
@@ -107,6 +53,7 @@ $app->post('/hook', function(Request $request) use ($app) {
     return new Response('', 201);
 })->bind('hook');
 
+$app->mount('/', new \Zelten\Core\Controller());
 $app->mount('/socialsync', new \Zelten\SocialSync\Controller());
 $app->mount('/bookmarks', new \Zelten\Bookmarks\Controller());
 
