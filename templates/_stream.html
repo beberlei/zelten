@@ -2,9 +2,7 @@
     {% for message in messages %}
     <div class="row-fluid stream-message">
         <div class="span1">
-            {% if message.entity.avatar %}
-            <a href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}"><img src="{{ message.entity.avatar}}" height="90" width="90" /></a>
-            {% endif %}
+            <a href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}"><img src="{% if message.entity.avatar %}{{ message.entity.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" /></a>
         </div>
         <div class="span11">
             <div class="box">

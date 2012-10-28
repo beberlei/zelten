@@ -7,6 +7,33 @@
     {% include "_stream.html" with {'messages': messages} %}
 {% endblock %}
 
+{% block sidebar %}
+<strong>{{ followings.total }} followings</strong> (<a href="#">View All</a>)
+<ul class="people-list">
+    {% for following in followings.list %}
+    <li>
+        <a href="{{ path('stream_user', {'entity': following.entity}) }}">
+            <img class="img-polaroid" height="30" width="30" src="{% if following.basic.avatar_url %}{{ following.basic.avatar_url }}{% else%}/zelten.png{% endif %}" />
+        {{ following.name }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+<strong>{{ followers.total }} followers</strong> (<a href="#">View All</a>)
+
+<ul class="people-list">
+    {% for follower in followers.list %}
+    <li>
+        <a href="{{ path('stream_user', {'entity': follower.entity}) }}">
+            <img class="img-polaroid" height="30" width="30" src="{% if follower.basic.avatar_url %}{{ follower.basic.avatar_url }}{% else%}/zelten.png{% endif %}" />
+        {{ follower.name }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
 {% block javascripts %}
 <script type="text/javascript">
 <!--

@@ -108,3 +108,10 @@ footer {
 .profile {
     margin-bottom: 10px;
 }
+.people-list {
+    list-style-type: none;
+    margin-left: 0px;
+}
+.people-list li {
+    margin-bottom: 3px;
+}

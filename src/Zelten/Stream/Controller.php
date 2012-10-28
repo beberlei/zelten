@@ -38,9 +38,11 @@ class Controller implements ControllerProviderInterface
         $messages = $stream->getMessages($entity);
 
         return $app['twig']->render('user_stream.html', array(
-            'messages' => $messages,
-            'profile'  => $stream->getFullProfile($entity),
-            'entity'   => $entity,
+            'messages'   => $messages,
+            'profile'    => $stream->getFullProfile($entity),
+            'entity'     => $entity,
+            'followers'  => $stream->getFollowers($entity),
+            'followings' => $stream->getFollowings($entity),
         ));
     }
 

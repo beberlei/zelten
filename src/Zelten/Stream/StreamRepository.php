@@ -18,6 +18,10 @@ class StreamRepository
         'https://tent.io/types/info/basic/v0.1.0' => 'basic',
         'https://tent.io/types/info/core/v0.1.0' => 'core',
     );
+    private $profileTypeDefaults = array(
+        'basic' => array('name' => '', 'bio' => '', 'avatar_url' => '', 'birthdate' => '', 'location' => ''),
+        'core'  => array('entity' => '', 'server' => ''),
+    );
 
     public function __construct($tentClient, $urlGenerator)
     {
@@ -81,12 +85,18 @@ class StreamRepository
     {
         $userClient = $this->tentClient->getUserClient($entity);
         $data = $userClient->getProfile();
-        $profile = array();
+        $profile = array('name' => str_replace(array('https://', 'http://'), '', $entity));
 
         foreach ($this->supportedProfileTypes as $profileType => $name) {
             if (isset($data[$profileType])) {
                 $profile[$name] = $data[$profileType];
+            } else {
+                $profile[$name] = $this->profileTypeDefaults[$name];
             }
+        }
+
+        if (!empty($profile['basic']['name'])) {
+            $profile['name'] = $profile['basic']['name'];
         }
 
         return $profile;
@@ -113,6 +123,53 @@ class StreamRepository
         apc_store($key, $data, 3600);
 
         return $data;
+    }
+
+    public function getFollowers($entity, $limit = 5)
+    {
+        $userClient = $this->tentClient->getUserClient($entity);
+        $followers  = $userClient->getFollowers();
+
+        return $this->preparePeopleList($followers, $limit);
+    }
+
+    public function getFollowings($entity, $limit = 5)
+    {
+        $userClient = $this->tentClient->getUserClient($entity);
+        $followings = $userClient->getFollowings();
+
+        return $this->preparePeopleList($followings, $limit);
+    }
+
+    private function preparePeopleList($followers, $limit)
+    {
+        $result = array('total' => count($followers), 'list' => array());
+        foreach ($followers as $follower) {
+            $profile = array(
+                'entity' => $this->getEntityShortname($follower['entity']),
+                'name'   => str_replace(array('https://', 'http://'), '', $follower['entity']),
+            );
+
+            foreach ($this->supportedProfileTypes as $profileType => $name) {
+                if (isset($follower['profile'][$profileType])) {
+                    $profile[$name] = $follower['profile'][$profileType];
+                } else {
+                    $profile[$name] = $this->profileTypeDefaults[$name];
+                }
+            }
+
+            if (!empty($profile['basic']['name'])) {
+                $profile['name'] = $profile['basic']['name'];
+            }
+
+            $result['list'][] = $profile;
+
+            if (count($result['list']) >= $limit) {
+                break;
+            }
+        }
+
+        return $result;
     }
 }
 
