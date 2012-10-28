@@ -30,8 +30,8 @@
                 <div class="span2">
                     {% if app.session.get('entity_url') %}
                     <ul class="sidebar">
-                        {#<li><i class="icon-inbox"></i> Messages</li>
-                        <li><i class="icon-user"></i> Profile</li>#}
+                        <li><a href="{{ path('stream') }}"><i class="icon-inbox"></i> Messages</a></li>
+                        {#<li><i class="icon-user"></i> Profile</li>#}
                         <li><a href="{{ path('bookmarks') }}"><i class="icon-link"></i> Bookmarks</a></li>
                         {#<li><i class="icon-camera-retro"></i> Photos</li>
                         <li><i class="icon-group"></i> Groups</li>#}
@@ -40,13 +40,14 @@
                     {% endif %}
                 </div>
 
-                <div class="span8">
+                <div class="span6">
                     <div class="content">
                         <div class="errors"></div>
 
                         {% block content %}{% endblock %}
                     </div>
                 </div>
+                <div class="span2">{% block sidebar %}{% endblock %}</div>
             </div>
 
             <div class="row-fluid">

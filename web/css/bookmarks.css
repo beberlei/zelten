@@ -16,10 +16,28 @@ body {
     border-radius: 4px;
     margin-bottom: 8px;
 }
+.box-content {
+    padding: 10px;
+}
 .box-highlight {
     background-color: #f9f9f9;
 }
-.box-content {
+.box-footer {
+    border-top: 1px solid #c4c4c4;
+    padding: 4px;
+    padding-left: 10px;
+    font-size: 12pt;
+    color: #c4c4c4;
+}
+p.bookmark-description {
+    color: #777777;
+    padding: 8px;
+    font-size: 9pt;
+}
+.box-footer a {
+    margin-right: 5px;
+}
+.box-highlight .box-content {
     padding: 4px;
 }
 .item-menu {
@@ -75,4 +93,12 @@ footer {
     text-align: center;
     font-size: 8pt;
     color: #777777;
+}
+.stream-message header {
+    font-size: 9pt;
+    color: #777777;
+}
+.stream-message header strong {
+    font-size: 10pt;
+    color: #000;
 }

@@ -63,4 +63,8 @@ $app['twitter'] = $app->share(function($app) {
     return new \TwitterOAuth\Api($options['key'], $options['secret']);
 });
 
+$app['zelten.stream'] = $app->share(function ($app) {
+    return new \Zelten\Stream\StreamRepository($app['tent.client'], $app['url_generator']);
+});
+
 return $app;

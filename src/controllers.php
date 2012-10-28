@@ -6,15 +6,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-$app->get('/', function () use ($app) {
-    $stats = $app['db']->fetchAssoc(
-        'SELECT count(*) as total_users, sum(bookmarks) as total_bookmarks FROM users'
-    );
-
-    return $app['twig']->render('index.html', array('stats' => $stats));
-})
-->bind('homepage');
-
 $app->post('/hook', function(Request $request) use ($app) {
     $post      = json_decode($request->getContent(), true);
     $entityUrl = $post['entity'];
@@ -54,6 +45,7 @@ $app->post('/hook', function(Request $request) use ($app) {
 })->bind('hook');
 
 $app->mount('/', new \Zelten\Core\Controller());
+$app->mount('/stream', new \Zelten\Stream\Controller());
 $app->mount('/socialsync', new \Zelten\SocialSync\Controller());
 $app->mount('/bookmarks', new \Zelten\Bookmarks\Controller());
 

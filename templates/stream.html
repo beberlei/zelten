@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}Stream{% endblock %}
+
+{% block content %}
+<div id="stream">
+    {% for message in messages %}
+    <div class="row-fluid stream-message">
+        <div class="span1">
+            {% if message.entity.avatar %}
+            <a href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}"><img src="{{ message.entity.avatar}}" height="90" width="90" /></a>
+            {% endif %}
+        </div>
+        <div class="span11">
+            <div class="box">
+                <div class="box-content">
+                    <header>
+                        <strong>
+                            <a href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}">{% if message.entity.name %}{{ message.entity.name }}{% else %}{{ message.entity.entity }}{% endif %}</a>
+                        </strong>
+                        {{ message.published|date }} - {{ message.app.name }} -
+                        {% if message.permissions.public is defined and message.permissions.public %}
+                            Public
+                        {% else %}
+                            Limited
+                        {% endif %}
+                    </header>
+
+                    {% if message.type == 'status' %}
+                    {{ message.content.text|raw }}
+                    {% elseif message.type == 'bookmark' %}
+                        shared a link to
+                        <a href="{{ message.content.url }}" target="_blank">
+                        {% if message.content.image %}<img src="{{ message.content.image }}" height="16" width="16" />{% endif %}
+                        {{ message.content.title }}
+                        </a>
+
+                        {% if message.content.description is defined %}<p class="bookmark-description">{{ message.content.description }}</p>{% endif %}
+
+                    {% endif %}
+                </div>
+                <div class="box-footer">
+                    <i class="icon-retweet"></i>
+                    <i class="icon-comment"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
