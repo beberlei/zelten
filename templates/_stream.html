@@ -1,6 +1,6 @@
 <div id="stream">
-    {% for message in messages %}
-    <div class="row-fluid stream-message">
+    {% for message in messages.messages %}
+    <div class="row-fluid stream-message" data-message-id="{{ message.id }}" data-entity="{{ message.entity.entity }}">
         <div class="span1">
             <a href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}"><img src="{% if message.entity.avatar %}{{ message.entity.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" /></a>
         </div>

@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends app.request.isXmlHttpRequest() ? "ajax.html" : "layout.html" %}
 
 {% block title %}Stream{% endblock %}
 
@@ -8,13 +8,12 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-<!--
-     $(document).ready(function() {
-         $('.show-popover').popover({
-             placement: 'bottom',
-             trigger: 'hover'
-         })
-     });
--->
+    var ZeltenMessages = {
+        url: '{{ path('stream') }}',
+        entity: '{{ app.session.get('entity_url') }}',
+        first: {{ messages.first|json_encode|raw }},
+        last: {{ messages.last|json_encode|raw }}
+    };
 </script>
+<script type="text/javascript" src="/js/stream.js"></script>
 {% endblock %}

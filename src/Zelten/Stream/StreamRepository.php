@@ -29,23 +29,34 @@ class StreamRepository
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function getMessages($entityUrl)
+    public function getMessages($entityUrl, array $criteria = array())
     {
         $client   = $this->tentClient->getUserClient($entityUrl);
-        $criteria = array(
-            'post_types' => 'https://tent.io/types/post/status/v0.1.0,http://www.beberlei.de/tent/bookmark/v0.0.1',
-            'limit'      => 10,
-        );
-        $posts    = $client->getPosts(new PostCriteria($criteria));
+        $criteria = array_merge(array(
+                'post_types' => 'https://tent.io/types/post/status/v0.1.0,http://www.beberlei.de/tent/bookmark/v0.0.1',
+                'limit'      => 10,
+            ), $criteria);
+        $posts  = $client->getPosts(new PostCriteria($criteria));
 
-        $messages = array();
+        $result = array(
+            'messages' => array(),
+            'first'    => null,
+            'last'     => null
+        );
+
         $linker = new UrlLinker();
         foreach ($posts as $post) {
             if (!isset($this->supportedTypes[$post['type']])) {
                 continue;
             }
 
+            if (!$result['first']) {
+                $result['first'] = array('id' => $post['id'], 'entity' => $post['entity']);
+            }
+            $result['last'] = array('id' => $post['id'], 'entity' => $post['entity']);
+
             $message              = new Message();
+            $message->id          = $post['id'];
             $message->type        = $this->supportedTypes[$post['type']];
             $message->content     = $post['content'];
             $message->entity      = $this->getPublicProfile($post['entity']);
@@ -70,10 +81,10 @@ class StreamRepository
                 }
             }
 
-            $messages[] = $message;
+            $result['messages'][] = $message;
         }
 
-        return $messages;
+        return $result;
     }
 
     public function getEntityShortname($url)
@@ -85,7 +96,10 @@ class StreamRepository
     {
         $userClient = $this->tentClient->getUserClient($entity);
         $data = $userClient->getProfile();
-        $profile = array('name' => str_replace(array('https://', 'http://'), '', $entity));
+        $profile = array(
+            'name' => str_replace(array('https://', 'http://'), '', $entity),
+            'entity' => $this->getEntityShortname($entity),
+        );
 
         foreach ($this->supportedProfileTypes as $profileType => $name) {
             if (isset($data[$profileType])) {

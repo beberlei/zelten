@@ -35,7 +35,7 @@ class Controller implements ControllerProviderInterface
         $entity = str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
 
         $stream   = $app['zelten.stream'];
-        $messages = $stream->getMessages($entity);
+        $messages = $stream->getMessages($entity, $request->query->get('criteria', array()));
 
         return $app['twig']->render('user_stream.html', array(
             'messages'   => $messages,
@@ -54,8 +54,8 @@ class Controller implements ControllerProviderInterface
             return new RedirectResponse($app['url_generator']->generate('homepage'));
         }
 
-        $stream = $app['zelten.stream'];
-        $messages  = $stream->getMessages($entityUrl);
+        $stream   = $app['zelten.stream'];
+        $messages = $stream->getMessages($entityUrl, $request->query->get('criteria', array()));
 
         return $app['twig']->render('stream.html', array('messages' => $messages));
     }

@@ -4,6 +4,7 @@ namespace Zelten\Stream;
 
 class Message
 {
+    public $id;
     public $type;
     public $entity;
     public $content;
