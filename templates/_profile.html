@@ -1,0 +1,17 @@
+<div class="row-fluid profile">
+    <div class="span8">
+        <h3>{{ profile.basic.name }}</h3>
+
+        {% if profile.basic.bio %}<p>{{ profile.basic.bio }}</p>{% endif %}
+
+        {% if profile.basic.location %}<p>Lives in {{ profile.basic.location }}</p>{% endif %}
+
+        {% if profile.basic.birthdate %}<p>Was born on {{profile.basic.birthdate }}</p>{%endif%}
+    </div>
+    <div class="span4">
+        {% if profile.basic.avatar_url %}
+        <img src="{{ profile.basic.avatar_url }}" class="img-polaroid" height="150" width="150" />
+        {% endif %}
+    </div>
+</div>
+

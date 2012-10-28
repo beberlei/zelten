@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 
-{% block title %}Stream{% endblock %}
+{% block title %}{{ entity }}{% endblock %}
 
 {% block content %}
+    {% include "_profile.html" with {'profile': profile } %}
     {% include "_stream.html" with {'messages': messages} %}
 {% endblock %}
 

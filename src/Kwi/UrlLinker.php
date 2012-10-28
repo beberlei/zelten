@@ -63,6 +63,13 @@ class UrlLinker
             // Add the text leading up to the URL.
             $html .= htmlspecialchars(substr($text, $position, $urlPosition - $position));
 
+            // Skip tent mentions with ^
+            if (substr($text, $urlPosition-1, 1) == "^") {
+                $html    .= htmlspecialchars($url);
+                $position = $urlPosition + strlen($url);
+                continue;
+            }
+
             $scheme      = $match[1][0];
             $username    = $match[2][0];
             $password    = $match[3][0];

@@ -14,6 +14,10 @@ class StreamRepository
         'https://tent.io/types/post/status/v0.1.0'    => 'status',
         'http://www.beberlei.de/tent/bookmark/v0.0.1' => 'bookmark',
     );
+    private $supportedProfileTypes = array(
+        'https://tent.io/types/info/basic/v0.1.0' => 'basic',
+        'https://tent.io/types/info/core/v0.1.0' => 'core',
+    );
 
     public function __construct($tentClient, $urlGenerator)
     {
@@ -55,7 +59,7 @@ class StreamRepository
                     $userLink = $this->urlGenerator->generate('stream_user', array('entity' => $this->getEntityShortname($mention['entity'])));
 
                     $message->content['text'] = str_replace(
-                        $shortname,
+                        array($shortname, "^".$mention['entity']),
                         '<a href="' . $userLink .'">' . $shortname . '</a>',
                         $message->content['text']
                     );
@@ -71,6 +75,21 @@ class StreamRepository
     public function getEntityShortname($url)
     {
         return str_replace(array('https://', 'http://'), array('https-', 'http-'), $url);
+    }
+
+    public function getFullProfile($entity)
+    {
+        $userClient = $this->tentClient->getUserClient($entity);
+        $data = $userClient->getProfile();
+        $profile = array();
+
+        foreach ($this->supportedProfileTypes as $profileType => $name) {
+            if (isset($data[$profileType])) {
+                $profile[$name] = $data[$profileType];
+            }
+        }
+
+        return $profile;
     }
 
     public function getPublicProfile($entity)

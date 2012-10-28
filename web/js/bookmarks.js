@@ -77,8 +77,7 @@ var BookmarkApplication = Backbone.View.extend({
         'keypress #bookmark_url': 'bookmarkKeyPress',
         'click .url-load': 'addBookmark',
         'submit form.add': 'saveBookmark',
-        'click a.reset': 'resetForm',
-        'click #tabs a': 'clickTab'
+        'click a.reset': 'resetForm'
     },
     bookmarkKeyPress: function(e) {
          if (e.which == 13){
@@ -188,26 +187,11 @@ var BookmarkApplication = Backbone.View.extend({
     initialize: function() {
         this.myBookmarks = new BookmarkList({
             collection: this.collection,
-            el: this.$el.find('#my').find('.list')
-        });
-
-        this.publicBookmarks = new BookmarkList({
-            collection: new BookmarksCollection([], {
-                filterMode: 'mode=public'
-            }),
-            el: this.$el.find('#public').find('.list')
+            el: this.$el.find('.list')
         });
     },
     render: function() {
         this.myBookmarks.addAll();
-    },
-    clickTab: function(e) {
-        e.preventDefault();
-        $(this).tab('show');
-
-        if ($(e.currentTarget).attr('href') == '#public') {
-            this.publicBookmarks.collection.fetch();
-        }
     }
 });
 

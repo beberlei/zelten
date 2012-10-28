@@ -37,6 +37,9 @@ p.bookmark-description {
 .box-footer a {
     margin-right: 5px;
 }
+.box-footer .post-type {
+    color: #777777;
+}
 .box-highlight .box-content {
     padding: 4px;
 }
@@ -101,4 +104,7 @@ footer {
 .stream-message header strong {
     font-size: 10pt;
     color: #000;
+}
+.profile {
+    margin-bottom: 10px;
 }

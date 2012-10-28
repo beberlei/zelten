@@ -37,7 +37,11 @@ class Controller implements ControllerProviderInterface
         $stream   = $app['zelten.stream'];
         $messages = $stream->getMessages($entity);
 
-        return $app['twig']->render('stream.html', array('messages' => $messages));
+        return $app['twig']->render('user_stream.html', array(
+            'messages' => $messages,
+            'profile'  => $stream->getFullProfile($entity),
+            'entity'   => $entity,
+        ));
     }
 
     public function streamAction(Request $request, Application $app)
