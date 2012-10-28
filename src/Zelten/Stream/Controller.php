@@ -34,8 +34,8 @@ class Controller implements ControllerProviderInterface
         }
         $entity = str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
 
-        $stream = $app['zelten.stream'];
-        $messages  = $stream->getMessages($entity);
+        $stream   = $app['zelten.stream'];
+        $messages = $stream->getMessages($entity);
 
         return $app['twig']->render('stream.html', array('messages' => $messages));
     }

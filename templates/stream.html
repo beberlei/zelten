@@ -19,11 +19,32 @@
                             <a href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}">{% if message.entity.name %}{{ message.entity.name }}{% else %}{{ message.entity.entity }}{% endif %}</a>
                         </strong>
                         {{ message.published|date }} - {{ message.app.name }} -
+
                         {% if message.permissions.public is defined and message.permissions.public %}
-                            Public
+                        <a href="#" class="show-popover" rel="popover" data-content="This content is visible to everybody on the internet." data-original-title="Permissions">Public</a>
+                        {% elseif message.permissions.groups is not defined and message.permissions.entities is not defined %}
+                            <a href="#" class="show-popover" rel="popover" data-content="This content is private any only visible to you." data-original-title="Permissions">Private</a>
                         {% else %}
-                            Limited
+                        <a href="#" class="show-popover" rel="popover" data-content="
+{% spaceless %}
+This content is limited to the following groups and entities:
+
+<ul>
+    {% if message.permissions.groups is defined %}
+    {% for name in message.permissions.groups %}
+    <li>{{ name}}</li>
+    {% endfor %}
+    {% endif %}
+
+    {% if message.permissions.entities is defined %}
+    {% for name in message.permissions.entities %}
+    <li>{{ name }}</li>
+    {% endfor %}
+    {% endif %}
+</ul>
+{% endspaceless %}" data-original-title="Permissions">Limited</a>
                         {% endif %}
+
                     </header>
 
                     {% if message.type == 'status' %}
@@ -48,4 +69,17 @@
     </div>
     {% endfor %}
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+<!--
+     $(document).ready(function() {
+         $('.show-popover').popover({
+             placement: 'bottom',
+             trigger: 'hover'
+         })
+     });
+-->
+</script>
 {% endblock %}
