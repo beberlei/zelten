@@ -4,6 +4,7 @@ namespace Zelten\Stream;
 
 use TentPHP\PostCriteria;
 use TentPHP\Post;
+use TentPHP\Util\Mentions;
 use Kwi\UrlLinker;
 use Zend\Escaper\Escaper;
 
@@ -14,6 +15,7 @@ class StreamRepository
     private $currentEntity;
     private $linker;
     private $escaper;
+    private $mentions;
 
     private $supportedTypes = array(
         'https://tent.io/types/post/status/v0.1.0'    => 'status',
@@ -34,11 +36,12 @@ class StreamRepository
 
     public function __construct($tentClient, $urlGenerator, $currentEntity)
     {
-        $this->tentClient = $tentClient;
-        $this->urlGenerator = $urlGenerator;
+        $this->tentClient    = $tentClient;
+        $this->urlGenerator  = $urlGenerator;
         $this->currentEntity = $currentEntity;
-        $this->linker = new UrlLinker();
-        $this->escaper = new Escaper();
+        $this->linker        = new UrlLinker();
+        $this->escaper       = new Escaper();
+        $this->mentions      = new Mentions();
     }
 
     public function write($message, $mention = null)
@@ -51,6 +54,12 @@ class StreamRepository
 
         if ($mention) {
             $post->addMention($mention['entity'], $mention['post']);
+        }
+
+        $mentions = $this->mentions->extractMentions($message, $this->currentEntity);
+
+        foreach ($mentions as $mention) {
+            $post->addMention($mention['entity']);
         }
 
         $data = $client->createPost($post);

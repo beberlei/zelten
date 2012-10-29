@@ -1,4 +1,4 @@
-var Zelten = {};
+var Zelten = Zelten || {};
 
 Zelten.ModalConfirmDialogView = Backbone.View.extend({
     events: {

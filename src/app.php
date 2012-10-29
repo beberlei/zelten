@@ -34,8 +34,12 @@ $app->register(new TentServiceProvider(), array(
             'http://zelten/index_dev.php/oauth/accept',
         ),
         'scopes'        => array(
-            'read_posts'  => 'Read Posts',
-            'write_posts' => 'Write Posts',
+            'read_posts'       => 'Read Posts',
+            'write_posts'      => 'Write Posts',
+            'read_groups'      => 'Read Groups',
+            'write_groups'     => 'Write Groups',
+            'read_followings'  => 'List Followings',
+            'write_followings' => 'Follow New People',
         ),
     )
 ));
