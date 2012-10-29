@@ -1,0 +1,9 @@
+<div class="row-fluid conversation-message">
+    <div class="span2">
+        <img src="{% if message.entity.avatar %}{{ message.entity.avatar }}{% else %}/zelten.png{% endif %}" width="30" height="30" class="img-polaroid" />
+    </div>
+    <div class="span10">
+        <header>{{ message.entity.name }} -  {{ message.published|date('H:i') }}</header>
+        <p>{{ message.content.text|raw }}</p>
+    </div>
+</div>

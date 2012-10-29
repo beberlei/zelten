@@ -34,12 +34,17 @@ class StreamRepository
         $this->linker = new UrlLinker();
     }
 
-    public function write($message)
+    public function write($message, $mention = null)
     {
         $client = $this->tentClient->getUserClient($this->currentEntity, true);
 
         $post = Post::create('https://tent.io/types/post/status/v0.1.0');
         $post->setContent(array('text' => substr($message, 0, 256)));
+        $post->markPublic();
+
+        if ($mention) {
+            $post->addMention($mention['entity'], $mention['post']);
+        }
 
         $data = $client->createPost($post);
         return $this->createMessage($data);
@@ -109,7 +114,7 @@ class StreamRepository
 
     public function getEntityShortname($url)
     {
-        return str_replace(array('https://', 'http://'), array('https-', 'http-'), $url);
+        return rtrim(str_replace(array('https://', 'http://'), array('https-', 'http-'), $url), '/');
     }
 
     public function getFullProfile($entity)

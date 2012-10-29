@@ -47,7 +47,7 @@ p.bookmark-description {
 }
 
 .box-footer .post-type {
-    color: #777777;
+    color: #555555;
 }
 .box-highlight .box-content {
     padding: 4px;
@@ -193,4 +193,19 @@ div#header .brand:hover {
     -ms-box-shadow: 0 1px 5px rgba(0,0,0,0.2);
     -o-box-shadow: 0 1px 5px rgba(0,0,0,0.2);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+.conversation-message {
+    font-size: 8pt;
+    color: #777777;
+}
+form.stream-message-add-comment {
+    margin: 0px;
+}
+.stream-message-add-comment .actions {
+    display: none;
+}
+.stream-message-add-comment textarea {
+    font-size: 9pt;
+    height: 10px;
+    min-height: 10px;
 }

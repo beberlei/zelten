@@ -1,0 +1,7 @@
+{% extends app.request.isXmlHttpRequest ? "ajax.html" : "layout.html" %}
+
+{% block content %}
+    {% for message in comments.messages %}
+    {% include "_conversation_message.html" with {"message": message} %}
+    {% endfor %}
+{% endblock %}

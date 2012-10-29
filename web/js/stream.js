@@ -2,6 +2,69 @@ var Zelten = {};
 
 Zelten.MessageView = Backbone.View.extend({
     events: {
+        "click a.show-conversation": "clickShowConversations",
+        "click .stream-message-add-comment": "showCommentBox",
+        "keyup .stream-message-add-comment .message": "showCommentBox",
+        "change .stream-message-add-comment .message": "showCommentBox",
+        "click .stream-message-add-comment-cancel": "cancelComment",
+        "submit .stream-message-add-comment": "writeMessage"
+    },
+    cancelComment: function() {
+        var actions = this.$el.find(".stream-message-add-comment .actions");
+        actions.slideUp();
+    },
+    writeMessage: function(e) {
+        var form = $(e.currentTarget);
+        var msg = form.find('.message').val();
+
+        if (typeof(msg) == 'undefined' || msg.length == 0) {
+            return false;
+        }
+
+        form.find('.stream-message-add-comment-btn').attr('disabled', true);
+
+        $.ajax({
+            url:  form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            success: _.bind(this.writeMessageSuccess, this)
+        });
+
+        return false;
+    },
+    writeMessageSuccess: function(data) {
+        this.$el.find('.stream-message-add-comment-btn').attr('disabled', false);
+        this.$el.find('.conversations').append(data);
+        this.$el.find('.stream-message-add-comment').each(function() {
+            this.reset();
+        });
+        this.cancelComment();
+    },
+    showCommentBox: function() {
+        var actions = this.$el.find(".stream-message-add-comment .actions");
+        if (actions.is(':hidden')) {
+            actions.slideDown();
+        }
+
+        var msg = this.$el.find('.stream-message-add-comment .message').val();
+        this.$el.find('.stream-message-add-comment-btn').attr('disabled', (msg.length == 0));
+    },
+    clickShowConversations: function(e) {
+        var link = $(e.currentTarget);
+        link.attr('disabled', true);
+        $.ajax({
+            url: link.attr('href'),
+            success: _.bind(this.showConversation, this)
+        });
+        this.$el.find('.conversations').addClass('loading');
+
+        return false;
+    },
+    showConversation: function(data) {
+        this.$el.find('.conversations').removeClass('loading');
+        this.$el.find('.conversations').html(data);
+        var cnt = this.$el.find('.conversations .conversation-message').length;
+        this.$el.find('a.show-conversation').append(cnt);
     },
     render: function() {
         this.$el.find('.show-tooltip').tooltip({
@@ -23,7 +86,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
     },
     initialize: function() {
         this.title = document.title;
-        this.newMessages = '';
+        this.newMessages = $("<div</div>");
         this.newMessagesCount = 0;
         this.win = $(window);
         this.win.scroll(_.bind(this.scrollCheck, this));
@@ -81,6 +144,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         var newEntries = $(data).find('.stream-messages');
         var done = false;
         var cnt = this.newMessagesCount;
+        var newMessages = $("<div></div>");
         newEntries.find('.stream-message').each(function() {
             cnt++;
             var el = $(this);
@@ -96,10 +160,11 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
                 el: el
             });
             message.render();
+            newMessages.append(el);
         });
 
         if (cnt > 0) {
-            this.newMessages = newEntries.html() + this.newMessages;
+            this.newMessages.prepend(newMessages);
             this.$el.find('.stream-notifications').html('<div class="alert new-messages">There are ' + cnt + ' new messages.</div>');
             this.$el.find('.new-messages').click(_.bind(this.showNewMessages, this));
             document.title = '(' + cnt + ') ' + this.title;
@@ -108,7 +173,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
     showNewMessages: function() {
         this.$el.find('.new-messages').remove();
         this.$el.find('.stream-messages').prepend(this.newMessages);
-        this.newMessages = '';
+        this.newMessages = $("<div></div>");
         this.newMessagesCount = 0;
         document.title = this.title;
     },
