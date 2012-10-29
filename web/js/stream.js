@@ -1,7 +1,12 @@
 var Zelten = {};
 
 Zelten.MessageView = Backbone.View.extend({
+    events: {
+    },
     render: function() {
+        this.$el.find('.show-tooltip').tooltip({
+
+        });
         this.$el.find('.show-popover').popover({
             placement: 'bottom',
             trigger: 'hover'
@@ -11,7 +16,10 @@ Zelten.MessageView = Backbone.View.extend({
 
 Zelten.MessageStreamApplication = Backbone.View.extend({
     events: {
-        'scroll-bottom': 'loadOlderPosts'
+        'scroll-bottom': 'loadOlderPosts',
+        'submit form.stream-add-post': 'writeMessage',
+        'keyup form.stream-add-post .message': 'updateShareButton',
+        'change form.stream-add-post .message': 'updateShareButton'
     },
     initialize: function() {
         this.title = document.title;
@@ -20,6 +28,47 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         this.win = $(window);
         this.win.scroll(_.bind(this.scrollCheck, this));
         setInterval(_.bind(this.checkNewMessages, this), 1000*60);
+    },
+    updateShareButton: function(e) {
+        var msg = $(e.currentTarget).val();
+        this.$el.find('.stream-add-post-btn').attr('disabled', (msg.length == 0));
+    },
+    writeMessage: function(e) {
+        var form = $(e.currentTarget);
+        var msg = form.find('.message').val();
+
+        if (msg.length == 0) {
+            return false;
+        }
+
+        form.find('.stream-add-post-btn').attr('disabled', true);
+
+        $.ajax({
+            url:  form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            success: _.bind(this.writeMessageSuccess, this)
+        });
+
+        return false;
+    },
+    writeMessageSuccess: function(data) {
+        var newMessage = $(data);
+        var message = new Zelten.MessageView({
+            el: newMessage
+        });
+        message.render();
+
+        ZeltenMessages.first = {
+            id: newMessage.data('message-id'),
+            entity: newMessage.data('entity')
+        };
+
+        this.$el.find('.stream-messages').prepend(newMessage);
+        this.$el.find('.stream-add-post-btn').attr('disabled', false);
+        this.$el.find('.stream-add-post').each(function() {
+            this.reset();
+        });
     },
     checkNewMessages: function() {
         $.ajax({

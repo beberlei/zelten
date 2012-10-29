@@ -3,6 +3,7 @@
 namespace Zelten\Stream;
 
 use TentPHP\PostCriteria;
+use TentPHP\Post;
 use Kwi\UrlLinker;
 
 class StreamRepository
@@ -10,6 +11,7 @@ class StreamRepository
     private $tentClient;
     private $urlGenerator;
     private $currentEntity;
+    private $linker;
 
     private $supportedTypes = array(
         'https://tent.io/types/post/status/v0.1.0'    => 'status',
@@ -29,6 +31,18 @@ class StreamRepository
         $this->tentClient = $tentClient;
         $this->urlGenerator = $urlGenerator;
         $this->currentEntity = $currentEntity;
+        $this->linker = new UrlLinker();
+    }
+
+    public function write($message)
+    {
+        $client = $this->tentClient->getUserClient($this->currentEntity, true);
+
+        $post = Post::create('https://tent.io/types/post/status/v0.1.0');
+        $post->setContent(array('text' => substr($message, 0, 256)));
+
+        $data = $client->createPost($post);
+        return $this->createMessage($data);
     }
 
     public function getMessages($entityUrl, array $criteria = array())
@@ -46,7 +60,6 @@ class StreamRepository
             'last'     => null
         );
 
-        $linker = new UrlLinker();
         foreach ($posts as $post) {
             if (!isset($this->supportedTypes[$post['type']])) {
                 continue;
@@ -57,36 +70,41 @@ class StreamRepository
             }
             $result['last'] = array('id' => $post['id'], 'entity' => $post['entity']);
 
-            $message              = new Message();
-            $message->id          = $post['id'];
-            $message->type        = $this->supportedTypes[$post['type']];
-            $message->content     = $post['content'];
-            $message->entity      = $this->getPublicProfile($post['entity']);
-            $message->app         = $post['app'];
-            $message->mentions    = $post['mentions'];
-            $message->permissions = $post['permissions'];
-            $message->published   = new \DateTime('@' . $post['published_at']);
-
-            if ($message->type == 'status') {
-                $message->content['text'] = $linker->parse($message->content['text']);
-
-                foreach ($message->mentions as $mention) {
-                    $parts = parse_url($mention['entity']);
-                    $shortname = "^" . substr($parts['host'], 0, strpos($parts['host'], "."));
-                    $userLink = $this->urlGenerator->generate('stream_user', array('entity' => $this->getEntityShortname($mention['entity'])));
-
-                    $message->content['text'] = str_replace(
-                        array($shortname, "^".$mention['entity']),
-                        '<a href="' . $userLink .'">' . $shortname . '</a>',
-                        $message->content['text']
-                    );
-                }
-            }
-
-            $result['messages'][] = $message;
+            $result['messages'][] = $this->createMessage($post);
         }
 
         return $result;
+    }
+
+    private function createMessage($post)
+    {
+        $message              = new Message();
+        $message->id          = $post['id'];
+        $message->type        = $this->supportedTypes[$post['type']];
+        $message->content     = $post['content'];
+        $message->entity      = $this->getPublicProfile($post['entity']);
+        $message->app         = $post['app'];
+        $message->mentions    = $post['mentions'];
+        $message->permissions = $post['permissions'];
+        $message->published   = new \DateTime('@' . $post['published_at']);
+
+        if ($message->type == 'status') {
+            $message->content['text'] = $this->linker->parse($message->content['text']);
+
+            foreach ($message->mentions as $mention) {
+                $parts = parse_url($mention['entity']);
+                $shortname = "^" . substr($parts['host'], 0, strpos($parts['host'], "."));
+                $userLink = $this->urlGenerator->generate('stream_user', array('entity' => $this->getEntityShortname($mention['entity'])));
+
+                $message->content['text'] = str_replace(
+                    array($shortname, "^".$mention['entity']),
+                    '<a href="' . $userLink .'">' . $shortname . '</a>',
+                    $message->content['text']
+                );
+            }
+        }
+
+        return $message;
     }
 
     public function getEntityShortname($url)

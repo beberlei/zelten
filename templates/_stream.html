@@ -1,15 +1,15 @@
 <div id="stream">
     {% if post_add %}
-    <div class="stream-post-add">
-        <form action="#" method="POST">
+    <div class="stream-add-post-box">
+        <form action="{{ path('stream_write') }}" method="POST" class="stream-add-post">
         <div class="box box-highlight">
             <div class="box-content">
                 <div  class="form-inline">
-                    <textarea class="span12" name="message" rows="1"></textarea>
+                    <textarea class="message span12" name="message" rows="1"></textarea>
                 </div>
             </div>
             <div class="box-footer">
-                <input class="btn btn-success span3" value="Share" />
+                <input type="submit" class="stream-add-post-btn btn btn-success" value="Share" disabled="disabled" />
             </div>
         </div>
         </form>
@@ -17,73 +17,10 @@
     {% endif %}
 
     <div class="stream-notifications"></div>
+
     <div class="stream-messages">
     {% for message in messages.messages %}
-    <div class="row-fluid stream-message" data-message-id="{{ message.id }}" data-entity="{{ message.entity.entity }}">
-        <div class="span1">
-            <a href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}"><img src="{% if message.entity.avatar %}{{ message.entity.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>
-        </div>
-        <div class="span11">
-            <div class="box">
-                <div class="box-content">
-                    <header>
-                        <strong>
-                            <a href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}">{% if message.entity.name %}{{ message.entity.name }}{% else %}{{ message.entity.entity }}{% endif %}</a>
-                        </strong>
-                        {{ message.published|date }} - {{ message.app.name }} -
-
-                        {% if message.permissions.public is defined and message.permissions.public %}
-                        <a href="#" class="show-popover" rel="popover" data-content="This content is visible to everybody on the internet." data-original-title="Permissions">Public</a>
-                        {% elseif message.permissions.groups is not defined and message.permissions.entities is not defined %}
-                            <a href="#" class="show-popover" rel="popover" data-content="This content is private any only visible to you." data-original-title="Permissions">Private</a>
-                        {% else %}
-                        <a href="#" class="show-popover" rel="popover" data-content="
-{% spaceless %}
-This content is limited to the following groups and entities:
-
-<ul>
-    {% if message.permissions.groups is defined %}
-    {% for name in message.permissions.groups %}
-    <li>{{ name}}</li>
-    {% endfor %}
-    {% endif %}
-
-    {% if message.permissions.entities is defined %}
-    {% for name in message.permissions.entities %}
-    <li>{{ name }}</li>
-    {% endfor %}
-    {% endif %}
-</ul>
-{% endspaceless %}" data-original-title="Permissions">Limited</a>
-                        {% endif %}
-
-                    </header>
-
-                    {% if message.type == 'status' %}
-                    {{ message.content.text|raw }}
-                    {% elseif message.type == 'bookmark' %}
-                        shared a link to
-                        <a href="{{ message.content.url }}" target="_blank">
-                        {% if message.content.image %}<img src="{{ message.content.image }}" height="16" width="16" />{% endif %}
-                        {{ message.content.title }}
-                        </a>
-
-                        {% if message.content.description is defined %}<p class="bookmark-description">{{ message.content.description }}</p>{% endif %}
-
-                    {% endif %}
-                </div>
-                <div class="box-footer">
-                    {% if message.type == 'status' %}
-                        <i class="icon-envelope post-type"></i>
-                    {% elseif message.type == 'bookmark' %}
-                    <i class="icon-link post-type"></i>
-                    {% endif %}
-                    <i class="icon-retweet"></i>
-                    <i class="icon-comment"></i>
-                </div>
-            </div>
-        </div>
-    </div>
+        {% include "_message.html" with {'message': message} %}
     {% endfor %}
     </div>
 </div>

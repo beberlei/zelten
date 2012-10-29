@@ -20,9 +20,31 @@ class Controller implements ControllerProviderInterface
         $controllers = $app['controllers_factory'];
 
         $controllers->get('/', array($this, 'streamAction'))->bind('stream');
+        $controllers->post('/', array($this, 'postAction'))->bind('stream_write');
         $controllers->get('/u/{entity}', array($this, 'userAction'))->bind('stream_user');
 
         return $controllers;
+    }
+
+    public function postAction(Request $request, Application $app)
+    {
+        $entityUrl = $app['session']->get('entity_url');
+
+        if (!$entityUrl) {
+            return new RedirectResponse($app['url_generator']->generate('homepage'));
+        }
+
+        $text = substr(strip_tags($request->request->get('message')), 0, 256);
+
+        $stream = $app['zelten.stream'];
+        $message = $stream->write($text);
+        $message->markPublic();
+
+        if ($request->isXmlHttpRequest()) {
+            return $app['twig']->render('_message.html', array('message' => $message));
+        }
+
+        return new RedirectResponse($app['url_generator']->generate('stream'));
     }
 
     public function userAction(Request $request, Application $app, $entity)

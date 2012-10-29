@@ -40,10 +40,12 @@ p.bookmark-description {
     padding: 8px;
     font-size: 9pt;
 }
-.box-footer a {
-    margin-right: 5px;
-    background-color: #f2f2f2;
+.box-footer a.btn {
+    line-height: 10px;
+    font-size: 12px;
+    padding: 4px 10px 0px;
 }
+
 .box-footer .post-type {
     color: #777777;
 }
