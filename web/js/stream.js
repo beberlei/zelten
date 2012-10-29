@@ -113,6 +113,7 @@ Zelten.MessageView = Backbone.View.extend({
         modal.render();
     },
     confirmClickRepost: function() {
+        alert("not supported yet :(");
     },
     clickShowConversations: function(e) {
         var link = $(e.currentTarget);
