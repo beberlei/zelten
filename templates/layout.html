@@ -3,7 +3,7 @@
     <head>
         <title>{% block title '' %} - Zelten</title>
 
-        <link href="http://fonts.googleapis.com/css?family=Overlock" rel="stylesheet" type="text/css" />
+        <link href="http://fonts.googleapis.com/css?family=Overlock|Merriweather:400,300,700" rel="stylesheet" type="text/css" />
         <link href="{{ app.request.basepath }}/bootstrap/css/bootstrap.min.css?v=4" rel="stylesheet" type="text/css" />
         <link href="{{ app.request.basepath }}/css/bookmarks.css?v=4" rel="stylesheet" type="text/css" />
         <link href="{{ app.request.basepath }}/font-awesome/css/font-awesome.css?v=4" rel="stylesheet" type="text/css" />
@@ -12,25 +12,23 @@
     </head>
     <body>
 
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container-fluid">
-                    <a href="{{ path('homepage') }}" class="brand">Zelten</a>
-                    {% if app.session.get('entity_url') %}
-                    <div class="pull-right">
-                        <span class="help-inline"><strong>{{ app.session.get('entity_url') }}</strong></span>
-                        <a href="{{ path('logout') }}" class="btn"><i class="icon-signout"></i> Logout</a>
-                    </div>
-                    {% endif %}
+        <div id="header">
+            <div class="container-fluid">
+                <a href="{{ path('homepage') }}" class="brand">Zelten</a>
+                {% if app.session.get('entity_url') %}
+                <div class="pull-right">
+                    <span class="help-inline"><strong>{{ app.session.get('entity_url') }}</strong></span>
+                    <a href="{{ path('logout') }}" class="btn"><i class="icon-signout"></i> Logout</a>
                 </div>
+                {% endif %}
             </div>
         </div>
 
-        <div class="container-fluid">
+        <div id="main" class="container-fluid">
             <div class="row-fluid">
-                <div class="span2">
+                <div class="span2 sidebar">
                     {% if app.session.get('entity_url') %}
-                    <ul class="sidebar">
+                    <ul>
                         <li><a href="{{ path('stream') }}"><i class="icon-inbox"></i> Stream</a></li>
                         {#<li><i class="icon-user"></i> Profile</li>#}
                         <li><a href="{{ path('bookmarks') }}"><i class="icon-link"></i> Bookmarks</a></li>
@@ -46,14 +44,13 @@
                     </footer>
                 </div>
 
-                <div class="span6">
+                <div class="span8">
                     <div class="content">
                         <div class="errors"></div>
 
                         {% block content %}{% endblock %}
                     </div>
                 </div>
-                <div class="span2">{% block sidebar %}{% endblock %}</div>
             </div>
 
         </div>

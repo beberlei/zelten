@@ -1,6 +1,7 @@
 body {
     margin: 0px;
-    padding: 60px;
+    padding: 0px;
+    background-color: #eee;
 }
 .sidebar, .navbar {
     font-family: 'Overlock', cursive;
@@ -15,6 +16,11 @@ body {
     border: 1px solid #C4C4C4;
     border-radius: 4px;
     margin-bottom: 8px;
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    -ms-box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    -o-box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
 }
 .box-content {
     padding: 10px;
@@ -123,4 +129,56 @@ footer {
     background-repeat: no-repeat;
     background-image: url('/ajax-loader.gif');
     height: 30px;
+}
+
+div#header {
+    background-color: #00C8FA;
+    height: 100px;
+    color: #ffffff;
+    font-family: 'Overlock', cursive;
+}
+div#header .help-inline {
+    color: #ffffff;
+}
+div#header .navbar-inner {
+    background-color: #00C8FA;
+    background-image: none;
+    border: 0px;
+    border-shadow: 0px;
+    border-radius: 0px;
+}
+div#header .brand {
+    display: block;
+    float: left;
+    padding: 10px 20px 10px;
+    margin-left: -20px;
+    font-size: 20px;
+    font-weight: 200;
+    color: #fff;
+    text-shadow: 0 1px 0 white;
+}
+div#header .brand:hover {
+    text-decoration: none;
+}
+#main {
+    margin-top: -20px;
+}
+.sidebar {
+    padding-top: 40px;
+}
+.content {
+    font-family: 'Merriweather',serif;
+    background-color: #fff;
+    border: 1px solid #c4c4c4;
+    padding: 10px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    -ms-box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    -o-box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
 }
