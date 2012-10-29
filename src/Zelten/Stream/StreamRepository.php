@@ -120,11 +120,17 @@ class StreamRepository
     public function getFullProfile($entity)
     {
         $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
-        $data = $userClient->getProfile();
+
         $profile = array(
             'name'   => str_replace(array('https://', 'http://'), '', $entity),
             'entity' => $this->getEntityShortname($entity),
         );
+
+        try {
+            $data = $userClient->getProfile();
+        } catch(\Guzzle\Http\Exception\CurlException $e) {
+            $data = array();
+        }
 
         foreach ($this->supportedProfileTypes as $profileType => $name) {
             if (isset($data[$profileType])) {
