@@ -50,7 +50,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         });
 
         if (cnt > 0) {
-            this.newMessages += newEntries.html();
+            this.newMessages = newEntries.html() + this.newMessages;
             this.$el.find('.stream-notifications').html('<div class="alert new-messages">There are ' + cnt + ' new messages.</div>');
             this.$el.find('.new-messages').click(_.bind(this.showNewMessages, this));
             document.title = '(' + cnt + ') ' + this.title;
