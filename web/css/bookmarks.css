@@ -83,16 +83,19 @@ p.bookmark-description {
     list-style-type: none;
     height: 28px;
     display: block;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     font-weight: bold;
     color: #777;
+    font-size: 8pt;
+    text-align: center;
 }
 .sidebar li:hover {
     color: #000;
 }
-.sidebar i {
+.sidebar li div {
     font-size: 32px;
     align: center;
+    width: 100%;
 }
 .sidebar a:hover {
     text-decoration: none;
@@ -166,7 +169,12 @@ div#header .brand:hover {
 .sidebar {
     padding-top: 40px;
 }
+.sidebar ul {
+    margin: 0px;
+    padding: 0px;
+}
 .content {
+    max-width: 1200px;
     font-family: 'Merriweather',serif;
     background-color: #fff;
     border: 1px solid #c4c4c4;

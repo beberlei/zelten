@@ -34,7 +34,7 @@ class Controller implements ControllerProviderInterface
             $entityUrl = $app['session']->get('entity_url');
 
             if ($entityUrl) {
-                return new RedirectResponse($app['url_generator']->generate('bookmarks'));
+                return new RedirectResponse($app['url_generator']->generate('stream'));
             }
 
             $entityUrl = $request->request->get('entity_url');
@@ -76,7 +76,7 @@ class Controller implements ControllerProviderInterface
 
             $app['db']->executeUpdate('UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($app['session']->get('entity_url')));
 
-            return new RedirectResponse($app['url_generator']->generate('bookmarks'));
+            return new RedirectResponse($app['url_generator']->generate('stream'));
         })->bind('oauth_accept');
 
         return $controllers;
