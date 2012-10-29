@@ -69,7 +69,6 @@ class Controller implements ControllerProviderInterface
         $stream  = $app['zelten.stream'];
         $message = $stream->write($text, $mention);
 
-
         if ($request->isXmlHttpRequest()) {
             $template = $request->request->get('type') == 'comment'
                 ? '_conversation_message.html'

@@ -68,7 +68,6 @@ Zelten.MessageView = Backbone.View.extend({
     },
     render: function() {
         this.$el.find('.show-tooltip').tooltip({
-
         });
         this.$el.find('.show-popover').popover({
             placement: 'bottom',
@@ -183,6 +182,8 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         }
     },
     render: function() {
+        this.$el.find('.stream-add-post .message').autoResize({extraSpace: 10});
+        this.$el.find('.stream-message-add-comment .message').autoResize({extraSpace: 10});
         this.$el.find('.stream-message').each(function() {
             var message = new Zelten.MessageView({
                 el: $(this)
