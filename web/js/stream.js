@@ -161,7 +161,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         this.win.scroll(_.bind(this.scrollCheck, this));
         setInterval(_.bind(this.checkNewMessages, this), 1000*60);
         this.postStatus = new Zelten.WriteStatusView({
-            el: this.$el.find('.stream-add-message-box .stream-add-message'),
+            el: this.$el.find('.stream-add-message-box .stream-message-add'),
             messageList: this.$el.find('.stream-messages')
         });
     },

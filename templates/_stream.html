@@ -1,17 +1,17 @@
 <div id="stream">
     {% if post_add %}
     <div class="stream-add-message-box">
-        <form action="{{ path('stream_write') }}" method="message" class="stream-add-message">
-        <div class="box box-highlight">
-            <div class="box-content">
-                <div  class="form-inline">
-                    <textarea class="message span12" name="message" rows="1" placeholder="Share whats new..."></textarea>
+        <form action="{{ path('stream_write') }}" method="message" class="stream-message-add">
+            <div class="box box-highlight">
+                <div class="box-content">
+                    <div  class="form-inline">
+                        <textarea class="message span12" name="message" rows="1" placeholder="Share whats new..."></textarea>
+                    </div>
+                </div>
+                <div class="box-footer actions">
+                    <input type="submit" class="stream-message-add-btn btn btn-success" value="Share" disabled="disabled" />
                 </div>
             </div>
-            <div class="box-footer actions">
-                <input type="submit" class="stream-add-message-btn btn btn-success" value="Share" disabled="disabled" />
-            </div>
-        </div>
         </form>
     </div>
     {% endif %}
