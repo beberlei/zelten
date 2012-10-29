@@ -131,7 +131,11 @@ class StreamRepository
         } else if ($message->type == 'repost') {
             $repostedBy     = $message->entity;
             $originalClient = $this->tentClient->getUserClient($message->content['entity']);
-            $message        = $this->createMessage($originalClient->getPost($message->content['id']));
+            try {
+                $message        = $this->createMessage($originalClient->getPost($message->content['id']));
+            } catch(\Exception $e) {
+                continue;
+            }
 
             if (!$message) {
                 continue;
