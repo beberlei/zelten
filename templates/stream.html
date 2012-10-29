@@ -3,7 +3,7 @@
 {% block title %}Stream{% endblock %}
 
 {% block content %}
-    {% include "_stream.html" with {'messages': messages} %}
+    {% include "_stream.html" with {'messages': messages, 'post_add': true} %}
 {% endblock %}
 
 {% block javascripts %}

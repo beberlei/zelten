@@ -42,6 +42,7 @@ p.bookmark-description {
 }
 .box-footer a {
     margin-right: 5px;
+    background-color: #f2f2f2;
 }
 .box-footer .post-type {
     color: #777777;
@@ -106,7 +107,7 @@ footer {
     font-size: 8pt;
     color: #777777;
 }
-.stream-message {
+#stream {
     max-width: 700px;
 }
 .stream-message header {

@@ -1,4 +1,21 @@
 <div id="stream">
+    {% if post_add %}
+    <div class="stream-post-add">
+        <form action="#" method="POST">
+        <div class="box box-highlight">
+            <div class="box-content">
+                <div  class="form-inline">
+                    <textarea class="span12" name="message" rows="1"></textarea>
+                </div>
+            </div>
+            <div class="box-footer">
+                <input class="btn btn-success span3" value="Share" />
+            </div>
+        </div>
+        </form>
+    </div>
+    {% endif %}
+
     <div class="stream-notifications"></div>
     <div class="stream-messages">
     {% for message in messages.messages %}
