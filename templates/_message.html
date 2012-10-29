@@ -1,4 +1,25 @@
 <div class="row-fluid stream-message" data-message-id="{{ message.id }}" data-entity="{{ message.entity.entity }}">
+    {% if message.type == "follower" %}
+    <div class="span1">
+        <a href="{{ path('stream_user', {'entity': message.content.follower.entity}) }}"><img src="{% if message.content.follower.avatar %}{{ message.content.follower.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>
+    </div>
+    <div class="span11">
+        <div class="box">
+            <div class="box-content">
+                {{ message.content.follower.name }} now follows you!
+            </div>
+            <div class="box-footer">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <div class="btn-group">
+                            <a href="#" class="btn show-tooltip" data-original-title="Follower Notification"><i class="icon-user post-type"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
     <div class="span1">
         <a href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}"><img src="{% if message.entity.avatar %}{{ message.entity.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>
     </div>
@@ -36,6 +57,9 @@ This content is limited to the following groups and entities:
 {% endspaceless %}" data-original-title="Permissions">Limited</a>
                     {% endif %}
 
+                    {% if message.repostedBy %}
+                    <p>Message was reposted by <a href="{{ path('stream_user', {'entity': message.repostedBy.entity}) }}">{{ message.repostedBy.name }}</a></p>
+                    {% endif %}
                 </header>
 
                 <div class="message-body">
@@ -49,7 +73,14 @@ This content is limited to the following groups and entities:
                     </a>
 
                     {% if message.content.description is defined %}<p class="bookmark-description">{{ message.content.description }}</p>{% endif %}
+                {% elseif message.type == 'essay' %}
+                    <h4>{{ message.content.title }}</h4>
 
+                    <p>{{ message.content.excerpt }} <a href="#" class="more-content">show more</a></p>
+
+                    <div class="hidden-content">
+                        {{ message.content.body|raw }}
+                    </div>
                 {% endif %}
                 </div>
             </div>
@@ -86,4 +117,5 @@ This content is limited to the following groups and entities:
             </div>
         </div>
     </div>
+    {% endif %}
 </div>

@@ -93,13 +93,19 @@ Zelten.WriteStatusView = Backbone.View.extend({
 Zelten.MessageView = Backbone.View.extend({
     events: {
         "click a.show-conversation": "clickShowConversations",
-        "click a.repost": "clickRepost"
+        "click a.repost": "clickRepost",
+        "click a.more-content": "showMoreContent"
     },
     initialize: function(args) {
         this.replyToView = new Zelten.WriteStatusView({
             messageList: args.messageList,
             el: this.$el.find(".stream-message-add-replyto")
         });
+    },
+    showMoreContent: function(e) {
+        $(e.currentTarget).hide();
+        this.$el.find('.hidden-content').slideDown();
+        return false;
     },
     clickRepost: function(e) {
         var modal = new Zelten.ModalConfirmDialogView({
@@ -249,7 +255,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             };
 
             var message = new Zelten.MessageView({
-                messageList: this.$el.find('.stream-messages'),
+                messageList: streamMessages,
                 el: el
             });
             message.render();

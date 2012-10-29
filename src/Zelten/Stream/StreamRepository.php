@@ -5,6 +5,7 @@ namespace Zelten\Stream;
 use TentPHP\PostCriteria;
 use TentPHP\Post;
 use Kwi\UrlLinker;
+use Zend\Escaper\Escaper;
 
 class StreamRepository
 {
@@ -12,11 +13,16 @@ class StreamRepository
     private $urlGenerator;
     private $currentEntity;
     private $linker;
+    private $escaper;
 
     private $supportedTypes = array(
         'https://tent.io/types/post/status/v0.1.0'    => 'status',
         'http://www.beberlei.de/tent/bookmark/v0.0.1' => 'bookmark',
+        'https://tent.io/types/post/essay/v0.1.0'     => 'essay',
+        'https://tent.io/types/post/repost/v0.1.0'    => 'repost',
+        'https://tent.io/types/post/follower/v0.1.0'  => 'follower',
     );
+
     private $supportedProfileTypes = array(
         'https://tent.io/types/info/basic/v0.1.0' => 'basic',
         'https://tent.io/types/info/core/v0.1.0' => 'core',
@@ -32,6 +38,7 @@ class StreamRepository
         $this->urlGenerator = $urlGenerator;
         $this->currentEntity = $currentEntity;
         $this->linker = new UrlLinker();
+        $this->escaper = new Escaper();
     }
 
     public function write($message, $mention = null)
@@ -52,9 +59,16 @@ class StreamRepository
 
     public function getMessages($entityUrl, array $criteria = array())
     {
+        $types = array(
+            'http://www.beberlei.de/tent/bookmark/v0.0.1',
+            'https://tent.io/types/post/status/v0.1.0',
+            'https://tent.io/types/post/essay/v0.1.0',
+            'https://tent.io/types/post/repost/v0.1.0',
+            'https://tent.io/types/post/follower/v0.1.0',
+        );
         $client   = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
         $criteria = array_merge(array(
-                'post_types' => 'https://tent.io/types/post/status/v0.1.0,http://www.beberlei.de/tent/bookmark/v0.0.1',
+                'post_types' => implode(",", $types),
                 'limit'      => 10,
             ), $criteria);
         $posts  = $client->getPosts(new PostCriteria($criteria));
@@ -112,6 +126,15 @@ class StreamRepository
                     $message->content['text']
                 );
             }
+        } else if ($message->type == 'follower') {
+            $message->content['follower'] = $this->getPublicProfile($message->content['entity']);
+        } else if ($message->type == 'repost') {
+            $repostedBy     = $message->entity;
+            $originalClient = $this->tentClient->getUserClient($message->content['entity']);
+            $message        = $this->createMessage($originalClient->getPost($message->content['id']));
+            $message->repostedBy = $repostedBy;
+        } else if ($message->type == 'essay') {
+            $message->content['body'] = $this->escaper->escapeHtml($message->content['body']);
         }
 
         return $message;

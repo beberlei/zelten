@@ -209,3 +209,6 @@ form.stream-message-add-replyto {
     height: 10px;
     min-height: 10px;
 }
+.hidden-content {
+    display: none;
+}

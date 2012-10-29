@@ -12,6 +12,7 @@ class Message
     public $mentions;
     public $published;
     public $permissions;
+    public $repostedBy;
 
     public function getEntityShortname()
     {
