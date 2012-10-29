@@ -119,7 +119,6 @@ class StreamRepository
 
     public function getFullProfile($entity)
     {
-        $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
 
         $profile = array(
             'name'   => str_replace(array('https://', 'http://'), '', $entity),
@@ -127,6 +126,7 @@ class StreamRepository
         );
 
         try {
+            $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
             $data = $userClient->getProfile();
         } catch(\Guzzle\Http\Exception\CurlException $e) {
             $data = array();
