@@ -132,6 +132,11 @@ class StreamRepository
             $repostedBy     = $message->entity;
             $originalClient = $this->tentClient->getUserClient($message->content['entity']);
             $message        = $this->createMessage($originalClient->getPost($message->content['id']));
+
+            if (!$message) {
+                continue;
+            }
+
             $message->repostedBy = $repostedBy;
         } else if ($message->type == 'essay') {
             $message->content['body'] = $this->escaper->escapeHtml($message->content['body']);

@@ -36,6 +36,10 @@ Zelten.WriteStatusView = Backbone.View.extend({
     },
     initialize: function(args) {
         this.messageList = args.messageList;
+        this.$el.find('textarea').autoResize({
+            extraSpace: 10,
+            animate: {duration: 50, complete: function() {}}
+        });
     },
     cancelPosting: function() {
         var actions = this.$el.find(".actions");
@@ -139,9 +143,7 @@ Zelten.MessageView = Backbone.View.extend({
         this.$el.find('a.show-conversation').append(cnt);
     },
     render: function() {
-        this.$el.find('.stream-message-add-comment .message').autoResize({extraSpace: 0});
-        this.$el.find('.show-tooltip').tooltip({
-        });
+        this.$el.find('.show-tooltip').tooltip({});
         this.$el.find('.show-popover').popover({
             placement: 'bottom',
             trigger: 'hover'
@@ -218,7 +220,6 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
     },
     render: function() {
         var messageList = this.$el.find('.stream-messages');
-        this.$el.find('.stream-add-post .message').autoResize({extraSpace: 10});
         this.$el.find('.stream-message').each(function() {
             var message = new Zelten.MessageView({
                 messageList: messageList,
