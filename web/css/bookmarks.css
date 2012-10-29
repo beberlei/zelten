@@ -119,6 +119,7 @@ footer {
 }
 .profile {
     margin-bottom: 10px;
+    max-width: 700px;
 }
 .people-list {
     list-style-type: none;

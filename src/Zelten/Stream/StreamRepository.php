@@ -149,40 +149,26 @@ class StreamRepository
     {
         $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
         $followers  = $userClient->getFollowers();
+        $count      = $userClient->getFollowerCount();
 
-        return $this->preparePeopleList($followers, $limit);
+        return $this->preparePeopleList($count, $followers, $limit);
     }
 
     public function getFollowings($entity, $limit = 5)
     {
         $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
         $followings = $userClient->getFollowings();
+        $count      = $userClient->getFollowingCount();
 
-        return $this->preparePeopleList($followings, $limit);
+        return $this->preparePeopleList($count, $followings, $limit);
     }
 
-    private function preparePeopleList($followers, $limit)
+    private function preparePeopleList($count, $peoples, $limit)
     {
-        $result = array('total' => count($followers), 'list' => array());
-        foreach ($followers as $follower) {
-            $profile = array(
-                'entity' => $this->getEntityShortname($follower['entity']),
-                'name'   => str_replace(array('https://', 'http://'), '', $follower['entity']),
-            );
+        $result = array('total' => $count, 'list' => array());
 
-            foreach ($this->supportedProfileTypes as $profileType => $name) {
-                if (isset($follower['profile'][$profileType])) {
-                    $profile[$name] = $follower['profile'][$profileType];
-                } else {
-                    $profile[$name] = $this->profileTypeDefaults[$name];
-                }
-            }
-
-            if (!empty($profile['basic']['name'])) {
-                $profile['name'] = $profile['basic']['name'];
-            }
-
-            $result['list'][] = $profile;
+        foreach ($peoples as $people) {
+            $result['list'][] = $this->getFullProfile($people['entity']);
 
             if (count($result['list']) >= $limit) {
                 break;
