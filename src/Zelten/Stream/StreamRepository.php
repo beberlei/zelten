@@ -89,7 +89,10 @@ class StreamRepository
             }
             $result['last'] = array('id' => $post['id'], 'entity' => $post['entity']);
 
-            $result['messages'][] = $this->createMessage($post);
+            $message = $this->createMessage($post);;
+            if ($message) {
+                $result['messages'][] = $message;
+            }
         }
 
         return $result;
@@ -134,11 +137,11 @@ class StreamRepository
             try {
                 $message        = $this->createMessage($originalClient->getPost($message->content['id']));
             } catch(\Exception $e) {
-                continue;
+                return;
             }
 
             if (!$message) {
-                continue;
+                return;
             }
 
             $message->repostedBy = $repostedBy;
