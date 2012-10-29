@@ -1,5 +1,31 @@
 var Zelten = {};
 
+Zelten.ModalConfirmDialogView = Backbone.View.extend({
+    events: {
+        "click .cancel": "cancelAction",
+        "click .action-success": "successAction"
+    },
+    initialize: function(args) {
+        this.success = args.success;
+        this.params = args.params;
+    },
+    template: _.template($("#modal-confirm-dialog").html()),
+    cancelAction: function() {
+        this.$el.modal('hide');
+        this.remove();
+    },
+    successAction: function() {
+        this.success();
+        this.cancelAction();
+    },
+    render: function() {
+        var dialog = $(this.template(this.params));
+        this.setElement(dialog);
+        dialog.modal('show');
+        $("body").append(dialog);
+    }
+});
+
 Zelten.WriteStatusView = Backbone.View.extend({
     events: {
         "click": "showActions",
@@ -12,7 +38,7 @@ Zelten.WriteStatusView = Backbone.View.extend({
         this.messageList = args.messageList;
     },
     cancelPosting: function() {
-        var actions = this.$el.find(".stream-message-add .actions");
+        var actions = this.$el.find(".actions");
         actions.slideUp();
     },
     writeMessage: function(e) {
@@ -66,13 +92,27 @@ Zelten.WriteStatusView = Backbone.View.extend({
 
 Zelten.MessageView = Backbone.View.extend({
     events: {
-        "click a.show-conversation": "clickShowConversations"
+        "click a.show-conversation": "clickShowConversations",
+        "click a.repost": "clickRepost"
     },
     initialize: function(args) {
         this.replyToView = new Zelten.WriteStatusView({
             messageList: args.messageList,
             el: this.$el.find(".stream-message-add-replyto")
         });
+    },
+    clickRepost: function(e) {
+        var modal = new Zelten.ModalConfirmDialogView({
+            params: {
+                title: 'Do you want to repost this message?',
+                post: this.$el.find('.message-body').html(),
+                label: 'Yes, repost!'
+            },
+            success: _.bind(this.confirmClickRepost, this)
+        });
+        modal.render();
+    },
+    confirmClickRepost: function() {
     },
     clickShowConversations: function(e) {
         var link = $(e.currentTarget);
@@ -130,6 +170,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         var done = false;
         var cnt = this.newMessagesCount;
         var newMessages = $("<div></div>");
+        var messageList = this.$el.find('.stream-messages');
         newEntries.find('.stream-message').each(function() {
             cnt++;
             var el = $(this);
@@ -142,7 +183,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             }
 
             var message = new Zelten.MessageView({
-                messageList: this.$el.find('.stream-messages'),
+                messageList: messageList,
                 el: el
             });
             message.render();

@@ -38,6 +38,7 @@ This content is limited to the following groups and entities:
 
                 </header>
 
+                <div class="message-body">
                 {% if message.type == 'status' %}
                 {{ message.content.text|raw }}
                 {% elseif message.type == 'bookmark' %}
@@ -50,6 +51,7 @@ This content is limited to the following groups and entities:
                     {% if message.content.description is defined %}<p class="bookmark-description">{{ message.content.description }}</p>{% endif %}
 
                 {% endif %}
+                </div>
             </div>
             <div class="box-footer">
                 <div class="row-fluid">
@@ -60,7 +62,7 @@ This content is limited to the following groups and entities:
                             {% elseif message.type == 'bookmark' %}
                             <a href="#" class="btn show-tooltip" data-original-title="Bookmark"><i class="icon-link post-type"></i></a>
                             {% endif %}
-                            <a href="#" class="btn show-tooltip" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
+                            <a href="#" class="btn show-tooltip repost" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
                             <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="btn show-tooltip show-conversation" data-original-title="View Conversation"><i class="icon-comment"></i></a>
                         </div>
                     </div>

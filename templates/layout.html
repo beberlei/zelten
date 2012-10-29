@@ -66,6 +66,22 @@
 </div>
 </script>
 
+<script type="text/html" id="modal-confirm-dialog">
+<div class="modal">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3><%- title %></h3>
+    </div>
+    <div class="modal-body">
+        <%= post %>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn cancel">Cancel</a>
+        <a href="#" class="btn btn-primary action-success"><%- label %></a>
+    </div>
+</div>
+</script>
+
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/jquery.autoresize.js"></script>
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/bootstrap/js/bootstrap.min.js"></script>
