@@ -108,8 +108,18 @@ class Controller implements ControllerProviderInterface
             return new RedirectResponse($app['url_generator']->generate('homepage'));
         }
 
+        $criteria = $request->query->get('criteria', array());
+
+        if (isset($criteria['since_id_entity'])) {
+            $criteria['since_id_entity'] = str_replace(array('http-', 'https-'), array('http://', 'https://'), $criteria['since_id_entity']);
+        }
+
+        if (isset($criteria['before_id_entity'])) {
+            $criteria['before_id_entity'] = str_replace(array('http-', 'https-'), array('http://', 'https://'), $criteria['before_id_entity']);
+        }
+
         $stream   = $app['zelten.stream'];
-        $messages = $stream->getMessages($entityUrl, $request->query->get('criteria', array()));
+        $messages = $stream->getMessages($entityUrl, $criteria);
 
         return $app['twig']->render('stream.html', array('messages' => $messages));
     }
