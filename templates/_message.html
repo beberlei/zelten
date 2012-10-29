@@ -68,15 +68,15 @@ This content is limited to the following groups and entities:
                         <div class="conversations">
                         </div>
 
-                        <form method="post" action="{{ path('stream_write') }}" class="stream-message-add-comment">
+                        <form method="post" action="{{ path('stream_write') }}" class="stream-message-add-replyto">
                             <input type="hidden" name="type" value="comment" />
                             <input type="hidden" name="mentioned_entity" value="{{ message.entity.entity }}" />
                             <input type="hidden" name="mentioned_post" value="{{ message.id }}" />
 
-                            <textarea class="span12 message" name="message" placeholder="Add a comment..."></textarea>
+                            <textarea class="span12 message" name="message" placeholder="Reply to this message..."></textarea>
                             <div class="actions">
-                                <input type="submit" class="btn btn-success stream-message-add-comment-btn" value="Post comment" />
-                                <input type="reset" class="btn stream-message-add-comment-cancel" value="Cancel" />
+                                <input type="submit" class="btn btn-success stream-message-add-btn" value="Reply" />
+                                <input type="reset" class="btn stream-message-add-cancel" value="Cancel" />
                             </div>
                         </form>
                     </div>

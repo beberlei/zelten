@@ -61,7 +61,7 @@ class Controller implements ControllerProviderInterface
 
         if ($request->request->has('mentioned_entity')) {
             $mention = array(
-                'entity' => $request->request->get('mentioned_entity'),
+                'entity' => str_replace(array('http-', 'https-'), array('http://', 'https://'), $request->request->get('mentioned_entity')),
                 'post'   => $request->request->get('mentioned_post')
             );
         }
@@ -70,9 +70,7 @@ class Controller implements ControllerProviderInterface
         $message = $stream->write($text, $mention);
 
         if ($request->isXmlHttpRequest()) {
-            $template = $request->request->get('type') == 'comment'
-                ? '_conversation_message.html'
-                : '_message.html';
+            $template = '_message.html';
             return $app['twig']->render($template, array('message' => $message));
         }
 

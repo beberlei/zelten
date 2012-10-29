@@ -1,16 +1,18 @@
 var Zelten = {};
 
-Zelten.MessageView = Backbone.View.extend({
+Zelten.WriteStatusView = Backbone.View.extend({
     events: {
-        "click a.show-conversation": "clickShowConversations",
-        "click .stream-message-add-comment": "showCommentBox",
-        "keyup .stream-message-add-comment .message": "showCommentBox",
-        "change .stream-message-add-comment .message": "showCommentBox",
-        "click .stream-message-add-comment-cancel": "cancelComment",
-        "submit .stream-message-add-comment": "writeMessage"
+        "click": "showActions",
+        "keyup .message": "showActions",
+        "change .message": "showActions",
+        "click .stream-message-add-cancel": "cancelPosting",
+        "submit": "writeMessage"
     },
-    cancelComment: function() {
-        var actions = this.$el.find(".stream-message-add-comment .actions");
+    initialize: function(args) {
+        this.messageList = args.messageList;
+    },
+    cancelPosting: function() {
+        var actions = this.$el.find(".stream-message-add .actions");
         actions.slideUp();
     },
     writeMessage: function(e) {
@@ -21,7 +23,7 @@ Zelten.MessageView = Backbone.View.extend({
             return false;
         }
 
-        form.find('.stream-message-add-comment-btn').attr('disabled', true);
+        form.find('.stream-message-add-btn').attr('disabled', true);
 
         $.ajax({
             url:  form.attr('action'),
@@ -33,21 +35,44 @@ Zelten.MessageView = Backbone.View.extend({
         return false;
     },
     writeMessageSuccess: function(data) {
-        this.$el.find('.stream-message-add-comment-btn').attr('disabled', false);
-        this.$el.find('.conversations').append(data);
-        this.$el.find('.stream-message-add-comment').each(function() {
+        var newMessage = $(data);
+        var message = new Zelten.MessageView({
+            el: newMessage,
+            messageList: this.messageList,
+        });
+        message.render();
+
+        ZeltenMessages.first = {
+            id: newMessage.data('message-id'),
+            entity: newMessage.data('entity')
+        };
+
+        this.messageList.prepend(newMessage);
+        this.$el.find('.stream-message-add-btn').attr('disabled', false);
+        this.$el.each(function() {
             this.reset();
         });
-        this.cancelComment();
     },
-    showCommentBox: function() {
-        var actions = this.$el.find(".stream-message-add-comment .actions");
+    showActions: function() {
+        var actions = this.$el.find(".actions");
         if (actions.is(':hidden')) {
             actions.slideDown();
         }
 
-        var msg = this.$el.find('.stream-message-add-comment .message').val();
-        this.$el.find('.stream-message-add-comment-btn').attr('disabled', (msg.length == 0));
+        var msg = this.$el.find('.message').val();
+        this.$el.find('.stream-message-add-btn').attr('disabled', (msg.length == 0));
+    }
+});
+
+Zelten.MessageView = Backbone.View.extend({
+    events: {
+        "click a.show-conversation": "clickShowConversations"
+    },
+    initialize: function(args) {
+        this.replyToView = new Zelten.WriteStatusView({
+            messageList: args.messageList,
+            el: this.$el.find(".stream-message-add-replyto")
+        });
     },
     clickShowConversations: function(e) {
         var link = $(e.currentTarget);
@@ -79,10 +104,7 @@ Zelten.MessageView = Backbone.View.extend({
 
 Zelten.MessageStreamApplication = Backbone.View.extend({
     events: {
-        'scroll-bottom': 'loadOlderPosts',
-        'submit form.stream-add-post': 'writeMessage',
-        'keyup form.stream-add-post .message': 'updateShareButton',
-        'change form.stream-add-post .message': 'updateShareButton'
+        'scroll-bottom': 'loadOlderPosts'
     },
     initialize: function() {
         this.title = document.title;
@@ -91,46 +113,9 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         this.win = $(window);
         this.win.scroll(_.bind(this.scrollCheck, this));
         setInterval(_.bind(this.checkNewMessages, this), 1000*60);
-    },
-    updateShareButton: function(e) {
-        var msg = $(e.currentTarget).val();
-        this.$el.find('.stream-add-post-btn').attr('disabled', (msg.length == 0));
-    },
-    writeMessage: function(e) {
-        var form = $(e.currentTarget);
-        var msg = form.find('.message').val();
-
-        if (msg.length == 0) {
-            return false;
-        }
-
-        form.find('.stream-add-post-btn').attr('disabled', true);
-
-        $.ajax({
-            url:  form.attr('action'),
-            type: 'POST',
-            data: form.serialize(),
-            success: _.bind(this.writeMessageSuccess, this)
-        });
-
-        return false;
-    },
-    writeMessageSuccess: function(data) {
-        var newMessage = $(data);
-        var message = new Zelten.MessageView({
-            el: newMessage
-        });
-        message.render();
-
-        ZeltenMessages.first = {
-            id: newMessage.data('message-id'),
-            entity: newMessage.data('entity')
-        };
-
-        this.$el.find('.stream-messages').prepend(newMessage);
-        this.$el.find('.stream-add-post-btn').attr('disabled', false);
-        this.$el.find('.stream-add-post').each(function() {
-            this.reset();
+        this.postStatus = new Zelten.WriteStatusView({
+            el: this.$el.find('.stream-add-message-box .stream-add-message'),
+            messageList: this.$el.find('.stream-messages')
         });
     },
     checkNewMessages: function() {
@@ -157,6 +142,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             }
 
             var message = new Zelten.MessageView({
+                messageList: this.$el.find('.stream-messages'),
                 el: el
             });
             message.render();
@@ -183,9 +169,11 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         }
     },
     render: function() {
+        var messageList = this.$el.find('.stream-messages');
         this.$el.find('.stream-add-post .message').autoResize({extraSpace: 10});
         this.$el.find('.stream-message').each(function() {
             var message = new Zelten.MessageView({
+                messageList: messageList,
                 el: $(this)
             });
             message.render();
@@ -219,6 +207,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             };
 
             var message = new Zelten.MessageView({
+                messageList: this.$el.find('.stream-messages'),
                 el: el
             });
             message.render();

@@ -98,6 +98,11 @@ class StreamRepository
 
             foreach ($message->mentions as $mention) {
                 $parts = parse_url($mention['entity']);
+
+                if (!isset($parts['host'])) {
+                    continue;
+                }
+
                 $shortname = "^" . substr($parts['host'], 0, strpos($parts['host'], "."));
                 $userLink = $this->urlGenerator->generate('stream_user', array('entity' => $this->getEntityShortname($mention['entity'])));
 
