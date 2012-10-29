@@ -119,7 +119,6 @@ class StreamRepository
 
     public function getFullProfile($entity)
     {
-
         $profile = array(
             'name'   => str_replace(array('https://', 'http://'), '', $entity),
             'entity' => $this->getEntityShortname($entity),
@@ -163,7 +162,7 @@ class StreamRepository
             $profile = array();
         }
 
-        $data = array('entity' => $entity, 'name' => $entity, 'avatar' => null);
+        $data = array('entity' => $this->getEntityShortname($entity), 'name' => $entity, 'avatar' => null);
         if (isset($profile['https://tent.io/types/info/basic/v0.1.0'])) {
             $data['name']   = $profile['https://tent.io/types/info/basic/v0.1.0']['name'];
             $data['avatar'] = $profile['https://tent.io/types/info/basic/v0.1.0']['avatar_url'];
@@ -197,7 +196,7 @@ class StreamRepository
         $result = array('total' => $count, 'list' => array());
 
         foreach ($peoples as $people) {
-            $result['list'][] = $this->getFullProfile($people['entity']);
+            $result['list'][] = $this->getPublicProfile($people['entity']);
 
             if (count($result['list']) >= $limit) {
                 break;
