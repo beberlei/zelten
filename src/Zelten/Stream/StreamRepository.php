@@ -94,7 +94,7 @@ class StreamRepository
         $message->published   = new \DateTime('@' . $post['published_at']);
 
         if ($message->type == 'status') {
-            $message->content['text'] = $this->linker->parse($message->content['text']);
+            $message->content['text'] = nl2br($this->linker->parse($message->content['text']));
 
             foreach ($message->mentions as $mention) {
                 $parts = parse_url($mention['entity']);
