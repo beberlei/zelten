@@ -40,6 +40,10 @@ p.bookmark-description {
     padding: 8px;
     font-size: 9pt;
 }
+.message-stats {
+    color: #777777;
+    font-size: 9pt;
+}
 .box-footer a.btn {
     line-height: 10px;
     font-size: 12px;
@@ -140,7 +144,7 @@ footer {
 
 div#header {
     background-color: #00C8FA;
-    height: 100px;
+    height: 60px;
     color: #ffffff;
     font-family: 'Overlock', cursive;
 }
@@ -212,3 +216,4 @@ form.stream-message-add-replyto {
 .hidden-content {
     display: none;
 }
+

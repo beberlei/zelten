@@ -141,6 +141,8 @@ Zelten.MessageView = Backbone.View.extend({
             url: link.attr('href'),
             success: _.bind(this.showConversation, this)
         });
+
+        this.$el.find('.conversations-pane').slideDown();
         this.$el.find('.conversations').addClass('loading');
 
         return false;
