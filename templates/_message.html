@@ -1,4 +1,5 @@
-<div class="row-fluid stream-message" data-message-id="{{ message.id }}" data-entity="{{ message.entity.entity }}">
+<div class="row-fluid stream-message" data-message-id="{{ message.id }}" data-entity="{{ message.entity.entity }}"
+    {% if message.content.mentions is defined %}data-mentions="{{ message.content.mentions }}"{% endif %}>
     {% if message.type == "follower" %}
     <div class="span1">
         <a href="{{ path('stream_user', {'entity': message.content.follower.entity}) }}"><img src="{% if message.content.follower.avatar %}{{ message.content.follower.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>

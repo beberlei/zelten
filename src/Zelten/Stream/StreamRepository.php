@@ -120,6 +120,10 @@ class StreamRepository
         $message->published   = new \DateTime('@' . $post['published_at']);
 
         if ($message->type == 'status') {
+            if (preg_match_all('((\^[^\s]+))', $message->content['text'], $matches)) {
+                $message->content['mentions'] = implode(" ", array_unique($matches[1]));
+            }
+
             $message->content['text'] = nl2br($this->linker->parse($message->content['text']));
 
             foreach ($message->mentions as $mention) {

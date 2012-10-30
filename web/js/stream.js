@@ -35,6 +35,7 @@ Zelten.WriteStatusView = Backbone.View.extend({
         "submit": "writeMessage"
     },
     initialize: function(args) {
+        this.mentions = args.mentions || '';
         this.messageList = args.messageList;
         this.$el.find('textarea').autoResize({
             extraSpace: 10,
@@ -87,6 +88,10 @@ Zelten.WriteStatusView = Backbone.View.extend({
         var actions = this.$el.find(".actions");
         if (actions.is(':hidden')) {
             actions.slideDown();
+
+            if (this.mentions.length > 0) {
+                this.$el.find('.message').val(this.mentions + ' ');
+            }
         }
 
         var msg = this.$el.find('.message').val();
@@ -102,6 +107,7 @@ Zelten.MessageView = Backbone.View.extend({
     },
     initialize: function(args) {
         this.replyToView = new Zelten.WriteStatusView({
+            mentions: this.$el.data('mentions'),
             messageList: args.messageList,
             el: this.$el.find(".stream-message-add-replyto")
         });
