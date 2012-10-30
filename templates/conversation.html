@@ -1,7 +1,15 @@
 {% extends app.request.isXmlHttpRequest ? "ajax.html" : "layout.html" %}
 
 {% block content %}
-    {% for message in comments.messages %}
-    {% include "_conversation_message.html" with {"message": message} %}
-    {% endfor %}
+    {% if parent is defined %}
+        <h6>In reply to</h6>
+        {% include "_conversation_message.html" with {"message": parent} %}
+    {% endif %}
+
+    {% if comments.messages|length > 0 %}
+        <h6>Comments</h6>
+        {% for message in comments.messages %}
+        {% include "_conversation_message.html" with {"message": message} %}
+        {% endfor %}
+    {% endif %}
 {% endblock %}

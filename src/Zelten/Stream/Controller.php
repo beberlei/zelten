@@ -44,8 +44,25 @@ class Controller implements ControllerProviderInterface
 
         $stream   = $app['zelten.stream'];
         $comments = $stream->getMessages($entityUrl, $criteria);
+        $post     = $stream->getPost($mentionedEntity, $id);
 
-        return $app['twig']->render('conversation.html', array('comments' => $comments));
+        $parent = null;
+        if ($post && $post->type == "status" && isset($post->content['reply'])) {
+            $parent = $stream->getPost(
+                $this->urlize($post->content['reply']['entity']['entity']),
+                $post->content['reply']['post']
+            );
+        }
+
+        return $app['twig']->render('conversation.html', array(
+            'comments' => $comments,
+            'parent'   => $parent,
+        ));
+    }
+
+    private function urlize($entity)
+    {
+        return str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
     }
 
     public function postAction(Request $request, Application $app)

@@ -61,6 +61,10 @@ This content is limited to the following groups and entities:
                     {% if message.repostedBy %}
                     <p>Message was reposted by <a href="{{ path('stream_user', {'entity': message.repostedBy.entity}) }}">{{ message.repostedBy.name }}</a></p>
                     {% endif %}
+
+                    {% if message.content.reply is defined %}
+                    <p><a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-conversation">Reply to {{ message.content.reply.entity.name }}</a></p>
+                    {% endif %}
                 </header>
 
                 <div class="message-body">

@@ -66,6 +66,24 @@ class StreamRepository
         return $this->createMessage($data);
     }
 
+    /**
+     * Get a post
+     *
+     * @param string $entityUrl
+     * @param string $id
+     * @return Message
+     */
+    public function getPost($entityUrl, $id)
+    {
+        $client = $this->tentClient->getUserClient($entityUrl);
+
+        try {
+            return $this->createMessage($client->getPost($id));
+        } catch(\Exception $e) {
+            return;
+        }
+    }
+
     public function getMessages($entityUrl, array $criteria = array())
     {
         $types = array(
@@ -130,6 +148,13 @@ class StreamRepository
             $message->content['text'] = nl2br($this->linker->parse($message->content['text']));
 
             foreach ($message->mentions as $mention) {
+                if (!empty($mention['post'])) {
+                    $message->content['reply'] = array(
+                        'post'   => $mention['post'],
+                        'entity' => $this->getPublicProfile($mention['entity'])
+                    );
+                }
+
                 $parts = parse_url($mention['entity']);
 
                 if (!isset($parts['host'])) {
@@ -148,13 +173,8 @@ class StreamRepository
         } else if ($message->type == 'follower') {
             $message->content['follower'] = $this->getPublicProfile($message->content['entity']);
         } else if ($message->type == 'repost') {
-            $repostedBy     = $message->entity;
-            $originalClient = $this->tentClient->getUserClient($message->content['entity']);
-            try {
-                $message        = $this->createMessage($originalClient->getPost($message->content['id']));
-            } catch(\Exception $e) {
-                return;
-            }
+            $repostedBy = $message->entity;
+            $message    = $this->getPost($message->content['entity'], $message->content['id']);
 
             if (!$message) {
                 return;

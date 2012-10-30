@@ -133,7 +133,10 @@ Zelten.MessageView = Backbone.View.extend({
     },
     clickShowConversations: function(e) {
         var link = $(e.currentTarget);
-        link.attr('disabled', true);
+
+        // dont use link here, because we want to disable ALL conversation links
+        this.$el.find('a.show-conversation').attr('disabled', true).css('pointer-events', 'none');
+
         $.ajax({
             url: link.attr('href'),
             success: _.bind(this.showConversation, this)
@@ -146,7 +149,7 @@ Zelten.MessageView = Backbone.View.extend({
         this.$el.find('.conversations').removeClass('loading');
         this.$el.find('.conversations').html(data);
         var cnt = this.$el.find('.conversations .conversation-message').length;
-        this.$el.find('a.show-conversation').append(cnt);
+        this.$el.find('a.show-conversation').filter('.btn').append(' ' + cnt);
     },
     render: function() {
         this.$el.find('.show-tooltip').tooltip({});
