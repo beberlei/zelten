@@ -75,7 +75,14 @@ class StreamRepository
      */
     public function getPost($entityUrl, $id)
     {
-        $client = $this->tentClient->getUserClient($entityUrl);
+        $key     = sprintf('post_%s#%s#%s', $entityUrl, $entityUrl == $this->currentEntity, $id);
+        $message = apc_fetch($key, $fetched);
+
+        if ($fetched) {
+            return $message;
+        }
+
+        $client = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
 
         try {
             return $this->createMessage($client->getPost($id));
@@ -116,7 +123,7 @@ class StreamRepository
             }
             $result['last'] = array('id' => $post['id'], 'entity' => $post['entity']);
 
-            $message = $this->createMessage($post);;
+            $message = $this->createMessage($post);
             if ($message) {
                 $result['messages'][] = $message;
             }
@@ -127,6 +134,8 @@ class StreamRepository
 
     private function createMessage($post)
     {
+        $key     = sprintf('post_%s#%s#%s', $post['entity'], $post['entity'] == $this->currentEntity, $post['id']);
+
         $message              = new Message();
         $message->id          = $post['id'];
         $message->type        = $this->supportedTypes[$post['type']];
@@ -184,6 +193,8 @@ class StreamRepository
         } else if ($message->type == 'essay') {
             $message->content['body'] = $this->escaper->escapeHtml($message->content['body']);
         }
+
+        apc_store($key, $message, 600);
 
         return $message;
     }
