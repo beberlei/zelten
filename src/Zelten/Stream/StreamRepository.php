@@ -121,7 +121,10 @@ class StreamRepository
 
         if ($message->type == 'status') {
             if (preg_match_all('((\^[^\s]+))', $message->content['text'], $matches)) {
+                $matches[1][] = "^". str_replace(array("https://", "http://"), "", $post['entity']);
                 $message->content['mentions'] = implode(" ", array_unique($matches[1]));
+            } else {
+                $message->content['mentions'] = "^". str_replace(array("https://", "http://"), "", $post['entity']);
             }
 
             $message->content['text'] = nl2br($this->linker->parse($message->content['text']));
