@@ -1,7 +1,7 @@
 {% extends app.request.isXmlHttpRequest ? "ajax.html" : "layout.html" %}
 
 {% block content %}
-    {% if parent is defined %}
+    {% if parent %}
         <h6>In reply to</h6>
         {% include "_conversation_message.html" with {"message": parent} %}
     {% endif %}
