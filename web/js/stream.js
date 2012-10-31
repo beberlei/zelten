@@ -161,6 +161,18 @@ Zelten.MessageView = Backbone.View.extend({
             placement: 'bottom',
             trigger: 'hover'
         });
+        this.$el.find('a.user-details').clickover({
+            title:'User-Details',
+            content: '&nbsp;',
+            html: true,
+            width: 400,
+            template: '<div class="popover popover-user-details"><div class="arrow"></div><div class="popover-inner"><div class="popover-content loading"><p></p></div></div></div>'
+        }).bind('shown', function(e) {
+            var link = $(this);
+            $.get($(e.currentTarget).attr('href'), function(data) {
+                link.data('clickover').tip().find('.popover-content').removeClass('loading').html(data);
+            });
+        });
     }
 });
 

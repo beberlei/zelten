@@ -22,7 +22,7 @@ class Controller implements ControllerProviderInterface
         $controllers->get('/', array($this, 'streamAction'))->bind('stream');
         $controllers->post('/', array($this, 'postAction'))->bind('stream_write');
         $controllers->get('/u/{entity}/{id}/conversations', array($this, 'conversationAction'))->bind('post_conversation');
-        $controllers->get('/u/{entity}', array($this, 'userAction'))->bind('stream_user');
+        $controllers->get('/u/{entity}', array($this, 'profileAction'))->bind('stream_user');
 
         return $controllers;
     }
@@ -92,6 +92,21 @@ class Controller implements ControllerProviderInterface
         }
 
         return new RedirectResponse($app['url_generator']->generate('stream'));
+    }
+
+    public function profileAction(Request $request, Application $app, $entity)
+    {
+        $entityUrl = $app['session']->get('entity_url');
+
+        if (!$entityUrl) {
+            return new RedirectResponse($app['url_generator']->generate('homepage'));
+        }
+        $entity = str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
+
+        $stream   = $app['zelten.stream'];
+        $profile  = $stream->getFullProfile($entity);
+
+        return $app['twig']->render('user_profile.html', array('profile' => $profile));
     }
 
     public function userAction(Request $request, Application $app, $entity)

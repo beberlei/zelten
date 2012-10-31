@@ -1,0 +1,5 @@
+{% extends app.request.isXmlHttpRequest() ? "ajax.html" : "layout.html" %}
+
+{% block content %}
+{% include "_profile.html" with {"profile": profile, "size": 30} %}
+{% endblock %}

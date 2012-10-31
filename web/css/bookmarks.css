@@ -216,4 +216,6 @@ form.stream-message-add-replyto {
 .hidden-content {
     display: none;
 }
-
+.popover-user-details {
+    width: 400px;
+}
