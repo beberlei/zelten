@@ -175,7 +175,7 @@ class StreamRepository
 
                 $message->content['text'] = str_replace(
                     array($shortname, "^".$mention['entity']),
-                    '<a href="' . $userLink .'">' . $shortname . '</a>',
+                    '<a class="user-details" href="' . $userLink .'">' . $shortname . '</a>',
                     $message->content['text']
                 );
             }
