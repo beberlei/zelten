@@ -183,7 +183,7 @@ div#header .brand:hover {
 }
 .content {
     max-width: 1200px;
-    font-family: 'Merriweather',serif;
+    font-family: arial,sans-serif;
     background-color: #fff;
     border: 1px solid #c4c4c4;
     padding: 10px;
