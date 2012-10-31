@@ -44,6 +44,7 @@ Zelten.WriteStatusView = Backbone.View.extend({
     },
     cancelPosting: function() {
         var actions = this.$el.find(".actions");
+        this.$el.find('.message').css('height', 40);
         actions.slideUp();
     },
     writeMessage: function(e) {
@@ -89,6 +90,7 @@ Zelten.WriteStatusView = Backbone.View.extend({
         if (actions.is(':hidden')) {
             actions.slideDown();
 
+            this.$el.find('.message').css('height', 60);
             if (this.mentions.length > 0) {
                 this.$el.find('.message').val(this.mentions + ' ');
             }
