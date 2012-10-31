@@ -26,6 +26,33 @@ Zelten.ModalConfirmDialogView = Backbone.View.extend({
     }
 });
 
+Zelten.FollowerCollection = Backbone.Collection.extend({
+});
+
+Zelten.UserView = Backbone.View.extend({
+    events: {
+        "submit .follow": "followUser"
+    },
+    followUser: function(e) {
+        var form = $(e.currentTarget);
+        form.find('.btn').attr('disabled', true);
+        $.ajax({
+            data: form.serialize(),
+            type: 'POST',
+            url: form.attr('action'),
+            success: _.bind(this.followUserSuccess, this)
+        });
+        return false;
+    },
+    followUserSuccess: function() {
+        this.$el.find('form.follow .btn')
+                .addClass('btn-danger')
+                .removeClass('btn-success')
+                .attr('value', 'Unfollow')
+                .attr('disabled', true);
+    }
+});
+
 Zelten.WriteStatusView = Backbone.View.extend({
     events: {
         "click": "showActions",
@@ -170,7 +197,15 @@ Zelten.MessageView = Backbone.View.extend({
         }).bind('shown', function(e) {
             var link = $(this);
             $.get($(e.currentTarget).attr('href'), function(data) {
-                link.data('clickover').tip().find('.popover-content').removeClass('loading').html(data);
+                data = $(data);
+                var userView = new Zelten.UserView({
+                    el: data
+                });
+
+                link.data('clickover')
+                    .tip()
+                    .find('.popover-content')
+                    .removeClass('loading').html(data);
             });
         });
     }

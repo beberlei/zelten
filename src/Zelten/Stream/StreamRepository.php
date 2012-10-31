@@ -269,6 +269,12 @@ class StreamRepository
         return $this->preparePeopleList($count, $followers, $limit);
     }
 
+    public function follow($followEntity)
+    {
+        $userClient = $this->tentClient->getUserClient($this->currentEntity, true);
+        return $userClient->follow($followEntity);
+    }
+
     public function getFollowings($entity, $limit = 5)
     {
         $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);

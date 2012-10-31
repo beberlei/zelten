@@ -1,5 +1,5 @@
-<div class="row-fluid profile">
-    <div class="span8">
+<div class="row-fluid profile" data-entity="{{ profile.entity }}">
+    <div class="span9">
         <h3>{{ profile.name }}</h3>
 
         <small>
@@ -10,13 +10,20 @@
         {% if profile.basic.birthdate %}<p>Was born on {{profile.basic.birthdate }}</p>{%endif%}
         </small>
     </div>
-    <div class="span4">
+    <div class="span3">
         {% if profile.basic.avatar_url %}
         <img src="{{ profile.basic.avatar_url }}"
-            class="pull-right img-polaroid"
-            height="{% if not app.request.isXmlHttpRequest() %}1{% endif %}50"
-            width="{% if not app.request.isXmlHttpRequest() %}1{% endif %}50" />
+            class="img-polaroid"
+            height="{% if not app.request.isXmlHttpRequest() %}1{% endif %}75"
+            width="{% if not app.request.isXmlHttpRequest() %}1{% endif %}75" />
         {% endif %}
+
+        <p align="center" style="padding-top: 10px">
+            <form class="follow" method="post" action="{{ path('stream_follow') }}">
+                <input type="hidden" name="entity" value="{{ profile.entity }}" />
+                <input type="submit" class="btn btn-success" value="Follow" />
+            </form>
+        </p>
     </div>
 </div>
 

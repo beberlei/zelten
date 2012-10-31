@@ -23,8 +23,31 @@ class Controller implements ControllerProviderInterface
         $controllers->post('/', array($this, 'postAction'))->bind('stream_write');
         $controllers->get('/u/{entity}/{id}/conversations', array($this, 'conversationAction'))->bind('post_conversation');
         $controllers->get('/u/{entity}', array($this, 'profileAction'))->bind('stream_user');
+        $controllers->post('/followings', array($this, 'followAction'))->bind('stream_follow');
 
         return $controllers;
+    }
+
+    public function followAction(Request $request, Application $app)
+    {
+        $entityUrl = $app['session']->get('entity_url');
+
+        if (!$entityUrl) {
+            return new RedirectResponse($app['url_generator']->generate('homepage'));
+        }
+
+        $followEntity = $this->urlize($request->request->get('entity'));
+
+        $stream = $app['zelten.stream'];
+        $data   = $stream->follow($followEntity);
+
+        if ($request->isXmlHttpRequest()) {
+            return $app->json($data);
+        }
+
+        return new RedirectResponse($app['url_generator']->generate('stream_user', array(
+            'entity' => $request->request->get('entity'),
+        )));
     }
 
     public function conversationAction(Request $request, Application $app, $entity, $id)
