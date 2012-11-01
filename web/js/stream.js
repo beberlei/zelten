@@ -125,6 +125,7 @@ Zelten.WriteStatusView = Backbone.View.extend({
 
         var msg = this.$el.find('.message').val();
         this.$el.find('.stream-message-add-btn').attr('disabled', (msg.length == 0));
+        this.$el.find('.status-length-left').text(256 - msg.length);
     }
 });
 

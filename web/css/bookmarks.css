@@ -230,3 +230,6 @@ form.stream-message-add-replyto {
     text-align: center;
     color: #c09853;
 }
+.status-length-left {
+    font-size:8pt;
+}
