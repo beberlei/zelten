@@ -164,16 +164,21 @@ Zelten.MessageView = Backbone.View.extend({
     clickShowConversations: function(e) {
         var link = $(e.currentTarget);
 
-        // dont use link here, because we want to disable ALL conversation links
-        this.$el.find('a.show-conversation').attr('disabled', true).css('pointer-events', 'none');
+        if (this.$el.find('.conversations-pane').is(':hidden')) {
+            // dont use link here, because we want to disable ALL conversation links
+            this.$el.find('a.show-conversation').attr('disabled', true).css('pointer-events', 'none');
 
-        $.ajax({
-            url: link.attr('href'),
-            success: _.bind(this.showConversation, this)
-        });
+            $.ajax({
+                url: link.attr('href'),
+                success: _.bind(this.showConversation, this)
+            });
 
-        this.$el.find('.conversations-pane').slideDown();
-        this.$el.find('.conversations').addClass('loading');
+            this.$el.find('.conversations-pane').slideDown();
+            this.$el.find('.conversations').addClass('loading');
+        } else {
+            this.$el.find('.conversations-pane').slideUp();
+            this.$el.find('.conversations').removeClass('loading');
+        }
 
         return false;
     },
@@ -182,6 +187,7 @@ Zelten.MessageView = Backbone.View.extend({
         this.$el.find('.conversations').html(data);
         var cnt = this.$el.find('.conversations .conversation-message').length;
         this.$el.find('a.show-conversation').filter('.btn').append(' ' + cnt);
+        this.$el.find('a.show-conversation').attr('disabled', false).css('pointer-events', 'auto');
     },
     render: function() {
         this.$el.find('.show-tooltip').tooltip({});
