@@ -1,6 +1,6 @@
 {% extends app.request.isXmlHttpRequest() ? "ajax.html" : "layout.html" %}
 
-{% block title %}Stream{% endblock %}
+{% block title %}{% if mentioned_entity is defined %}Notifications{% else %}Stream{% endif %}{% endblock %}
 
 {% block content %}
 {% include "_stream.html" with {'messages': messages, 'post_add': post_add} %}
