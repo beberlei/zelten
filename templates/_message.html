@@ -73,14 +73,14 @@
                 <div class="row-fluid">
                     <div class="span8 message-stats">
                         {% if message.type == 'status' %}
-                        <a href="#" class="show-tooltip" data-original-title="Status Message"><i class="icon-envelope post-type"></i></a>
+                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Status Message"><i class="icon-envelope post-type"></i></a>
                         {% elseif message.type == 'bookmark' %}
-                        <a href="#" class="show-tooltip" data-original-title="Bookmark"><i class="icon-link post-type"></i></a>
+                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Bookmark"><i class="icon-link post-type"></i></a>
                         {% elseif message.type == 'essay' %}
-                        <a href="#" class="show-tooltip" data-original-title="Essay"><i class="icon-pencil post-type"></i></a>
+                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Essay"><i class="icon-pencil post-type"></i></a>
                         {% endif %}
 
-                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}">{{ message.published|date }}</a> - {{ message.app.name }} -
+                        {{ message.published|date }} - {{ message.app.name }} -
 
                         {% if message.permissions.public is defined and message.permissions.public %}
                         <a href="#" class="show-popover" rel="popover" data-content="This content is visible to everybody on the internet." data-original-title="Permissions">Public</a>
