@@ -271,6 +271,7 @@ class StreamRepository
         $profile = array(
             'name'   => str_replace(array('https://', 'http://'), '', $entity),
             'entity' => $this->getEntityShortname($entity),
+            'uri'    => $entity,
         );
 
         try {

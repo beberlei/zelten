@@ -2,7 +2,9 @@
     <div class="span9">
         <h3>{{ profile.name }} {% if you %}(YOU){% endif %}</h3>
 
+        {% if not app.request.isXmlHttpRequest() %}<p><a href="{{ profile.uri }}">{{ profile.uri }}</a></p>{% endif %}
         <small>
+
         {% if profile.basic.bio %}<p>{{ profile.basic.bio }}</p>{% endif %}
 
         {% if profile.basic.location %}<p>Lives in {{ profile.basic.location }}</p>{% endif %}
