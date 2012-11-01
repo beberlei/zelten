@@ -49,7 +49,7 @@ $app->register(new UrlGeneratorServiceProvider());
 $app->register(new ValidatorServiceProvider());
 $app->register(new TwigServiceProvider(), array(
     'twig.path'    => array(__DIR__.'/../templates'),
-    'twig.options' => array('cache' => sys_get_temp_dir() . '/twig_cache'),
+    'twig.options' => array('cache' => __DIR__.'/../cache'),
 ));
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
     // add custom globals, filters, tags, ...
