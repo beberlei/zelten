@@ -49,7 +49,7 @@
                 {% elseif message.type == 'bookmark' %}
                     shared a link to
                     <a href="{{ message.content.url }}" target="_blank">
-                    {% if message.content.image %}<img src="{{ message.content.image }}" height="16" width="16" />{% endif %}
+                    {% if message.content.image is defined and message.content.image %}<img src="{{ message.content.image }}" height="16" width="16" />{% endif %}
                     {{ message.content.title }}
                     </a>
 

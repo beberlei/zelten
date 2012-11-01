@@ -426,8 +426,12 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         var query = '';
         var lastMessage = this.collection.last();
 
+        if (this.postType != 'all') {
+            query += 'criteria[post_types]=' + this.postType;
+        }
+
         if (lastMessage) {
-            query += 'criteria[before_id]=' + lastMessage.id + '&criteria[before_id_entity]=' + lastMessage.get('entity');
+            query += '&criteria[before_id]=' + lastMessage.id + '&criteria[before_id_entity]=' + lastMessage.get('entity');
         }
 
         if (this.mentionedEntity) {

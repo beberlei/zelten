@@ -32,18 +32,22 @@ class Controller extends BaseController
 
     public function followersAction(Request $request, Application $app, $entity)
     {
+        $limit  = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
         $stream = $app['zelten.stream'];
+
         return $app['twig']->render('users.html', array(
-            'users' => $stream->getFollowers($this->urlize($entity)),
+            'users' => $stream->getFollowers($this->urlize($entity, $limit)),
             'title' => 'Follower',
         ));
     }
 
     public function followingAction(Request $request, Application $app, $entity)
     {
+        $limit  = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
         $stream = $app['zelten.stream'];
+
         return $app['twig']->render('users.html', array(
-            'users' => $stream->getFollowings($this->urlize($entity)),
+            'users' => $stream->getFollowings($this->urlize($entity), $limit),
             'title' => 'Following',
         ));
     }
