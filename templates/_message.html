@@ -37,7 +37,7 @@
                         <div class="span6">
 
                             {% if message.content.reply is defined %}
-                            <p class="pull-right"><a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-conversation">Reply to {{ message.content.reply.entity.name }}</a></p>
+                            <p class="pull-right"><a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-conversation">In reply to {{ message.content.reply.entity.name }}</a></p>
                             {% endif %}
                         </div>
                     </div>
