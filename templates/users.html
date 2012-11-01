@@ -1,0 +1,17 @@
+{% extends app.request.isXmlHttpRequest() ? "ajax.html" : "layout.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+{% if not app.request.isXmlHttpRequest() %}
+<h4>{{ title }}</h4>
+
+{% endif %}
+
+{% include "_user_list.html" with {
+    users: users,
+    title: title
+} %}
+
+{% endblock %}
+

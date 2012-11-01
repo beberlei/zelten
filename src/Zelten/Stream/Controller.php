@@ -2,7 +2,7 @@
 
 namespace Zelten\Stream;
 
-use Silex\ControllerProviderInterface;
+use Zelten\BaseController;
 use Silex\Application;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 use TentPHP\PostCriteria;
 
-class Controller implements ControllerProviderInterface
+class Controller extends BaseController
 {
     public function connect(Application $app)
     {
@@ -49,23 +49,6 @@ class Controller implements ControllerProviderInterface
                     ->before(array($this, 'isAuthenticated'));
 
         return $controllers;
-    }
-
-    public function isAuthenticated(Request $request)
-    {
-        $this->entityUrl = $request->getSession()->get('entity_url');
-
-        if (!$this->entityUrl) {
-            return new RedirectResponse($app['url_generator']->generate('homepage'));
-        }
-    }
-
-    private function getCurrentEntity()
-    {
-        if (!$this->entityUrl) {
-            throw new AccessDeniedHttpException();
-        }
-        return $this->entityUrl;
     }
 
     public function followAction(Request $request, Application $app)
@@ -115,11 +98,6 @@ class Controller implements ControllerProviderInterface
         ));
     }
 
-    private function urlize($entity)
-    {
-        return str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
-    }
-
     public function postAction(Request $request, Application $app)
     {
         $entityUrl = $this->getCurrentEntity();
@@ -163,8 +141,6 @@ class Controller implements ControllerProviderInterface
             'messages'   => $this->getMessages($userEntity, array(), $app),
             'profile'    => $stream->getFullProfile($userEntity),
             'entity'     => $userEntity,
-            'followers'  => $stream->getFollowers($userEntity),
-            'followings' => $stream->getFollowings($userEntity),
         ));
     }
 

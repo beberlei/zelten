@@ -49,6 +49,7 @@ $app->mount('/stream', new \Zelten\Stream\Controller());
 $app->mount('/socialsync', new \Zelten\SocialSync\Controller());
 $app->mount('/bookmarks', new \Zelten\Bookmarks\Controller());
 $app->mount('/groups', new \Zelten\Groups\Controller());
+$app->mount('/profile', new \Zelten\Profile\Controller());
 
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {

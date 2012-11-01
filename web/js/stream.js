@@ -53,6 +53,36 @@ Zelten.UserView = Backbone.View.extend({
     }
 });
 
+Zelten.UserListView = Backbone.View.extend({
+    initialize: function(args) {
+        this.url = args.url;
+        this.loadUsers();
+    },
+    loadUsers: function() {
+        this.$el.find('.people-list').addClass('loading');
+
+        $.ajax({
+            url: this.url,
+            success: _.bind(this.loadUsersSuccess, this)
+        });
+    },
+    loadUsersSuccess: function(data) {
+        this.$el.find('.people-list').removeClass('loading');
+        var data = $(data);
+        data.find('.user').each(_.bind(this.addUser, this));
+        this.$el.find('.total').text(data.find('.total').text());
+    },
+    addUser: function(idx, el) {
+        el = $(el);
+        var view = new Zelten.UserLinkView({
+            el: el.find('.user-details')
+        });
+        view.render();
+
+        this.$el.append(el);
+    }
+});
+
 Zelten.WriteStatusView = Backbone.View.extend({
     events: {
         "click": "showActions",
@@ -195,25 +225,38 @@ Zelten.MessageView = Backbone.View.extend({
             placement: 'bottom',
             trigger: 'hover'
         });
-        this.$el.find('a.user-details').clickover({
+        this.$el.find('a.user-details').each(function() {
+            var view = new Zelten.UserLinkView({
+                el: $(this)
+            });
+            view.render();
+        });
+    }
+});
+
+Zelten.UserLinkView = Backbone.View.extend({
+    render: function() {
+        this.$el.clickover({
             title:'User-Details',
             content: '&nbsp;',
             html: true,
+            placement: 'bottom',
             width: 400,
             template: '<div class="popover popover-user-details"><div class="arrow"></div><div class="popover-inner"><div class="popover-content loading"><p></p></div></div></div>'
-        }).bind('shown', function(e) {
-            var link = $(this);
-            $.get($(e.currentTarget).attr('href'), function(data) {
-                data = $(data);
-                var userView = new Zelten.UserView({
-                    el: data
-                });
-
-                link.data('clickover')
-                    .tip()
-                    .find('.popover-content')
-                    .removeClass('loading').html(data);
+        }).bind('shown', this.clickoverIsShown);
+    },
+    clickoverIsShown: function(e) {
+        var link = $(this);
+        $.get($(e.currentTarget).attr('href'), function(data) {
+            data = $(data);
+            var userView = new Zelten.UserView({
+                el: data
             });
+
+            link.data('clickover')
+                .tip()
+                .find('.popover-content')
+                .removeClass('loading').html(data);
         });
     }
 });

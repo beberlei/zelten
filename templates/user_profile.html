@@ -3,14 +3,37 @@
 {% block title %}{{ profile.name }}{% endblock %}
 
 {% block content %}
-{% include "_profile.html" with {"profile": profile, "you": you} %}
+{% if not app.request.isXmlHttpRequest() %}
+<div class="row-fluid">
+    <div class="span9">
+{% endif %}
+        {% include "_profile.html" with {"profile": profile, "you": you} %}
 
-<div id="stream">
-    <div class="stream-notifications"></div>
-    <div class="stream-messages"></div>
+        <div id="stream">
+            <div class="stream-notifications"></div>
+            <div class="stream-messages"></div>
+        </div>
+{% if not app.request.isXmlHttpRequest() %}
+    </div>
+    <div class="span3">
+        <div class="following">
+            {% include "_user_list.html" with {
+                users: {'list': [], 'total': ''},
+                title: 'following'
+            } %}
+        </div>
+
+        <div class="follower">
+            {% include "_user_list.html" with {
+                users: {'list': [], 'total': ''},
+                title: 'followed by'
+            } %}
+        </div>
+    </div>
 </div>
-
+{% endif %}
 {% endblock %}
+
 {% block javascripts %}
 <script type="text/javascript" src="/js/stream.js"></script>
 <script type="text/javascript">
@@ -23,6 +46,18 @@
         });
         app.render();
         app.checkNewMessages();
+
+        var following = new Zelten.UserListView({
+            url: '{{ path('user_following', {'entity': profile.entity}) }}',
+            el: $(".following")
+        });
+        following.render();
+
+        var followers = new Zelten.UserListView({
+            url: '{{ path('user_followers', {'entity': profile.entity}) }}',
+            el: $(".follower")
+        });
+        followers.render();
     });
 </script>
 {% endblock %}
