@@ -116,6 +116,9 @@ footer {
 #stream {
     max-width: 700px;
 }
+.stream-filters {
+    margin-bottom: 20px;
+}
 .stream-message header {
     font-size: 9pt;
     color: #777777;

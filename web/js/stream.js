@@ -229,10 +229,12 @@ Zelten.Message = Backbone.Model.extend({
 
 Zelten.MessageStreamApplication = Backbone.View.extend({
     events: {
-        'scroll-bottom': 'loadOlderPosts'
+        'scroll-bottom': 'loadOlderPosts',
+        'click .filter-post-type button': 'filterByPostType'
     },
     initialize: function(args) {
         this.entity = args.entity;
+        this.postType = 'all';
         this.mentionedEntity = args.mentionedEntity;
         this.url = args.url;
         this.title = document.title;
@@ -242,9 +244,25 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         setInterval(_.bind(this.checkNewMessages, this), 1000*15);
         this.collection.bind('add', _.bind(this.renderMessage, this));
     },
+    filterByPostType: function(e) {
+        var newPostType = $(e.currentTarget).attr('value');
+        if (newPostType == this.postType) {
+            return false;
+        }
+
+        this.postType = newPostType;
+        this.collection.reset();
+        this.checkNewMessages();
+
+        return true;
+    },
     checkNewMessages: function() {
         var firstMessage = this.collection.first();
         var query = '';
+
+        if (this.postType != 'all') {
+            query += 'criteria[post_types]=' + this.postType;
+        }
 
         if (firstMessage) {
             query += 'criteria[since_id]=' + firstMessage.id + '&criteria[since_id_entity]=' + firstMessage.get('entity')
@@ -326,6 +344,10 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             el: message.get('element')
         });
         messageView.render();
+
+        this.collection.on('reset', function() {
+            messageView.remove();
+        });
 
         // message already rendered
         if (messageList.children('*[data-message-id="' + message.id + '"]').length == 1) {

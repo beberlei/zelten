@@ -107,10 +107,17 @@ class StreamRepository
             'https://tent.io/types/post/repost/v0.1.0',
             'https://tent.io/types/post/follower/v0.1.0',
         );
+
         $criteria = array_merge(array(
                 'post_types' => implode(",", $types),
                 'limit'      => 10,
             ), $criteria);
+
+        $supportedTypes = array_flip($this->supportedTypes);
+        if (isset($supportedTypes[$criteria['post_types']])) {
+            $criteria['post_types'] = $supportedTypes[$criteria['post_types']];
+        }
+
         return $criteria;
     }
 
