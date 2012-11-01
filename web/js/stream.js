@@ -302,8 +302,13 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         this.loading = $('<div class="loading"></div>');
         this.$el.find('.stream-messages').append(this.loading);
 
+        var query = '?criteria[before_id]=' + ZeltenMessages.last.id + '&criteria[before_id_entity]=' + ZeltenMessages.last.entity;
+        if (ZeltenMessages.mentioned_entity) {
+            query += '&criteria[mentioned_entity]=' + ZeltenMessages.mentioned_entity;
+        }
+
         $.ajax({
-            url: ZeltenMessages.url + '?criteria[before_id]=' + ZeltenMessages.last.id + '&criteria[before_id_entity]=' + ZeltenMessages.last.entity,
+            url: ZeltenMessages.url + query,
             success: _.bind(this.loadOlderPostsSuccess, this)
         });
     },
