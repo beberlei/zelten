@@ -91,7 +91,14 @@ class StreamRepository
         }
     }
 
-    public function getMessages($entityUrl, array $criteria = array())
+    public function getMessageCount($entity, array $criteria = array())
+    {
+        $criteria = $this->mergeMessageCriteria($criteria);
+        $client   = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
+        return $client->getPostCount(new PostCriteria($criteria));
+    }
+
+    private function mergeMessageCriteria($criteria)
     {
         $types = array(
             'http://www.beberlei.de/tent/bookmark/v0.0.1',
@@ -100,11 +107,17 @@ class StreamRepository
             'https://tent.io/types/post/repost/v0.1.0',
             'https://tent.io/types/post/follower/v0.1.0',
         );
-        $client   = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
         $criteria = array_merge(array(
                 'post_types' => implode(",", $types),
                 'limit'      => 10,
             ), $criteria);
+        return $criteria;
+    }
+
+    public function getMessages($entityUrl, array $criteria = array())
+    {
+        $criteria = $this->mergeMessageCriteria($criteria);
+        $client   = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
         $posts  = $client->getPosts(new PostCriteria($criteria));
 
         $result = array(

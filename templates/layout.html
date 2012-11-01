@@ -4,10 +4,10 @@
         <title>{% block title '' %} - Zelten</title>
 
         <link href="http://fonts.googleapis.com/css?family=Overlock|Merriweather:400,300,700" rel="stylesheet" type="text/css" />
-        <link href="{{ app.request.basepath }}/bootstrap/css/bootstrap.min.css?v=12" rel="stylesheet" type="text/css" />
+        <link href="{{ app.request.basepath }}/bootstrap/css/bootstrap.min.css?v=13" rel="stylesheet" type="text/css" />
         <link href="{{ app.request.basepath }}/favicon.png" rel="shortcut icon" />
-        <link href="{{ app.request.basepath }}/css/bookmarks.css?v=12" rel="stylesheet" type="text/css" />
-        <link href="{{ app.request.basepath }}/font-awesome/css/font-awesome.css?v=12" rel="stylesheet" type="text/css" />
+        <link href="{{ app.request.basepath }}/css/bookmarks.css?v=13" rel="stylesheet" type="text/css" />
+        <link href="{{ app.request.basepath }}/font-awesome/css/font-awesome.css?v=13" rel="stylesheet" type="text/css" />
         <meta http-equiv='Content-Type' content='Type=text/html; charset=utf-8' />
         <link href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABmJLR0T///////8JWPfcAAAACXBIWXMAAABIAAAASABGyWs+AAAAF0lEQVRIx2NgGAWjYBSMglEwCkbBSAcACBAAAeaR9cIAAAAASUVORK5CYII=" rel="icon" type="image/x-icon" />
     </head>
@@ -31,7 +31,7 @@
                     {% if app.session.get('entity_url') %}
                     <ul>
                         <li><a href="{{ path('stream') }}"><div class="icon-inbox"></div> Stream</a></li>
-                        <li><a href="{{ path('stream_notifications') }}"><div class="icon-envelope"></div> Notifications</a></li>
+                        <li><a class="notifications" href="{{ path('stream_notifications') }}"><div class="icon-envelope"></div> Notifications</a></li>
                         {#<li><div class="icon-user"></div> Profile</li>#}
                         <li><a href="{{ path('bookmarks') }}"><div class="icon-link"></div> Bookmarks</a></li>
                         {#<li><div class="icon-camera-retro"></div> Photos</li>#}
@@ -88,9 +88,22 @@
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/jquery.autoresize.js"></script>
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/clickover.js"></script>
+        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/jquery.cookie.js"></script>
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/underscore-min.js"></script>
         <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/backbone-min.js"></script>
-        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/bookmarks.js?v=12"></script>
+        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/bookmarks.js?v=13"></script>
+        <script type="text/javascript" language="javascript" src="{{ app.request.basepath }}/js/notifications.js?v=13"></script>
+        <script type="text/javascript" language="javascript">
+        $(document).ready(function() {
+            $(".notifications").each(function() {
+                var view = new Zelten.NotificationCountView({
+                    url: '{{ path('stream_notifications_count') }}',
+                    el: $(this)
+                });
+                view.render();
+            });
+        });
+        </script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

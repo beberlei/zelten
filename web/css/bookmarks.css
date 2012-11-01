@@ -219,3 +219,9 @@ form.stream-message-add-replyto {
 .popover-user-details {
     width: 400px;
 }
+.notification-count {
+    position: relative;
+    z-index: 999;
+    top: -20px;
+    right: 0px;
+}

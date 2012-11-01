@@ -20,12 +20,33 @@ class Controller implements ControllerProviderInterface
     {
         $controllers = $app['controllers_factory'];
 
-        $controllers->get('/notifications', array($this, 'notificationsAction'))->bind('stream_notifications')->before(array($this, 'isAuthenticated'));
-        $controllers->get('/', array($this, 'streamAction'))->bind('stream')->before(array($this, 'isAuthenticated'));
-        $controllers->post('/', array($this, 'postAction'))->bind('stream_write')->before(array($this, 'isAuthenticated'));
-        $controllers->get('/u/{entity}/{id}/conversations', array($this, 'conversationAction'))->bind('post_conversation')->before(array($this, 'isAuthenticated'));
-        $controllers->get('/u/{entity}', array($this, 'profileAction'))->bind('stream_user')->before(array($this, 'isAuthenticated'));
-        $controllers->post('/followings', array($this, 'followAction'))->bind('stream_follow')->before(array($this, 'isAuthenticated'));
+        $controllers->get('/notifications', array($this, 'notificationsAction'))
+                    ->bind('stream_notifications')
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->get('/notifications/count', array($this, 'notificationsCountAction'))
+                    ->bind('stream_notifications_count')
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->get('/', array($this, 'streamAction'))
+                    ->bind('stream')
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->post('/', array($this, 'postAction'))
+                    ->bind('stream_write')
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->get('/u/{entity}/{id}/conversations', array($this, 'conversationAction'))
+                    ->bind('post_conversation')
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->get('/u/{entity}', array($this, 'profileAction'))
+                    ->bind('stream_user')
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->post('/followings', array($this, 'followAction'))
+                    ->bind('stream_follow')
+                    ->before(array($this, 'isAuthenticated'));
 
         return $controllers;
     }
@@ -51,11 +72,6 @@ class Controller implements ControllerProviderInterface
     {
         $entityUrl = $this->getCurrentEntity();
 
-        if (!$entityUrl) {
-            return new RedirectResponse($app['url_generator']->generate('homepage'));
-        }
-
-
         $followEntity = $this->urlize($request->request->get('entity'));
         $stream = $app['zelten.stream'];
         $data   = $stream->follow($followEntity);
@@ -73,7 +89,7 @@ class Controller implements ControllerProviderInterface
     {
         $entityUrl = $this->getCurrentEntity();
 
-        $mentionedEntity   = str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
+        $mentionedEntity = $this->urlize($entity);
         $criteria = array(
             //'mentioned_entity' => $mentionedEntity,
             'mentioned_post'   => $id,
@@ -107,12 +123,12 @@ class Controller implements ControllerProviderInterface
     {
         $entityUrl = $this->getCurrentEntity();
 
-        $text = substr(strip_tags($request->request->get('message')), 0, 256);
+        $text    = substr(strip_tags($request->request->get('message')), 0, 256);
         $mention = array();
 
         if ($request->request->has('mentioned_entity')) {
             $mention = array(
-                'entity' => str_replace(array('http-', 'https-'), array('http://', 'https://'), $request->request->get('mentioned_entity')),
+                'entity' => $this->urlize($request->request->get('mentioned_entity')),
                 'post'   => $request->request->get('mentioned_post')
             );
         }
@@ -130,29 +146,23 @@ class Controller implements ControllerProviderInterface
 
     public function profileAction(Request $request, Application $app, $entity)
     {
-        $entityUrl = $this->getCurrentEntity();
-        $entity = str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
+        $userEntity = $this->urlize($entity);
 
-        $stream   = $app['zelten.stream'];
-        $profile  = $stream->getFullProfile($entity);
-
-        return $app['twig']->render('user_profile.html', array('profile' => $profile));
+        return $app['twig']->render('user_profile.html', array(
+            'profile' => $app['zelten.stream']->getFullProfile($userEntity)
+        ));
     }
 
     public function userAction(Request $request, Application $app, $entity)
     {
-        $entityUrl = $this->getCurrentEntity();
-        $entity = str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
-
-        $stream   = $app['zelten.stream'];
-        $messages = $stream->getMessages($entity, $request->query->get('criteria', array()));
+        $userEntity = $this->urlize($entity);
 
         return $app['twig']->render('user_stream.html', array(
-            'messages'   => $messages,
-            'profile'    => $stream->getFullProfile($entity),
-            'entity'     => $entity,
-            'followers'  => $stream->getFollowers($entity),
-            'followings' => $stream->getFollowings($entity),
+            'messages'   => $this->getMessages($userEntity, array(), $app),
+            'profile'    => $stream->getFullProfile($userEntity),
+            'entity'     => $userEntity,
+            'followers'  => $stream->getFollowers($userEntity),
+            'followings' => $stream->getFollowings($userEntity),
         ));
     }
 
@@ -170,6 +180,18 @@ class Controller implements ControllerProviderInterface
             'mentioned_entity' => $entityUrl,
             'post_add'         => false
         ));
+    }
+
+    public function notificationsCountAction(Request $request, Application $app)
+    {
+        $entityUrl = $this->getCurrentEntity();
+
+        $criteria  = $request->query->get('criteria', array());
+        $criteria['mentioned_entity'] = $entityUrl;
+
+        return $app->json(array(
+            'count' => $app['zelten.stream']->getMessageCount($entityUrl, $criteria))
+        );
     }
 
     public function streamAction(Request $request, Application $app)

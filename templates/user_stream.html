@@ -36,20 +36,20 @@
             </li>
             {% endfor %}
         </ul>
-        {% endblock %}
-
-        {% block javascripts %}
-        <script type="text/javascript">
-            var ZeltenMessages = {
-                url: '{{ path('stream_user', {'entity': profile.entity}) }}',
-                entity: '{{ entity }}',
-                first: {{ messages.first|json_encode|raw }},
-                last: {{ messages.last|json_encode|raw }}
-            };
-        </script>
-        <script type="text/javascript" src="/js/stream.js"></script>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    var ZeltenMessages = {
+        url: '{{ path('stream_user', {'entity': profile.entity}) }}',
+        entity: '{{ entity }}',
+        first: {{ messages.first|json_encode|raw }},
+        last: {{ messages.last|json_encode|raw }}
+    };
+</script>
+<script type="text/javascript" src="/js/stream.js"></script>
 {% endblock %}
 
 {% block sidebar %}
