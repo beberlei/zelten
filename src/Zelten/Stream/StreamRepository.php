@@ -50,7 +50,7 @@ class StreamRepository
 
         $post = Post::create('https://tent.io/types/post/status/v0.1.0');
         $post->setContent(array('text' => substr($message, 0, 256)));
-        //$post->markPublic();
+        $post->markPublic();
 
         if ($mention) {
             $post->addMention($mention['entity'], $mention['post']);
