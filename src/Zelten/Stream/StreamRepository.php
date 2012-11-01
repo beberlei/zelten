@@ -186,8 +186,9 @@ class StreamRepository
                 $shortname = "^" . substr($parts['host'], 0, strpos($parts['host'], "."));
                 $userLink = $this->urlGenerator->generate('stream_user', array('entity' => $this->getEntityShortname($mention['entity'])));
 
+                $mentionNames = array("^" . $mention['entity'], "^" . $parts['host'], $shortname);
                 $message->content['text'] = str_replace(
-                    array($shortname, "^".$mention['entity']),
+                    $mentionNames,
                     '<a class="user-details" href="' . $userLink .'">' . $shortname . '</a>',
                     $message->content['text']
                 );
