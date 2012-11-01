@@ -3,7 +3,10 @@
         <img src="{% if message.entity.avatar %}{{ message.entity.avatar }}{% else %}/zelten.png{% endif %}" width="30" height="30" class="img-polaroid" />
     </div>
     <div class="span11">
-        <header>{{ message.entity.name }} -  {{ message.published|date('H:i') }}</header>
+        <header>
+            <a class="user-details" href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}">{{ message.entity.name }}</a>
+            -  {{ message.published|date('H:i') }}
+        </header>
         {% if message.type == "status" %}
         <p>{{ message.content.text|raw }}</p>
         {% else %}

@@ -241,6 +241,13 @@ Zelten.MessageView = Backbone.View.extend({
         var cnt = this.$el.find('.conversations .conversation-message').length;
         this.$el.find('a.show-conversation').filter('.btn').append(' ' + cnt);
         this.$el.find('a.show-conversation').attr('disabled', false).css('pointer-events', 'auto');
+
+        $(data).find('.user-details').each(function() {
+            var view = new Zelten.UserLinkView({
+                el: $(this)
+            });
+            view.render();
+        });
     },
     render: function() {
         this.$el.find('.show-tooltip').tooltip({});
