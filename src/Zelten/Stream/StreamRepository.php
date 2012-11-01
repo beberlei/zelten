@@ -59,6 +59,10 @@ class StreamRepository
         $mentions = $this->mentions->extractMentions($message, $this->currentEntity);
 
         foreach ($mentions as $mention) {
+            if ($mention['entity'] === $this->currentEntity) {
+                continue;
+            }
+
             $post->addMention($mention['entity']);
         }
 
@@ -198,10 +202,17 @@ class StreamRepository
         if ($message->type == 'status') {
             if (preg_match_all('((\^[^\s]+))', $message->content['text'], $matches)) {
                 $matches[1][] = "^". str_replace(array("https://", "http://"), "", $post['entity']);
-                $message->content['mentions'] = implode(" ", array_unique($matches[1]));
+                $message->content['mentions'] = array_unique($matches[1]);
             } else {
-                $message->content['mentions'] = "^". str_replace(array("https://", "http://"), "", $post['entity']);
+                $message->content['mentions'] = array("^". str_replace(array("https://", "http://"), "", $post['entity']));
             }
+
+            $currentEntity = $this->currentEntity;
+            $message->content['mentions'] = implode(" ", array_filter(
+                $message->content['mentions'],
+                function($mentionedEntity) use($currentEntity) {
+                    return strpos($currentEntity, ltrim($mentionedEntity, "^")) === false;
+            }));
 
             $message->content['text'] = nl2br($this->linker->parse($message->content['text']));
 
