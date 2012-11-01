@@ -36,10 +36,6 @@
                         </div>
                         <div class="span6">
 
-                            {% if message.repostedBy %}
-                            <p class="pull-right">Message was reposted by <a class="user-details" href="{{ path('stream_user', {'entity': message.repostedBy.entity}) }}">{{ message.repostedBy.name }}</a></p>
-                            {% endif %}
-
                             {% if message.content.reply is defined %}
                             <p class="pull-right"><a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-conversation">Reply to {{ message.content.reply.entity.name }}</a></p>
                             {% endif %}
@@ -66,6 +62,8 @@
                     <div class="hidden-content">
                         {{ message.content.body|raw }}
                     </div>
+                {% elseif message.type == 'repost' %}
+                    {% include "_conversation_message.html" with {"message": message.content.original} %}
                 {% endif %}
                 </div>
             </div>
@@ -78,6 +76,8 @@
                         <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Bookmark"><i class="icon-link post-type"></i></a>
                         {% elseif message.type == 'essay' %}
                         <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Essay"><i class="icon-pencil post-type"></i></a>
+                        {% elseif message.type == 'repost' %}
+                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Repost"><i class="icon-retweet post-type"></i></a>
                         {% endif %}
 
                         {{ message.published|date }} - {{ message.app.name }} -
@@ -109,8 +109,8 @@
                     </div>
                     <div class="span4">
                         <div class="btn-group pull-right">
-                            <a href="#" class="btn show-tooltip repost" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
                             {% if message.type == "status" %}
+                            <a href="#" class="btn show-tooltip repost" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
                             <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="btn show-tooltip show-conversation" data-original-title="View Conversation"><i class="icon-comment"></i></a>
                             {% endif %}
                         </div>

@@ -196,14 +196,12 @@ class StreamRepository
         } else if ($message->type == 'follower') {
             $message->content['follower'] = $this->getPublicProfile($message->content['entity']);
         } else if ($message->type == 'repost') {
-            $repostedBy = $message->entity;
-            $message    = $this->getPost($message->content['entity'], $message->content['id']);
+            $message->content['original'] = $this->getPost($message->content['entity'], $message->content['id']);
 
             if (!$message) {
                 return;
             }
 
-            $message->repostedBy = $repostedBy;
         } else if ($message->type == 'essay') {
             $message->content['body'] = $this->escaper->escapeHtml($message->content['body']);
         }

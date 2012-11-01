@@ -1,5 +1,22 @@
 {% extends app.request.isXmlHttpRequest() ? "ajax.html" : "layout.html" %}
 
+{% block title %}{{ profile.name }}{% endblock %}
+
 {% block content %}
 {% include "_profile.html" with {"profile": profile, "size": 30} %}
+
+<div id="stream"></div>
+
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript">
+    var ZeltenMessages = {
+        {% if mentioned_entity is defined %}mentioned_entity: '{{ profile.entity }}',{% endif %}
+        url: '{{ path('stream') }}',
+        entity: '{{ app.session.get('entity_url') }}',
+        first: {},
+        last: {}
+    };
+</script>
+<script type="text/javascript" src="/js/stream.js"></script>
 {% endblock %}
