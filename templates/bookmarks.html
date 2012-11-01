@@ -93,9 +93,7 @@
 {% block javascripts %}
 <script type="text/javascript">
 <!--
-    var Zelten = {
-        entity: '{{ app.session.get('entity_url') }}'
-    };
+    Zelten.entity = '{{ app.session.get('entity_url') }}';
     $(document).ready(function() {
         var col = new BookmarksCollection({{ posts|json_encode|raw }});
         var app = new BookmarkApplication({
