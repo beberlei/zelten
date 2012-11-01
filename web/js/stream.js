@@ -63,7 +63,6 @@ Zelten.WriteStatusView = Backbone.View.extend({
     },
     initialize: function(args) {
         this.mentions = args.mentions || '';
-        this.messageList = args.messageList;
         this.$el.find('textarea').autoResize({
             extraSpace: 10,
             animate: {duration: 50, complete: function() {}}
@@ -95,18 +94,16 @@ Zelten.WriteStatusView = Backbone.View.extend({
     },
     writeMessageSuccess: function(data) {
         var newMessage = $(data);
-        var message = new Zelten.MessageView({
-            el: newMessage,
-            messageList: this.messageList,
-        });
-        message.render();
 
-        ZeltenMessages.first = {
+        var message = new Zelten.Message({
             id: newMessage.data('message-id'),
-            entity: newMessage.data('entity')
-        };
+            entity: newMessage.data('entity'),
+            published: newMessage.data('published'),
+            element: newMessage
+        });
 
-        this.messageList.prepend(newMessage);
+        this.collection.add(message);
+
         this.$el.find('.stream-message-add-btn').attr('disabled', false);
         this.$el.each(function() {
             this.reset();
@@ -138,7 +135,7 @@ Zelten.MessageView = Backbone.View.extend({
     initialize: function(args) {
         this.replyToView = new Zelten.WriteStatusView({
             mentions: this.$el.data('mentions'),
-            messageList: args.messageList,
+            collection: args.messages,
             el: this.$el.find(".stream-message-add-replyto")
         });
     },
@@ -212,79 +209,84 @@ Zelten.MessageView = Backbone.View.extend({
     }
 });
 
+Zelten.MessageCollection = Backbone.Collection.extend({
+    comparator: function(message) {
+        return message.get('published') * -1;
+    }
+});
+
+Zelten.Message = Backbone.Model.extend({
+});
+
 Zelten.MessageStreamApplication = Backbone.View.extend({
     events: {
         'scroll-bottom': 'loadOlderPosts'
     },
-    initialize: function() {
+    initialize: function(args) {
+        this.entity = args.entity;
+        this.mentionedEntity = args.mentionedEntity;
+        this.url = args.url;
         this.title = document.title;
-        this.newMessages = $("<div</div>");
         this.newMessagesCount = 0;
         this.win = $(window);
         this.win.scroll(_.bind(this.scrollCheck, this));
-        setInterval(_.bind(this.checkNewMessages, this), 1000*60);
-        this.postStatus = new Zelten.WriteStatusView({
-            el: this.$el.find('.stream-add-message-box .stream-message-add'),
-            messageList: this.$el.find('.stream-messages')
-        });
+        setInterval(_.bind(this.checkNewMessages, this), 1000*15);
+        this.collection.bind('add', _.bind(this.renderMessage, this));
     },
     checkNewMessages: function() {
-        var query = '?criteria[since_id]=' + ZeltenMessages.first.id + '&criteria[since_id_entity]=' + ZeltenMessages.first.entity
-        if (ZeltenMessages.mentioned_entity) {
-            query += '&criteria[mentioned_entity]=' + ZeltenMessages.mentioned_entity;
+        var firstMessage = this.collection.first();
+        var query = '';
+
+        if (firstMessage) {
+            query += 'criteria[since_id]=' + firstMessage.id + '&criteria[since_id_entity]=' + firstMessage.get('entity')
+        } else {
+            this.$el.find('.stream-messages').addClass('loading');
+        }
+
+        if (this.mentionedEntity) {
+            query += '&criteria[mentioned_entity]=' + this.mentionedEntity;
+        }
+
+        if (this.entity) {
+            query += '&criteria[entity]=' + this.entity;
         }
 
         $.ajax({
-            url: ZeltenMessages.url + query,
+            url: this.url + ((query.length > 0) ? '?' : '') + query,
             success: _.bind(this.checkNewMessagesSuccess, this)
         });
-
     },
     checkNewMessagesSuccess: function(data) {
-        var newEntries = $(data).find('.stream-messages');
-        var done = false;
-        var cnt = this.newMessagesCount;
-        var newMessages = $("<div></div>");
-        var messageList = this.$el.find('.stream-messages');
-        newEntries.find('.stream-message').each(function() {
-            cnt++;
-            var el = $(this);
-            if (!done) {
-                done = true;
-                ZeltenMessages.first = {
-                    id: el.data('message-id'),
-                    entity: el.data('entity')
-                };
-            }
+        var newEntries = $(data).find('.stream-message').addClass('hidden-content');
+        var initialLoad = this.$el.find('.stream-message').length == 0;
 
-            var message = new Zelten.MessageView({
-                messageList: messageList,
-                el: el
-            });
-            message.render();
-            newMessages.append(el);
-        });
+        this.newMessagesCount = this.newMessagesCount + newEntries.length;
 
-        if (cnt == 0) {
+        if (this.newMessagesCount == 0) {
             return;
         }
 
-        if (cnt == 1) {
-            var msg = 'There is 1 new message.';
-        } else {
-            var msg = 'There are ' + cnt + ' new messages.';
+        this.$el.find('.stream-messages').removeClass('loading');
+        newEntries.each(_.bind(this.addMessage, this));
+
+        if (initialLoad) {
+            this.showNewMessages();
+            return;
         }
 
-        this.newMessages.prepend(newMessages);
+        if (this.newMessagesCount == 1) {
+            var msg = 'There is 1 new message.';
+        } else {
+            var msg = 'There are ' + this.newMessagesCount + ' new messages.';
+        }
+
         this.$el.find('.stream-notifications').html('<div class="alert new-messages"><a href="#">' + msg + '</a></div>');
         this.$el.find('.new-messages').click(_.bind(this.showNewMessages, this));
-        document.title = '(' + cnt + ') ' + this.title;
-        this.newMessagesCount = cnt;
+        document.title = '(' + this.newMessagesCount + ') ' + this.title;
     },
     showNewMessages: function() {
         this.$el.find('.new-messages').remove();
-        this.$el.find('.stream-messages').prepend(this.newMessages);
-        this.newMessages = $("<div></div>");
+        this.$el.find('.stream-message').removeClass('hidden-content');
         this.newMessagesCount = 0;
         document.title = this.title;
     },
@@ -293,15 +295,49 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             this.$el.trigger('scroll-bottom');
         }
     },
-    render: function() {
+    renderExistingMessages: function() {
         var messageList = this.$el.find('.stream-messages');
-        this.$el.find('.stream-message').each(function() {
-            var message = new Zelten.MessageView({
-                messageList: messageList,
-                el: $(this)
-            });
-            message.render();
+        messageList.find('.stream-message').each(_.bind(this.addMessage, this));
+    },
+    addMessage: function(idx, snippet) {
+        el = $(snippet);
+        var message = new Zelten.Message({
+            id: el.data('message-id'),
+            entity: el.data('entity'),
+            published: el.data('published'),
+            element: el
         });
+        this.collection.add(message);
+    },
+    renderMessage: function(message, col, options) {
+        var messageList = this.$el.find('.stream-messages');
+        var messageView = new Zelten.MessageView({
+            messages: this.collection,
+            model: message,
+            el: message.get('element')
+        });
+        messageView.render();
+
+        // message already rendered
+        if (messageList.children('*[data-message-id="' + message.id + '"]').length == 1) {
+            return;
+        }
+
+        if (options.index == 0) {
+            messageList.prepend(messageView.$el);
+        } else {
+            messageList.find('.stream-message').eq(options.index - 1).after(messageView.$el);
+        }
+    },
+    renderWriteStatus: function() {
+        this.postStatus = new Zelten.WriteStatusView({
+            collection: this.collection,
+            el: this.$el.find('.stream-add-message-box .stream-message-add'),
+        });
+    },
+    render: function() {
+        this.renderExistingMessages();
+        this.renderWriteStatus();
     },
     loadOlderPosts: function() {
         if (this.isLoadingOlderPosts) {
@@ -312,15 +348,29 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         this.loading = $('<div class="loading"></div>');
         this.$el.find('.stream-messages').append(this.loading);
 
-        var query = '?criteria[before_id]=' + ZeltenMessages.last.id + '&criteria[before_id_entity]=' + ZeltenMessages.last.entity;
-        if (ZeltenMessages.mentioned_entity) {
-            query += '&criteria[mentioned_entity]=' + ZeltenMessages.mentioned_entity;
+        var query = '';
+        var lastMessage = this.collection.last();
+
+        if (lastMessage) {
+            query += 'criteria[before_id]=' + lastMessage.id + '&criteria[before_id_entity]=' + lastMessage.get('entity');
+        }
+
+        if (this.mentionedEntity) {
+            query += '&criteria[mentioned_entity]=' + this.mentionedEntity;
+        }
+
+        if (this.entity) {
+            query += '&criteria[entity]=' + this.entity;
         }
 
         $.ajax({
-            url: ZeltenMessages.url + query,
-            success: _.bind(this.loadOlderPostsSuccess, this)
+            url: this.url + ((query.length > 0) ? '?' : '') + query,
+            success: _.bind(this.loadOlderPostsSuccess, this),
+            error: _.bind(this.loadOlderPostsError, this)
         });
+    },
+    loadOlderPostsError: function() {
+        this.isLoadingOlderPosts = false;
     },
     loadOlderPostsSuccess:function(data) {
         this.loading.remove();
@@ -328,28 +378,9 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         var newEntries = $(data).find('.stream-messages');
         var streamMessages = this.$el.find('.stream-messages');
 
-        newEntries.find('.stream-message').each(function() {
-            var el = $(this);
-            ZeltenMessages.last = {
-                id: el.data('message-id'),
-                entity: el.data('entity')
-            };
-
-            var message = new Zelten.MessageView({
-                messageList: streamMessages,
-                el: el
-            });
-            message.render();
-            streamMessages.append(el);
-        });
+        newEntries.find('.stream-message').each(_.bind(this.addMessage, this));
 
         this.isLoadingOlderPosts = false;
     }
 });
 
-$(document).ready(function() {
-    var app = new Zelten.MessageStreamApplication({
-        el: $("#stream")
-    });
-    app.render();
-});

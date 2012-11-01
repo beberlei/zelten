@@ -4,6 +4,10 @@
     </div>
     <div class="span11">
         <header>{{ message.entity.name }} -  {{ message.published|date('H:i') }}</header>
+        {% if message.type == "status" %}
         <p>{{ message.content.text|raw }}</p>
+        {% else %}
+        {{ message.type }}
+        {% endif %}
     </div>
 </div>

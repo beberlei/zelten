@@ -213,6 +213,10 @@ class Controller implements ControllerProviderInterface
             $criteria['before_id_entity'] = $this->urlize($criteria['before_id_entity']);
         }
 
+        if (isset($criteria['entity'])) {
+            $criteria['entity'] = $this->urlize($criteria['entity']);
+        }
+
         $stream   = $app['zelten.stream'];
         return $stream->getMessages($entityUrl, $criteria);
     }

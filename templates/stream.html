@@ -7,14 +7,16 @@
 {% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript">
-    var ZeltenMessages = {
-        {% if mentioned_entity is defined %}mentioned_entity: '{{ mentioned_entity}}',{% endif %}
-        url: '{{ path('stream') }}',
-        entity: '{{ app.session.get('entity_url') }}',
-        first: {{ messages.first|json_encode|raw }},
-        last: {{ messages.last|json_encode|raw }}
-    };
-</script>
 <script type="text/javascript" src="/js/stream.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var app = new Zelten.MessageStreamApplication({
+        {% if mentioned_entity is defined %}mentionedEntity: '{{ mentioned_entity}}',{% endif %}
+            url: '{{ path('stream') }}',
+            el: $("#stream"),
+            collection: new Zelten.MessageCollection()
+        });
+        app.render();
+    });
+</script>
 {% endblock %}
