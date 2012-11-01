@@ -3,12 +3,13 @@
 {% block title %}Stream{% endblock %}
 
 {% block content %}
-    {% include "_stream.html" with {'messages': messages, 'post_add': true} %}
+{% include "_stream.html" with {'messages': messages, 'post_add': post_add} %}
 {% endblock %}
 
 {% block javascripts %}
 <script type="text/javascript">
     var ZeltenMessages = {
+        {% if mentioned_entity is defined %}mentioned_entity: '{{ mentioned_entity}}',{% endif %}
         url: '{{ path('stream') }}',
         entity: '{{ app.session.get('entity_url') }}',
         first: {{ messages.first|json_encode|raw }},

@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 use TentPHP\PostCriteria;
 
@@ -19,25 +20,43 @@ class Controller implements ControllerProviderInterface
     {
         $controllers = $app['controllers_factory'];
 
-        $controllers->get('/', array($this, 'streamAction'))->bind('stream');
-        $controllers->post('/', array($this, 'postAction'))->bind('stream_write');
-        $controllers->get('/u/{entity}/{id}/conversations', array($this, 'conversationAction'))->bind('post_conversation');
-        $controllers->get('/u/{entity}', array($this, 'profileAction'))->bind('stream_user');
-        $controllers->post('/followings', array($this, 'followAction'))->bind('stream_follow');
+        $controllers->get('/notifications', array($this, 'notificationsAction'))->bind('stream_notifications')->before(array($this, 'isAuthenticated'));
+        $controllers->get('/', array($this, 'streamAction'))->bind('stream')->before(array($this, 'isAuthenticated'));
+        $controllers->post('/', array($this, 'postAction'))->bind('stream_write')->before(array($this, 'isAuthenticated'));
+        $controllers->get('/u/{entity}/{id}/conversations', array($this, 'conversationAction'))->bind('post_conversation')->before(array($this, 'isAuthenticated'));
+        $controllers->get('/u/{entity}', array($this, 'profileAction'))->bind('stream_user')->before(array($this, 'isAuthenticated'));
+        $controllers->post('/followings', array($this, 'followAction'))->bind('stream_follow')->before(array($this, 'isAuthenticated'));
 
         return $controllers;
     }
 
+    public function isAuthenticated(Request $request)
+    {
+        $this->entityUrl = $request->getSession()->get('entity_url');
+
+        if (!$this->entityUrl) {
+            return new RedirectResponse($app['url_generator']->generate('homepage'));
+        }
+    }
+
+    private function getCurrentEntity()
+    {
+        if (!$this->entityUrl) {
+            throw new AccessDeniedHttpException();
+        }
+        return $this->entityUrl;
+    }
+
     public function followAction(Request $request, Application $app)
     {
-        $entityUrl = $app['session']->get('entity_url');
+        $entityUrl = $this->getCurrentEntity();
 
         if (!$entityUrl) {
             return new RedirectResponse($app['url_generator']->generate('homepage'));
         }
 
-        $followEntity = $this->urlize($request->request->get('entity'));
 
+        $followEntity = $this->urlize($request->request->get('entity'));
         $stream = $app['zelten.stream'];
         $data   = $stream->follow($followEntity);
 
@@ -52,11 +71,7 @@ class Controller implements ControllerProviderInterface
 
     public function conversationAction(Request $request, Application $app, $entity, $id)
     {
-        $entityUrl = $app['session']->get('entity_url');
-
-        if (!$entityUrl) {
-            return new RedirectResponse($app['url_generator']->generate('homepage'));
-        }
+        $entityUrl = $this->getCurrentEntity();
 
         $mentionedEntity   = str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
         $criteria = array(
@@ -90,11 +105,7 @@ class Controller implements ControllerProviderInterface
 
     public function postAction(Request $request, Application $app)
     {
-        $entityUrl = $app['session']->get('entity_url');
-
-        if (!$entityUrl) {
-            return new RedirectResponse($app['url_generator']->generate('homepage'));
-        }
+        $entityUrl = $this->getCurrentEntity();
 
         $text = substr(strip_tags($request->request->get('message')), 0, 256);
         $mention = array();
@@ -119,11 +130,7 @@ class Controller implements ControllerProviderInterface
 
     public function profileAction(Request $request, Application $app, $entity)
     {
-        $entityUrl = $app['session']->get('entity_url');
-
-        if (!$entityUrl) {
-            return new RedirectResponse($app['url_generator']->generate('homepage'));
-        }
+        $entityUrl = $this->getCurrentEntity();
         $entity = str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
 
         $stream   = $app['zelten.stream'];
@@ -134,11 +141,7 @@ class Controller implements ControllerProviderInterface
 
     public function userAction(Request $request, Application $app, $entity)
     {
-        $entityUrl = $app['session']->get('entity_url');
-
-        if (!$entityUrl) {
-            return new RedirectResponse($app['url_generator']->generate('homepage'));
-        }
+        $entityUrl = $this->getCurrentEntity();
         $entity = str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
 
         $stream   = $app['zelten.stream'];
@@ -153,28 +156,42 @@ class Controller implements ControllerProviderInterface
         ));
     }
 
+    public function notificationsAction(Request $request, Application $app)
+    {
+        $entityUrl = $this->getCurrentEntity();
+
+        $criteria  = $request->query->get('criteria', array());
+        $criteria['mentioned_entity'] = $entityUrl;
+
+        $messages  = $this->getMessages($entityUrl, $criteria, $app);
+
+        return $app['twig']->render('stream.html', array(
+            'messages'         => $messages,
+            'mentioned_entity' => $entityUrl,
+            'post_add'         => false
+        ));
+    }
+
     public function streamAction(Request $request, Application $app)
     {
-        $entityUrl = $app['session']->get('entity_url');
+        $entityUrl = $this->getCurrentEntity();
+        $messages  = $this->getMessages($entityUrl, $request->query->get('criteria', array()), $app);
 
-        if (!$entityUrl) {
-            return new RedirectResponse($app['url_generator']->generate('homepage'));
-        }
+        return $app['twig']->render('stream.html', array('messages' => $messages, 'post_add' => true));
+    }
 
-        $criteria = $request->query->get('criteria', array());
-
+    private function getMessages($entityUrl, $criteria, Application $app)
+    {
         if (isset($criteria['since_id_entity'])) {
-            $criteria['since_id_entity'] = str_replace(array('http-', 'https-'), array('http://', 'https://'), $criteria['since_id_entity']);
+            $criteria['since_id_entity'] = $this->urlize($criteria['since_id_entity']);
         }
 
         if (isset($criteria['before_id_entity'])) {
-            $criteria['before_id_entity'] = str_replace(array('http-', 'https-'), array('http://', 'https://'), $criteria['before_id_entity']);
+            $criteria['before_id_entity'] = $this->urlize($criteria['before_id_entity']);
         }
 
         $stream   = $app['zelten.stream'];
-        $messages = $stream->getMessages($entityUrl, $criteria);
-
-        return $app['twig']->render('stream.html', array('messages' => $messages));
+        return $stream->getMessages($entityUrl, $criteria);
     }
 }
 

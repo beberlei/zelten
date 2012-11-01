@@ -228,8 +228,13 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         });
     },
     checkNewMessages: function() {
+        var query = '?criteria[since_id]=' + ZeltenMessages.first.id + '&criteria[since_id_entity]=' + ZeltenMessages.first.entity
+        if (ZeltenMessages.mentioned_entity) {
+            query += '&criteria[mentioned_entity]=' + ZeltenMessages.mentioned_entity;
+        }
+
         $.ajax({
-            url: ZeltenMessages.url + '?criteria[since_id]=' + ZeltenMessages.first.id + '&criteria[since_id_entity]=' + ZeltenMessages.first.entity,
+            url: ZeltenMessages.url + query,
             success: _.bind(this.checkNewMessagesSuccess, this)
         });
 

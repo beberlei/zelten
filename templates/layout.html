@@ -31,6 +31,7 @@
                     {% if app.session.get('entity_url') %}
                     <ul>
                         <li><a href="{{ path('stream') }}"><div class="icon-inbox"></div> Stream</a></li>
+                        <li><a href="{{ path('stream_notifications') }}"><div class="icon-envelope"></div> Notifications</a></li>
                         {#<li><div class="icon-user"></div> Profile</li>#}
                         <li><a href="{{ path('bookmarks') }}"><div class="icon-link"></div> Bookmarks</a></li>
                         {#<li><div class="icon-camera-retro"></div> Photos</li>#}
