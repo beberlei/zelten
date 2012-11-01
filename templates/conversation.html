@@ -1,5 +1,7 @@
 {% extends app.request.isXmlHttpRequest ? "ajax.html" : "layout.html" %}
 
+{% block title %}Conversation of {{ post.entity.name }}{% endblock %}
+
 {% block content %}
 <div class="conversation">
     {% if not app.request.isXmlHttpRequest() %}

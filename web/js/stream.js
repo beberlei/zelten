@@ -139,6 +139,7 @@ Zelten.WriteStatusView = Backbone.View.extend({
         this.$el.each(function() {
             this.reset();
         });
+        this.cancelPosting();
     },
     showActions: function() {
         var actions = this.$el.find(".actions");
