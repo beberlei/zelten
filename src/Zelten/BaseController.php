@@ -4,6 +4,8 @@ namespace Zelten;
 
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 abstract class BaseController implements ControllerProviderInterface
 {
