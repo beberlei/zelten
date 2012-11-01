@@ -64,13 +64,14 @@ Zelten.WriteStatusView = Backbone.View.extend({
     initialize: function(args) {
         this.mentions = args.mentions || '';
         this.$el.find('textarea').autoResize({
-            extraSpace: 10,
+            extraSpace: 0,
             animate: {duration: 50, complete: function() {}}
         });
     },
     cancelPosting: function() {
         var actions = this.$el.find(".actions");
-        this.$el.find('.message').css('height', 40);
+        this.$el.find('.message').data('AutoResizer').config.extraSpace = 0;
+        this.$el.find('.message').css('height', 30);
         actions.slideUp();
     },
     writeMessage: function(e) {
@@ -120,7 +121,9 @@ Zelten.WriteStatusView = Backbone.View.extend({
             }
         }
 
-        var msg = this.$el.find('.message').val();
+        var messageBox = this.$el.find('.message');
+        messageBox.data('AutoResizer').config.extraSpace = 50;
+        var msg = messageBox.val();
         this.$el.find('.stream-message-add-btn').attr('disabled', (msg.length == 0));
         this.$el.find('.status-length-left').text(256 - msg.length);
     }
