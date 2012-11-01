@@ -179,7 +179,6 @@ Zelten.MessageView = Backbone.View.extend({
         return false;
     },
     clickRepost: function(e) {
-        console.log($(e.currentTarget).attr('href'));
         var modal = new Zelten.ModalConfirmDialogView({
             params: {
                 title: 'Do you want to repost this message?',
