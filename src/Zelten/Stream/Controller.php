@@ -36,7 +36,7 @@ class Controller implements ControllerProviderInterface
                     ->bind('stream_write')
                     ->before(array($this, 'isAuthenticated'));
 
-        $controllers->get('/u/{entity}/{id}/conversations', array($this, 'conversationAction'))
+        $controllers->get('/u/{entity}/{id}', array($this, 'conversationAction'))
                     ->bind('post_conversation')
                     ->before(array($this, 'isAuthenticated'));
 
@@ -111,6 +111,7 @@ class Controller implements ControllerProviderInterface
         return $app['twig']->render('conversation.html', array(
             'comments' => $comments,
             'parent'   => $parent,
+            'post'     => $post,
         ));
     }
 

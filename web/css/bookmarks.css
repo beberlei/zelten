@@ -113,6 +113,7 @@ footer {
     font-size: 8pt;
     color: #777777;
 }
+
 #stream {
     max-width: 700px;
 }
@@ -232,4 +233,7 @@ form.stream-message-add-replyto {
 }
 .status-length-left {
     font-size:8pt;
+}
+.conversation {
+    max-width: 700px;
 }

@@ -1,6 +1,11 @@
 {% extends app.request.isXmlHttpRequest ? "ajax.html" : "layout.html" %}
 
 {% block content %}
+<div class="conversation">
+    {% if not app.request.isXmlHttpRequest() %}
+        {% include "_message.html" with {'message': post} %}
+    {% endif %}
+
     {% if parent %}
         <h6>In reply to</h6>
         {% include "_conversation_message.html" with {"message": parent} %}
@@ -12,4 +17,5 @@
         {% include "_conversation_message.html" with {"message": message} %}
         {% endfor %}
     {% endif %}
+</div>
 {% endblock %}

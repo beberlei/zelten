@@ -80,7 +80,7 @@
                         <a href="#" class="show-tooltip" data-original-title="Essay"><i class="icon-pencil post-type"></i></a>
                         {% endif %}
 
-                        {{ message.published|date }} - {{ message.app.name }} -
+                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}">{{ message.published|date }}</a> - {{ message.app.name }} -
 
                         {% if message.permissions.public is defined and message.permissions.public %}
                         <a href="#" class="show-popover" rel="popover" data-content="This content is visible to everybody on the internet." data-original-title="Permissions">Public</a>
