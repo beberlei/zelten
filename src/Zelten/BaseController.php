@@ -14,7 +14,7 @@ abstract class BaseController implements ControllerProviderInterface
         $this->entityUrl = $request->getSession()->get('entity_url');
 
         if (!$this->entityUrl) {
-            return new RedirectResponse($app['url_generator']->generate('homepage'));
+            return new RedirectResponse("/");
         }
     }
 
