@@ -225,3 +225,8 @@ form.stream-message-add-replyto {
     top: -20px;
     right: 0px;
 }
+.new-messages a {
+    display: block;
+    text-align: center;
+    color: #c09853;
+}

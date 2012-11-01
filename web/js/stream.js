@@ -264,12 +264,21 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             newMessages.append(el);
         });
 
-        if (cnt > 0) {
-            this.newMessages.prepend(newMessages);
-            this.$el.find('.stream-notifications').html('<div class="alert new-messages">There are ' + cnt + ' new messages.</div>');
-            this.$el.find('.new-messages').click(_.bind(this.showNewMessages, this));
-            document.title = '(' + cnt + ') ' + this.title;
+        if (cnt == 0) {
+            return;
         }
+
+        if (cnt == 1) {
+            var msg = 'There is 1 new message.';
+        } else {
+            var msg = 'There are ' + cnt + ' new messages.';
+        }
+
+        this.newMessages.prepend(newMessages);
+        this.$el.find('.stream-notifications').html('<div class="alert new-messages"><a href="#">' + msg + '</a></div>');
+        this.$el.find('.new-messages').click(_.bind(this.showNewMessages, this));
+        document.title = '(' + cnt + ') ' + this.title;
+        this.newMessagesCount = cnt;
     },
     showNewMessages: function() {
         this.$el.find('.new-messages').remove();

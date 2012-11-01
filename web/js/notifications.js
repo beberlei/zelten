@@ -30,7 +30,6 @@ Zelten.NotificationCountView = Backbone.View.extend({
         $.cookie('zelten_notifications_update', ts);
     },
     lastUpdateTimestamp: function() {
-        console.log($.cookie('zelten_notifications_update'));
         return $.cookie('zelten_notifications_update');
     }
 });
