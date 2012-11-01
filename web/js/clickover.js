@@ -39,16 +39,20 @@
       this.init( type, element, options );
 
       // setup our own handlers
-      this.$element.on( 'hover', this.options.selector, $.proxy(this.clickery, this) );
+      this.$element.on( 'hover', this.options.selector, $.proxy(this.scheduleClickery, this) );
 
       // soon add click hanlder to body to close this element
       // will need custom handler inside here
     }
-    , clickery: function(e) {
-      if (typeof(e) != 'undefined' && typeof(e.type) != 'undefined' && e.type != 'mouseenter') {
-        return;
-      }
+    , scheduleClickery: function(e) {
+        if (typeof(e) != 'undefined' && typeof(e.type) != 'undefined' && e.type != 'mouseenter') {
+          clearTimeout(this.timeout);
+          return;
+        }
 
+        this.timeout = setTimeout($.proxy(this.clickery, this), 400);
+    }
+    , clickery: function(e) {
       // clickery isn't only run by event handlers can be called by timeout or manually
       // only run our click handler and  
       // need to stop progration or body click handler would fire right away
