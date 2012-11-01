@@ -11,11 +11,10 @@
                 <a href="{{ path('stream_user', {'entity': message.content.follower.entity}) }}" class="user-details">{{ message.content.follower.name }}</a> now follows you!
             </div>
             <div class="box-footer">
-                <div class="row-fluid">
-                    <div class="span3">
-                        <div class="btn-group">
-                            <a href="#" class="btn show-tooltip" data-original-title="Follower Notification"><i class="icon-user post-type"></i></a>
-                        </div>
+                <div class="row-fluid message-stats">
+                    <div class="span12">
+                        <span class="show-tooltip" data-original-title="Follower Notification"><i class="icon-user post-type"></i></span>
+                        {{ message.published|date }}
                     </div>
                 </div>
             </div>

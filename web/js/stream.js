@@ -270,7 +270,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             this.$el.find('.stream-messages').addClass('loading');
         }
 
-        if (this.mentionedEntity) {
+        if (this.mentionedEntity && this.postType != 'follower') {
             query += '&criteria[mentioned_entity]=' + this.mentionedEntity;
         }
 
@@ -289,11 +289,12 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
 
         this.newMessagesCount = this.newMessagesCount + newEntries.length;
 
+        this.$el.find('.stream-messages').removeClass('loading');
+
         if (this.newMessagesCount == 0) {
             return;
         }
 
-        this.$el.find('.stream-messages').removeClass('loading');
         newEntries.each(_.bind(this.addMessage, this));
 
         if (initialLoad) {

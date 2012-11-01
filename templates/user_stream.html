@@ -8,7 +8,6 @@
     {% if not app.request.isXmlHttpRequest() %}
     {% include "_profile.html" with {'profile': profile, 'size': 150 } %}
     {% endif %}
-    {% include "_stream.html" with {'messages': messages, 'post_add': false} %}
     </div>
 
     <div class="span3">
