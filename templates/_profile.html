@@ -1,6 +1,6 @@
 <div class="row-fluid profile" data-entity="{{ profile.entity }}">
     <div class="span9">
-        <h3>{{ profile.name }}</h3>
+        <h3>{{ profile.name }} {% if you %}(YOU){% endif %}</h3>
 
         <small>
         {% if profile.basic.bio %}<p>{{ profile.basic.bio }}</p>{% endif %}
@@ -18,12 +18,14 @@
             width="{% if not app.request.isXmlHttpRequest() %}1{% endif %}75" />
         {% endif %}
 
+        {% if not you %}
         <p align="center" style="padding-top: 10px">
             <form class="follow" method="post" action="{{ path('stream_follow') }}">
                 <input type="hidden" name="entity" value="{{ profile.entity }}" />
                 <input type="submit" class="btn btn-success" value="Follow" />
             </form>
         </p>
+        {% endif %}
     </div>
 </div>
 

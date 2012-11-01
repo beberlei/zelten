@@ -150,7 +150,8 @@ class Controller implements ControllerProviderInterface
         $userEntity = $this->urlize($entity);
 
         return $app['twig']->render('user_profile.html', array(
-            'profile' => $app['zelten.stream']->getFullProfile($userEntity)
+            'profile' => $app['zelten.stream']->getFullProfile($userEntity),
+            'you'     => ($userEntity === $this->getCurrentEntity())
         ));
     }
 

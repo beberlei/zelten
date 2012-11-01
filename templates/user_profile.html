@@ -3,7 +3,7 @@
 {% block title %}{{ profile.name }}{% endblock %}
 
 {% block content %}
-{% include "_profile.html" with {"profile": profile, "size": 30} %}
+{% include "_profile.html" with {"profile": profile, "you": you} %}
 
 <div id="stream">
     <div class="stream-notifications"></div>
