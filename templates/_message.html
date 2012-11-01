@@ -110,7 +110,7 @@
                     <div class="span4">
                         <div class="btn-group pull-right">
                             {% if message.type == "status" %}
-                            <a href="#" class="btn show-tooltip repost" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
+                            <a href="{{ path('repost', {'post': message.id, 'entity': message.getEntityShortname()}) }}" class="btn show-tooltip repost" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
                             <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="btn show-tooltip show-conversation" data-original-title="View Conversation"><i class="icon-comment"></i></a>
                             {% endif %}
                         </div>

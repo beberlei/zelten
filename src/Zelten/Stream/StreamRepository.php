@@ -67,6 +67,35 @@ class StreamRepository
     }
 
     /**
+     * Repost the post of a given entity.
+     *
+     * @param string $entity
+     * @param string $post
+     * @return Message
+     */
+    public function repost($entity, $id)
+    {
+        $client = $this->tentClient->getUserClient($this->currentEntity, true);
+
+        if (empty($entity) || empty($id)) {
+            throw new \RuntimeException("Repost content data missing.");
+        }
+
+        $exists = $this->getPost($entity, $id);
+
+        if (!$exists) {
+            throw new \RuntimeException("Repost original post missing.");
+        }
+
+        $post = Post::create('https://tent.io/types/post/repost/v0.1.0');
+        $post->setContent(array('entity' => $entity, 'id' => $id));
+        $post->markPublic();
+
+        $data = $client->createPost($post);
+        return $this->createMessage($data);
+    }
+
+    /**
      * Get a post
      *
      * @param string $entityUrl
@@ -82,9 +111,9 @@ class StreamRepository
             return $message;
         }
 
-        $client = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
-
         try {
+            $client = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
+
             return $this->createMessage($client->getPost($id));
         } catch(\Exception $e) {
             return;
@@ -203,9 +232,12 @@ class StreamRepository
         } else if ($message->type == 'follower') {
             $message->content['follower'] = $this->getPublicProfile($message->content['entity']);
         } else if ($message->type == 'repost') {
-            $message->content['original'] = $this->getPost($message->content['entity'], $message->content['id']);
 
-            if (!$message) {
+            if (!empty($message->content['entity']) && !empty($message->content['id'])) {
+                $message->content['original'] = $this->getPost($message->content['entity'], @$message->content['id']);
+            }
+
+            if (!isset($message->content['original'])) {
                 return;
             }
 

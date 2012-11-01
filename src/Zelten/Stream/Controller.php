@@ -40,6 +40,10 @@ class Controller extends BaseController
                     ->bind('post_conversation')
                     ->before(array($this, 'isAuthenticated'));
 
+        $controllers->post('/u/{entity}/{post}', array($this, 'repostAction'))
+                    ->bind('repost')
+                    ->before(array($this, 'isAuthenticated'));
+
         $controllers->get('/u/{entity}', array($this, 'profileAction'))
                     ->bind('stream_user')
                     ->before(array($this, 'isAuthenticated'));
@@ -96,6 +100,21 @@ class Controller extends BaseController
             'parent'   => $parent,
             'post'     => $post,
         ));
+    }
+
+    public function repostAction(Request $request, Application $app, $entity, $post)
+    {
+        $entityUrl = $this->getCurrentEntity();
+
+        $stream  = $app['zelten.stream'];
+        $message = $stream->repost($this->urlize($entity), $post);
+
+        if ($request->isXmlHttpRequest()) {
+            $template = '_message.html';
+            return $app['twig']->render($template, array('message' => $message));
+        }
+
+        return new RedirectResponse($app['url_generator']->generate('stream'));
     }
 
     public function postAction(Request $request, Application $app)

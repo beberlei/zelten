@@ -166,6 +166,7 @@ Zelten.MessageView = Backbone.View.extend({
         "click a.more-content": "showMoreContent"
     },
     initialize: function(args) {
+        this.messages = args.messages;
         this.replyToView = new Zelten.WriteStatusView({
             mentions: this.$el.data('mentions'),
             collection: args.messages,
@@ -178,18 +179,40 @@ Zelten.MessageView = Backbone.View.extend({
         return false;
     },
     clickRepost: function(e) {
+        console.log($(e.currentTarget).attr('href'));
         var modal = new Zelten.ModalConfirmDialogView({
             params: {
                 title: 'Do you want to repost this message?',
                 post: this.$el.find('.message-body').html(),
                 label: 'Yes, repost!'
             },
-            success: _.bind(this.confirmClickRepost, this)
+            success: _.bind(this.confirmClickRepost, this, $(e.currentTarget).attr('href'))
         });
         modal.render();
+
+        return false;
     },
-    confirmClickRepost: function() {
-        alert("not supported yet :(");
+    confirmClickRepost: function(url) {
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: _.bind(this.repostSuccess, this)
+        });
+        return false;
+    },
+    repostSuccess: function(data) {
+        this.$el.find('a.repost').css('pointer-events', 'none');
+
+        var newMessage = $(data);
+
+        var message = new Zelten.Message({
+            id: newMessage.data('message-id'),
+            entity: newMessage.data('entity'),
+            published: newMessage.data('published'),
+            element: newMessage
+        });
+
+        this.messages.add(newMessage);
     },
     clickShowConversations: function(e) {
         var link = $(e.currentTarget);
