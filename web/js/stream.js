@@ -129,7 +129,7 @@ Zelten.WriteStatusView = Backbone.View.extend({
 
         if (this.hasPermissions) {
             this.$el.find('.complete-permissions').select2({
-                tags: ['Public']
+                tags: ['Everybody']
             });
         }
     },
@@ -184,7 +184,7 @@ Zelten.WriteStatusView = Backbone.View.extend({
             actions.slideDown();
 
             if (this.hasPermissions) {
-                this.$el.find('.complete-permissions').select2('data', {id: 'public', text: 'Public'});
+                this.$el.find('.complete-permissions').select2('data', {id: 'public', text: 'Everybody'});
             }
 
             this.$el.find('.message').css('height', 60);

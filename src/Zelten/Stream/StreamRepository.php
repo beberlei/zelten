@@ -6,7 +6,7 @@ use TentPHP\PostCriteria;
 use TentPHP\Post;
 use TentPHP\Util\Mentions;
 use Kwi\UrlLinker;
-use Zend\Escaper\Escaper;
+use Zelten\Util\Washtml;
 
 class StreamRepository
 {
@@ -40,7 +40,7 @@ class StreamRepository
         $this->urlGenerator  = $urlGenerator;
         $this->currentEntity = $currentEntity;
         $this->linker        = new UrlLinker();
-        $this->escaper       = new Escaper();
+        $this->escaper       = new Washtml(array('charset' => 'UTF-8'));
         $this->mentions      = new Mentions();
     }
 
@@ -52,8 +52,9 @@ class StreamRepository
         $post->setContent(array('text' => substr($message, 0, 256)));
 
         foreach ($permissions as $permission) {
-            switch($permission) {
+            switch(strtolower($permission)) {
                 case 'public':
+                case 'everybody':
                     $post->markPublic();
                     break;
                 default:
@@ -263,7 +264,7 @@ class StreamRepository
             }
 
         } else if ($message->type == 'essay') {
-            $message->content['body'] = $this->escaper->escapeHtml($message->content['body']);
+            $message->content['body'] = $this->escaper->wash($message->content['body']);
         }
 
         apc_store($key, $message, 600);
