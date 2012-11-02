@@ -5,7 +5,7 @@
     <div class="span11">
         <header>
             <a class="user-details" href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}">{{ message.entity.name }}</a>
-            -  <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}">{{ message.published|date('H:i') }}</a>
+            -  <a class="timeago" title="{{ message.published|date('c') }}" href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}">{{ message.published|date('H:i') }}</a>
         </header>
         {% if message.type == "status" %}
         <p>{{ message.content.text|raw }}</p>

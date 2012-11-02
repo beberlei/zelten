@@ -182,6 +182,7 @@ Zelten.MessageView = Backbone.View.extend({
     },
     clickReply: function(e) {
         this.$el.find('.reply-form').toggle();
+        return false;
     },
     clickRepost: function(e) {
         var modal = new Zelten.ModalConfirmDialogView({
