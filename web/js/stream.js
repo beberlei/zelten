@@ -409,15 +409,17 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         var newEntries = $(data).find('.stream-message').addClass('hidden-content');
         var initialLoad = this.$el.find('.stream-message').length == 0;
 
-        this.newMessagesCount = this.newMessagesCount + newEntries.length;
-
         this.$el.find('.stream-messages').removeClass('loading');
 
-        if (this.newMessagesCount == 0) {
+        if (newEntries.length == 0) {
             return;
         }
 
         newEntries.each(_.bind(this.addMessage, this));
+        
+        if (this.newMessagesCount == 0) {
+            return;
+        }
 
         if (initialLoad) {
             this.showNewMessages();
@@ -457,6 +459,15 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             published: el.data('published'),
             element: el
         });
+
+        // message already rendered
+        var messageList = this.$el.find('.stream-messages');
+        if (messageList.children('*[data-message-id="' + message.id + '"]').length == 1) {
+            return;
+        }
+
+        this.newMessagesCount++;
+
         this.collection.add(message);
     },
     renderMessage: function(message, col, options) {
