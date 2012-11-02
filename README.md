@@ -1,6 +1,6 @@
 # Zelten
 
-A bookmark manager for tent.io
+A social client that runs on the Tent protocol. https://tent.io/
 
 This is open source, but not yet easily installable on any
 server.  If you want to do it, make sure to run:
