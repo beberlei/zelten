@@ -303,7 +303,8 @@ Zelten.Message = Backbone.Model.extend({
 Zelten.MessageStreamApplication = Backbone.View.extend({
     events: {
         'scroll-bottom': 'loadOlderPosts',
-        'click .filter-post-type button': 'filterByPostType'
+        'click .filter-post-type button': 'filterByPostType',
+        'click a.loadOlderPosts': 'loadOlderPosts'
     },
     initialize: function(args) {
         this.entity = args.entity;
