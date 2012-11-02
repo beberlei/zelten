@@ -462,11 +462,9 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
 
         // message already rendered
         var messageList = this.$el.find('.stream-messages');
-        if (messageList.children('*[data-message-id="' + message.id + '"]').length == 1) {
-            return;
+        if (messageList.children('*[data-message-id="' + message.id + '"]').length == 0) {
+            this.newMessagesCount++;
         }
-
-        this.newMessagesCount++;
 
         this.collection.add(message);
     },
