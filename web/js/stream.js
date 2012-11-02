@@ -257,6 +257,7 @@ Zelten.MessageView = Backbone.View.extend({
             placement: 'bottom',
             trigger: 'hover'
         });
+        this.$el.find('.timeago').timeago();
         this.$el.find('a.user-details').each(function() {
             var view = new Zelten.UserLinkView({
                 el: $(this)

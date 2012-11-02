@@ -80,7 +80,7 @@
                         <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Repost"><i class="icon-retweet post-type"></i></a>
                         {% endif %}
 
-                        {{ message.published|date }} - {{ message.app.name }} -
+                        <abbr class="timeago" title="{{ message.published|date('c') }}">{{ message.published|date }}</abbr> - {{ message.app.name }} -
 
                         {% if message.permissions.public is defined and message.permissions.public %}
                         <a href="#" class="show-popover" rel="popover" data-content="This content is visible to everybody on the internet." data-original-title="Permissions">Public</a>
