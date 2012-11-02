@@ -444,6 +444,8 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         });
     },
     render: function() {
+        this.$el.find('.show-tooltip').tooltip({});
+
         this.renderExistingMessages();
         this.renderWriteStatus();
     },
