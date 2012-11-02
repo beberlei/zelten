@@ -123,6 +123,8 @@
 
                             {% if message.isPublic() %}
                             <input type="hidden" name="permissions" value="public" />
+                            {% else %}
+                            <input type="hidden" name="permissions" value="{{ message.entity.entity }}" />
                             {% endif %}
                             {% for entity in message.getVisibleEntities() %}
                             <input type="hidden" name="permissions" value="{{ entity }}" />
