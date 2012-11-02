@@ -111,29 +111,32 @@
                         <div class="btn-group pull-right">
                             {% if message.type == "status" %}
                             <a href="{{ path('repost', {'post': message.id, 'entity': message.getEntityShortname()}) }}" class="btn show-tooltip repost" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
-                            <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="btn show-tooltip show-conversation" data-original-title="View Conversation"><i class="icon-comment"></i></a>
+                            <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="btn show-tooltip show-conversation" data-original-title="View Conversation"><i class="icon-comments-alt"></i></a>
+                            <a href="#" class="btn show-tooltip show-reply" data-original-title="Reply"><i class="icon-share-alt"></i></a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 {% if message.type == "status" %}
-                <div class="conversations-pane hidden-content">
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <form method="post" action="{{ path('stream_write') }}" class="stream-message-add-replyto">
-                                <input type="hidden" name="type" value="comment" />
-                                <input type="hidden" name="mentioned_entity" value="{{ message.entity.entity }}" />
-                                <input type="hidden" name="mentioned_post" value="{{ message.id }}" />
+                <div class="row-fluid reply-form hidden-content">
+                    <div class="span12">
+                        <form method="post" action="{{ path('stream_write') }}" class="stream-message-add-replyto">
+                            <input type="hidden" name="type" value="comment" />
+                            <input type="hidden" name="mentioned_entity" value="{{ message.entity.entity }}" />
+                            <input type="hidden" name="mentioned_post" value="{{ message.id }}" />
 
-                                <textarea class="span12 message" name="message" placeholder="Reply to this message..."></textarea>
-                                <div class="actions">
-                                    <input type="submit" class="btn btn-success stream-message-add-btn" value="Reply" />
-                                    <input type="reset" class="btn stream-message-add-cancel" value="Cancel" />
-                                    <span class="status-length-left"></span>
-                                </div>
-                            </form>
-                            <div class="conversations">
+                            <textarea class="span12 message" name="message" placeholder="Reply to this message..."></textarea>
+                            <div class="actions">
+                                <input type="submit" class="btn btn-success stream-message-add-btn" value="Reply" />
+                                <input type="reset" class="btn stream-message-add-cancel" value="Cancel" />
+                                <span class="status-length-left"></span>
                             </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row-fluid conversation-pane hidden-content">
+                    <div class="span12">
+                        <div class="conversations">
                         </div>
                     </div>
                 </div>

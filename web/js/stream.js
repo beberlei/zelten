@@ -163,6 +163,7 @@ Zelten.WriteStatusView = Backbone.View.extend({
 Zelten.MessageView = Backbone.View.extend({
     events: {
         "click a.show-conversation": "clickShowConversations",
+        "click a.show-reply": "clickReply",
         "click a.repost": "clickRepost",
         "click a.more-content": "showMoreContent"
     },
@@ -178,6 +179,9 @@ Zelten.MessageView = Backbone.View.extend({
         $(e.currentTarget).hide();
         this.$el.find('.hidden-content').slideDown();
         return false;
+    },
+    clickReply: function(e) {
+        this.$el.find('.reply-form').toggle();
     },
     clickRepost: function(e) {
         var modal = new Zelten.ModalConfirmDialogView({
@@ -217,7 +221,7 @@ Zelten.MessageView = Backbone.View.extend({
     clickShowConversations: function(e) {
         var link = $(e.currentTarget);
 
-        if (this.$el.find('.conversations-pane').is(':hidden')) {
+        if (this.$el.find('.conversation-pane').is(':hidden')) {
             // dont use link here, because we want to disable ALL conversation links
             this.$el.find('a.show-conversation').attr('disabled', true).css('pointer-events', 'none');
 
@@ -226,17 +230,15 @@ Zelten.MessageView = Backbone.View.extend({
                 success: _.bind(this.showConversation, this)
             });
 
-            this.$el.find('.conversations-pane').slideDown();
-            this.$el.find('.conversations').addClass('loading');
+            this.$el.find('.conversation-pane').slideDown().addClass('loading');
         } else {
-            this.$el.find('.conversations-pane').slideUp();
-            this.$el.find('.conversations').removeClass('loading');
+            this.$el.find('.conversation-pane').slideUp().removeClass('loading');
         }
 
         return false;
     },
     showConversation: function(data) {
-        this.$el.find('.conversations').removeClass('loading');
+        this.$el.find('.conversation-pane').removeClass('loading');
         this.$el.find('.conversations').html(data);
         var cnt = this.$el.find('.conversations .conversation-message').length;
         this.$el.find('a.show-conversation').filter('.btn').append(' ' + cnt);
