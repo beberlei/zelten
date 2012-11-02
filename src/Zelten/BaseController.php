@@ -18,6 +18,11 @@ abstract class BaseController implements ControllerProviderInterface
         }
     }
 
+    protected function acceptJson(Request $request)
+    {
+        return in_array('application/json', $request->getAcceptableContentTypes());
+    }
+
     protected function getCurrentEntity()
     {
         if (!$this->entityUrl) {

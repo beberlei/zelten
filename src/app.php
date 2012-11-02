@@ -40,6 +40,7 @@ $app->register(new TentServiceProvider(), array(
             'write_groups'     => 'Write Groups',
             'read_followings'  => 'List Followings',
             'write_followings' => 'Follow New People',
+            'read_permissions' => 'Read Permissions',
         ),
     )
 ));

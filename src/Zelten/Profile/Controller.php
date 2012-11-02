@@ -19,6 +19,14 @@ class Controller extends BaseController
     {
         $controllers = $app['controllers_factory'];
 
+        $controllers->get('/followers', array($this, 'myFollowersAction'))
+                    ->bind('my_followers')
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->get('/following', array($this, 'myFollowingAction'))
+                    ->bind('my_followings')
+                    ->before(array($this, 'isAuthenticated'));
+
         $controllers->get('/{entity}/followers', array($this, 'followersAction'))
                     ->bind('user_followers')
                     ->before(array($this, 'isAuthenticated'));
@@ -30,13 +38,28 @@ class Controller extends BaseController
         return $controllers;
     }
 
+    public function myFollowingAction(Request $request, Application $app)
+    {
+        return $this->followingAction($request, $app, $this->getCurrentEntity());
+    }
+
+    public function myFollowersAction(Request $request, Application $app)
+    {
+        return $this->followersAction($request, $app, $this->getCurrentEntity());
+    }
+
     public function followersAction(Request $request, Application $app, $entity)
     {
-        $limit  = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
-        $stream = $app['zelten.stream'];
+        $limit     = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
+        $stream    = $app['zelten.stream'];
+        $followers = $stream->getFollowers($this->urlize($entity, $limit));
+
+        if ($this->acceptJson($request)) {
+            return $app->json($followers);
+        }
 
         return $app['twig']->render('users.html', array(
-            'users' => $stream->getFollowers($this->urlize($entity, $limit)),
+            'users' => $followers,
             'title' => 'Follower',
         ));
     }
@@ -45,9 +68,14 @@ class Controller extends BaseController
     {
         $limit  = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
         $stream = $app['zelten.stream'];
+        $following = $stream->getFollowings($this->urlize($entity), $limit);
+
+        if ($this->acceptJson($request)) {
+            return $app->json($following);
+        }
 
         return $app['twig']->render('users.html', array(
-            'users' => $stream->getFollowings($this->urlize($entity), $limit),
+            'users' => $following,
             'title' => 'Following',
         ));
     }

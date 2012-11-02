@@ -14,6 +14,13 @@
                     </div>
                 </div>
                 <div class="box-footer actions hidden-content">
+                    <div class="row-fluid">
+                        <div class="span2"><small>Permissions:</small></div>
+                        <div class="span10">
+                            <input type="text" class="complete-permissions span12" name="permissions" value="" />
+                        </div>
+                    </div>
+
                     <input type="submit" class="stream-message-add-btn btn btn-success" value="Share" disabled="disabled" />
                     <input type="reset" class="btn stream-message-add-cancel" value="Cancel" />
                     <span class="status-length-left"></span>
@@ -59,11 +66,16 @@
 <script type="text/javascript" src="/js/stream.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        var followers = new Zelten.FollowerCollection();
+        var following = new Zelten.FollowingCollection();
+
         var app = new Zelten.MessageStreamApplication({
         {% if mentioned_entity is defined %}mentionedEntity: '{{ mentioned_entity}}',{% endif %}
             url: '{{ path('stream') }}',
             el: $("#stream"),
-            collection: new Zelten.MessageCollection()
+            collection: new Zelten.MessageCollection(),
+            followers: followers,
+            following: following
         });
         app.render();
     });

@@ -26,7 +26,33 @@ Zelten.ModalConfirmDialogView = Backbone.View.extend({
     }
 });
 
-Zelten.FollowerCollection = Backbone.Collection.extend({
+Zelten.User = Backbone.Model.extend({
+
+});
+
+Zelten.Collection = Backbone.Collection.extend({
+    getBasePath: function() {
+        return (Zelten && Zelten.ApplicationOptions && Zelten.ApplicationOptions.base)
+            ? Zelten.ApplicationOptions.base
+            : '';
+    }
+});
+
+Zelten.UserCollection = Zelten.Collection.extend({
+    model: Zelten.User,
+    url: function() {
+        return this.getBasePath() + this.path;
+    },
+    parse: function(resp, jxhr) {
+        return resp.list;
+    }
+});
+
+Zelten.FollowerCollection = Zelten.UserCollection.extend({
+    path: '/profile/followers'
+});
+Zelten.FollowingCollection = Zelten.UserCollection.extend({
+    path: '/profile/following'
 });
 
 Zelten.UserView = Backbone.View.extend({
@@ -93,10 +119,19 @@ Zelten.WriteStatusView = Backbone.View.extend({
     },
     initialize: function(args) {
         this.mentions = args.mentions || '';
+        this.hasPermissions = this.$el.find('.complete-permissions').length > 0;
+    },
+    render: function() {
         this.$el.find('textarea').autoResize({
             extraSpace: 0,
             animate: {duration: 50, complete: function() {}}
         });
+
+        if (this.hasPermissions) {
+            this.$el.find('.complete-permissions').select2({
+                tags: ['Public']
+            });
+        }
     },
     cancelPosting: function() {
         var actions = this.$el.find(".actions");
@@ -142,18 +177,23 @@ Zelten.WriteStatusView = Backbone.View.extend({
         this.cancelPosting();
     },
     showActions: function() {
-        var actions = this.$el.find(".actions");
+        var actions    = this.$el.find(".actions");
+        var messageBox = this.$el.find('.message');
+
         if (actions.is(':hidden')) {
             actions.slideDown();
 
+            if (this.hasPermissions) {
+                this.$el.find('.complete-permissions').select2('data', {id: 'public', text: 'Public'});
+            }
+
             this.$el.find('.message').css('height', 60);
+            messageBox.data('AutoResizer').config.extraSpace = 50;
             if (this.mentions.length > 0) {
                 this.$el.find('.message').val(this.mentions + ' ');
             }
         }
 
-        var messageBox = this.$el.find('.message');
-        messageBox.data('AutoResizer').config.extraSpace = 50;
         var msg = messageBox.val();
         this.$el.find('.stream-message-add-btn').attr('disabled', (msg.length == 0));
         this.$el.find('.status-length-left').text(256 - msg.length);
@@ -265,6 +305,7 @@ Zelten.MessageView = Backbone.View.extend({
             });
             view.render();
         });
+        this.replyToView.render();
     }
 });
 
@@ -317,6 +358,9 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         this.url = args.url;
         this.title = document.title;
         this.newMessagesCount = 0;
+        this.followers = args.followers;
+        this.following = args.following;
+
         this.win = $(window);
         this.win.scroll(_.bind(this.scrollCheck, this));
         setInterval(_.bind(this.checkNewMessages, this), 1000*15);
@@ -442,8 +486,9 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
     renderWriteStatus: function() {
         this.postStatus = new Zelten.WriteStatusView({
             collection: this.collection,
-            el: this.$el.find('.stream-add-message-box .stream-message-add'),
+            el: this.$el.find('.stream-add-message-box .stream-message-add')
         });
+        this.postStatus.render();
     },
     render: function() {
         this.$el.find('.show-tooltip').tooltip({});

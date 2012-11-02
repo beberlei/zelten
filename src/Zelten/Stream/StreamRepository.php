@@ -44,13 +44,23 @@ class StreamRepository
         $this->mentions      = new Mentions();
     }
 
-    public function write($message, $mention = null)
+    public function write($message, $mention = null, array $permissions = array())
     {
         $client = $this->tentClient->getUserClient($this->currentEntity, true);
 
         $post = Post::create('https://tent.io/types/post/status/v0.1.0');
         $post->setContent(array('text' => substr($message, 0, 256)));
-        $post->markPublic();
+
+        foreach ($permissions as $permission) {
+            switch($permission) {
+                case 'public':
+                    $post->markPublic();
+                    break;
+                default:
+                    $post->markVisibleEntity($this->mentions->normalize($permission, $this->currentEntity));
+                    break;
+            }
+        }
 
         if ($mention) {
             $post->addMention($mention['entity'], $mention['post']);

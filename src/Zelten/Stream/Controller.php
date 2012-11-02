@@ -121,8 +121,13 @@ class Controller extends BaseController
     {
         $entityUrl = $this->getCurrentEntity();
 
-        $text    = substr(strip_tags($request->request->get('message')), 0, 256);
-        $mention = array();
+        $text        = substr(strip_tags($request->request->get('message')), 0, 256);
+        $mention     = array();
+        $permissions = $request->request->get('permissions', array());
+
+        if (!is_array($permissions)) {
+            $permissions = array_filter(array_map('trim', explode(',', $permissions)));
+        }
 
         if ($request->request->has('mentioned_entity')) {
             $mention = array(
@@ -132,7 +137,7 @@ class Controller extends BaseController
         }
 
         $stream  = $app['zelten.stream'];
-        $message = $stream->write($text, $mention);
+        $message = $stream->write($text, $mention, $permissions);
 
         if ($request->isXmlHttpRequest()) {
             $template = '_message.html';
