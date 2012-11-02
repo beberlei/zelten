@@ -10,6 +10,13 @@ use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use TentPHP\Silex\TentServiceProvider;
 
+$cacheTokenFile = sys_get_temp_dir() . "/cache.token";
+if (file_exists($cacheTokenFile)) {
+    $cacheDir = sys_get_temp_dir() . "/" . file_get_contents($cacheTokenFile);
+} else {
+    $cacheDir = __DIR__ . "/../cache";
+}
+
 $app = new Application();
 $app->register(new DoctrineServiceProvider(), array(
     'db.options' => array(
@@ -50,7 +57,7 @@ $app->register(new UrlGeneratorServiceProvider());
 $app->register(new ValidatorServiceProvider());
 $app->register(new TwigServiceProvider(), array(
     'twig.path'    => array(__DIR__.'/../templates'),
-    'twig.options' => array('cache' => __DIR__.'/../cache'),
+    'twig.options' => array('cache' => $cacheDir . '/twig'),
 ));
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
     // add custom globals, filters, tags, ...
