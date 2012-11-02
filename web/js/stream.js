@@ -447,8 +447,9 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
     },
     loadOlderPosts: function() {
         if (this.isLoadingOlderPosts) {
-            return;
+            return false;
         }
+
         this.isLoadingOlderPosts = true;
 
         this.loading = $('<div class="loading"></div>');
@@ -478,6 +479,8 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
             success: _.bind(this.loadOlderPostsSuccess, this),
             error: _.bind(this.loadOlderPostsError, this)
         });
+
+        return false;
     },
     loadOlderPostsError: function() {
         this.isLoadingOlderPosts = false;
