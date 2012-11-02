@@ -12,8 +12,10 @@ use TentPHP\Silex\TentServiceProvider;
 
 $cacheTokenFile = sys_get_temp_dir() . "/cache.token";
 if (file_exists($cacheTokenFile)) {
-    $cacheDir = sys_get_temp_dir() . "/" . file_get_contents($cacheTokenFile);
+    $cacheToken = file_get_contents($cacheTokenFile);
+    $cacheDir = sys_get_temp_dir() . "/" . $cacheToken;
 } else {
+    $cacheToken = filemtime(__DIR__ . "/../composer.json");
     $cacheDir = __DIR__ . "/../cache";
 }
 
@@ -59,8 +61,9 @@ $app->register(new TwigServiceProvider(), array(
     'twig.path'    => array(__DIR__.'/../templates'),
     'twig.options' => array('cache' => $cacheDir . '/twig'),
 ));
-$app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
+$app['twig'] = $app->share($app->extend('twig', function($twig, $app) use ($cacheToken) {
     // add custom globals, filters, tags, ...
+    $twig->addGlobal('cachetoken', $cacheToken);
 
     return $twig;
 }));
