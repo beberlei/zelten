@@ -62,22 +62,3 @@
 </div>
 {% endblock %}
 
-{% block javascripts %}
-<script type="text/javascript" src="/js/stream.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        var followers = new Zelten.FollowerCollection();
-        var following = new Zelten.FollowingCollection();
-
-        var app = new Zelten.MessageStreamApplication({
-        {% if mentioned_entity is defined %}mentionedEntity: '{{ mentioned_entity}}',{% endif %}
-            url: '{{ path('stream') }}',
-            el: $("#stream"),
-            collection: new Zelten.MessageCollection(),
-            followers: followers,
-            following: following
-        });
-        app.render();
-    });
-</script>
-{% endblock %}
