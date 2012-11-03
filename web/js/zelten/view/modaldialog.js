@@ -10,8 +10,8 @@ define(["backbone"], function(Backbone) {
         initialize: function(args) {
             this.success = args.success;
             this.params = args.params;
+            this.template = _.template($("#modal-confirm-dialog").html() || '');
         },
-        template: _.template($("#modal-confirm-dialog").html() || ''),
         cancelAction: function() {
             this.$el.modal('hide');
             this.remove();
