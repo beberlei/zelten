@@ -1,4 +1,3 @@
-var Zelten = Zelten || {};
 
 Zelten.NotificationCountView = Backbone.View.extend({
     initialize: function(args) {

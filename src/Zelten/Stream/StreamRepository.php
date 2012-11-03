@@ -225,7 +225,7 @@ class StreamRepository
             $message->content['mentions'] = implode(" ", array_filter(
                 $message->content['mentions'],
                 function($mentionedEntity) use($currentEntity) {
-                    return strpos($currentEntity, ltrim($mentionedEntity, "^")) === false;
+                    return ltrim($mentionedEntity, "^") && strpos($currentEntity, ltrim($mentionedEntity, "^")) === false;
             }));
 
             $message->content['text'] = nl2br($this->linker->parse($message->content['text']));

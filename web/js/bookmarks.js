@@ -200,11 +200,11 @@ define(["backbone", "jquery"], function(Backbone) {
         }
     });
 
-    var app = new BookmarkApplication({
-        collection: new BookmarksCollection(ZeltenBookmarks),
-        el: $("#bookmarks")
+    $(document).ready(function() {
+        var app = new BookmarkApplication({
+            collection: new BookmarksCollection(ZeltenBookmarks),
+            el: $("#bookmarks")
+        });
+        app.render();
     });
-    app.render();
-
-    return app;
 });

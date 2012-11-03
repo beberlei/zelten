@@ -1,6 +1,8 @@
 define(["zelten/view/conversation"], function(ConversationView) {
-    var app = new ConversationView({
-        el: $(".conversation")
+    $(document).ready(function() {
+        var app = new ConversationView({
+            el: $(".conversation")
+        });
+        app.render();
     });
-    app.render();
 });
