@@ -4,5 +4,6 @@
 if git diff-index --name-only HEAD | egrep '^web/js' >/dev/null ; then
     echo 'Precompiling assets...'
     r.js -o require_build.js
+    git add web/build
 fi
 
