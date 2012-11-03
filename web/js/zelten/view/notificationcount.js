@@ -18,7 +18,6 @@ define(["backbone"], function(Backbone) {
             });
         },
         checkNewNotificationSuccess: function(data) {
-            console.log(data);
             if (data.count == 0) {
                 return;
             }
