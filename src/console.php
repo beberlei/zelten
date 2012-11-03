@@ -36,6 +36,20 @@ $console
         $favoriteTable->addColumn('post_id', 'string');
         $favoriteTable->setPrimaryKey(array('id'));
 
+        $profilesTable = $toSchema->createTable('profiles');
+        $profilesTable->addColumn('entity', 'string');
+        $profilesTable->addColumn('name', 'string');
+        $profilesTable->addColumn('avatar', 'string', array('default' => ''));
+        $profilesTable->addColumn('location', 'string', array('default' => ''));
+        $profilesTable->addColumn('bio', 'string', array('default' => ''));
+        $profilesTable->addColumn('birthday', 'date', array('notnull' => true));
+        $profilesTable->addColumn('gender', 'string', array('default' => ''));
+        $profilesTable->addColumn('email', 'string', array('default' => ''));
+        $profilesTable->addColumn('occupation', 'string', array('default' => ''));
+        $profilesTable->addColumn('school', 'string', array('default' => ''));
+        $profilesTable->addColumn('updated', 'datetime');
+        $profilesTable->setPrimaryKey(array('entity'));
+
         $comp = new Comparator();
         $diff = $comp->compare($fromSchema, $toSchema);
 
