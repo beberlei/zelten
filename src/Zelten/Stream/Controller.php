@@ -44,6 +44,10 @@ class Controller extends BaseController
                     ->bind('post_favorite')
                     ->before(array($this, 'isAuthenticated'));
 
+        $controllers->get('/u/{entity}/{post}/favorite', array($this, 'favoriteAction'))
+                    ->bind('post_favorite2')
+                    ->before(array($this, 'isAuthenticated'));
+
         $controllers->post('/u/{entity}/{post}', array($this, 'repostAction'))
                     ->bind('repost')
                     ->before(array($this, 'isAuthenticated'));
