@@ -44,6 +44,10 @@ class Controller extends BaseController
                     ->bind('repost')
                     ->before(array($this, 'isAuthenticated'));
 
+        $controllers->get('/u/0', array($this, 'myProfileAction'))
+                    ->bind('my_stream')
+                    ->before(array($this, 'isAuthenticated'));
+
         $controllers->get('/u/{entity}', array($this, 'profileAction'))
                     ->bind('stream_user')
                     ->before(array($this, 'isAuthenticated'));
@@ -146,6 +150,11 @@ class Controller extends BaseController
         }
 
         return new RedirectResponse($app['url_generator']->generate('stream'));
+    }
+
+    public function myProfileAction(Request $request, Application $app)
+    {
+        return $this->profileAction($request, $app, $this->getCurrentEntity());
     }
 
     public function profileAction(Request $request, Application $app, $entity)
