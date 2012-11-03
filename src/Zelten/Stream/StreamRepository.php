@@ -325,7 +325,9 @@ class StreamRepository
 
         $data = array('entity' => $this->getEntityShortname($entity), 'name' => $entity, 'avatar' => null);
         if (isset($profile['https://tent.io/types/info/basic/v0.1.0'])) {
-            $data['name']   = $profile['https://tent.io/types/info/basic/v0.1.0']['name'];
+            if (!empty($profile['https://tent.io/types/info/basic/v0.1.0']['name'])) {
+                $data['name']   = $profile['https://tent.io/types/info/basic/v0.1.0']['name'];
+            }
             $data['avatar'] = $profile['https://tent.io/types/info/basic/v0.1.0']['avatar_url'];
         }
 
