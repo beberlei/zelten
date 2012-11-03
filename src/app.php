@@ -83,12 +83,17 @@ $app['zelten.stream'] = $app->share(function ($app) {
     return new \Zelten\Stream\StreamRepository(
         $app['tent.client'],
         $app['url_generator'],
+        $app['zelten.profile'],
         $app['session']->get('entity_url')
     );
 });
 
 $app['zelten.favorite'] = $app->share(function ($app) {
     return new \Zelten\Stream\FavoriteRepository($app['db'], $app['tent.client']);
+});
+
+$app['zelten.profile'] = $app->share(function ($app) {
+    return new \Zelten\Profile\ProfileRepository($app['db'], $app['tent.client']);
 });
 
 return $app;

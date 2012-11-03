@@ -9,12 +9,12 @@
 
         {% if profile.basic.location %}<p>Lives in {{ profile.basic.location }}</p>{% endif %}
 
-        {% if profile.basic.birthdate %}<p>Was born on {{profile.basic.birthdate }}</p>{%endif%}
+        {% if profile.basic.birthday %}<p>Was born on {{profile.basic.birthday }}</p>{%endif%}
         </small>
     </div>
     <div class="span3">
-        {% if profile.basic.avatar_url %}
-        <img src="{{ profile.basic.avatar_url }}"
+        {% if profile.basic.avatar %}
+        <img src="{{ profile.basic.avatar }}"
             class="img-polaroid"
             height="{% if not app.request.isXmlHttpRequest() %}1{% endif %}75"
             width="{% if not app.request.isXmlHttpRequest() %}1{% endif %}75" />

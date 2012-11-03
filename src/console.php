@@ -42,7 +42,7 @@ $console
         $profilesTable->addColumn('avatar', 'string', array('default' => ''));
         $profilesTable->addColumn('location', 'string', array('default' => ''));
         $profilesTable->addColumn('bio', 'string', array('default' => ''));
-        $profilesTable->addColumn('birthday', 'date', array('notnull' => true));
+        $profilesTable->addColumn('birthday', 'string', array('default' => ''));
         $profilesTable->addColumn('gender', 'string', array('default' => ''));
         $profilesTable->addColumn('email', 'string', array('default' => ''));
         $profilesTable->addColumn('occupation', 'string', array('default' => ''));

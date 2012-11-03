@@ -36,14 +36,17 @@ class StreamRepository
         'core'  => array('entity' => '', 'server' => ''),
     );
 
-    public function __construct($tentClient, $urlGenerator, $currentEntity)
+    private $profileRepository;
+
+    public function __construct($tentClient, $urlGenerator, $profileRepository, $currentEntity)
     {
-        $this->tentClient    = $tentClient;
-        $this->urlGenerator  = $urlGenerator;
-        $this->currentEntity = $currentEntity;
-        $this->linker        = new UrlLinker();
-        $this->escaper       = new Washtml(array('charset' => 'UTF-8'));
-        $this->mentions      = new Mentions();
+        $this->tentClient        = $tentClient;
+        $this->urlGenerator      = $urlGenerator;
+        $this->currentEntity     = $currentEntity;
+        $this->profileRepository = $profileRepository;
+        $this->linker            = new UrlLinker();
+        $this->escaper           = new Washtml(array('charset' => 'UTF-8'));
+        $this->mentions          = new Mentions();
     }
 
     public function write($message, $mention = null, array $permissions = array())
@@ -289,61 +292,29 @@ class StreamRepository
 
     public function getFullProfile($entity)
     {
-        $profile = array(
-            'name'   => str_replace(array('https://', 'http://'), '', $entity),
-            'entity' => $this->getEntityShortname($entity),
-            'uri'    => $entity,
-        );
-
-        try {
-            $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
-            $data = $userClient->getProfile();
-        } catch(\Guzzle\Http\Exception\CurlException $e) {
-            $data = array();
-        }
-
-        foreach ($this->supportedProfileTypes as $profileType => $name) {
-            if (isset($data[$profileType])) {
-                $profile[$name] = $data[$profileType];
-            } else {
-                $profile[$name] = $this->profileTypeDefaults[$name];
-            }
-        }
-
-        if (!empty($profile['basic']['name'])) {
-            $profile['name'] = $profile['basic']['name'];
-        }
-
-        return $profile;
-    }
-
-    public function getPublicProfile($entity)
-    {
-        $key = "userprofile_" . $entity;
+        $key = "profile_" . $entity;
         $data = apc_fetch($key);
 
         if ($data) {
             return $data;
         }
 
-        try {
-            $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
-            $profile = $userClient->getProfile();
-        } catch(\Guzzle\Http\Exception\CurlException $e) {
-            $profile = array();
-        }
-
-        $data = array('entity' => $this->getEntityShortname($entity), 'name' => $entity, 'avatar' => null);
-        if (isset($profile['https://tent.io/types/info/basic/v0.1.0'])) {
-            if (!empty($profile['https://tent.io/types/info/basic/v0.1.0']['name'])) {
-                $data['name']   = $profile['https://tent.io/types/info/basic/v0.1.0']['name'];
-            }
-            $data['avatar'] = $profile['https://tent.io/types/info/basic/v0.1.0']['avatar_url'];
-        }
+        $data = $this->profileRepository->getProfile($entity);
 
         apc_store($key, $data, 3600);
 
         return $data;
+    }
+
+    public function getPublicProfile($entity)
+    {
+        $profile = $this->getFullProfile($entity);
+
+        return array(
+            'entity' => $profile['entity'],
+            'name'   => $profile['name'],
+            'avatar' => isset($profile['basic']['avatar']) ? $profile['basic']['avatar'] : '/zelten.png'
+        );
     }
 
     public function getFollowers($entity, $limit = 5)

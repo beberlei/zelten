@@ -74,11 +74,6 @@ class ProfileRepository
         ),
     );
 
-    private $profileTypeDefaults = array(
-        'core'  => array('entity' => '', 'server' => ''),
-        'basic' => array('name' => '', 'bio' => '', 'avatar' => '', 'birthdate' => null, 'location' => ''),
-    );
-
     public function __construct(Connection $conn, Client $tentClient)
     {
         $this->conn       = $conn;
@@ -92,7 +87,8 @@ class ProfileRepository
      */
     public function getProfile($entityUrl)
     {
-        $row = $this->conn->fetchAssoc('SELECT * FROM profiles WHERE entity = ?', array($entityUrl));
+        $sql = 'SELECT * FROM profiles WHERE entity = ? AND updated > ?';
+        $row = $this->conn->fetchAssoc($sql, array($entityUrl, strtotime('-1 day')));
 
         if ($row) {
             return $this->parseDatabaseProfile($row);
@@ -134,7 +130,7 @@ class ProfileRepository
     private function parseTentProfile($entity, $data)
     {
         $profile = array('name' => $entity, 'entity' => $this->fixUri($entity), 'uri' => $entity);
-        $row     = array();
+        $row     = array('updated' => date('Y-m-d H:i:s'));
 
         foreach ($this->supportedProfileTypes as $profileType => $profileData) {
             $name = $profileData['name'];
@@ -144,9 +140,12 @@ class ProfileRepository
                     $profile[$name][$fieldName] = $data[$profileType][$tentName];
                     $row[$fieldName]            = $data[$profileType][$tentName];
                 }
-            } else if (!isset($data[$name])) {
-                $profile[$name] = $this->profileTypeDefaults[$name];
-                $row            = array_merge($row, $this->profileTypeDefaults[$name]);
+            } else {
+                foreach ($profileData['fields'] as $tentName => $fieldName) {
+                    if (empty($profile[$name][$fieldName])) {
+                        $profile[$name][$fieldName] = "";
+                    }
+                }
             }
         }
 
@@ -158,7 +157,15 @@ class ProfileRepository
             $profile['entity'] = $this->fixUri($profile['core']['entity']);
         }
 
-        $this->conn->insert('profiles', $row);
+        try {
+            $this->conn->beginTransaction();
+            $this->conn->delete('profiles', array('entity' => $row['entity']));
+            $this->conn->insert('profiles', $row);
+            $this->conn->commit();
+        } catch(\Exception $e) {
+            $this->conn->rollback();
+            throw $e;
+        }
 
         return $profile;
     }
