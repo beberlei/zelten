@@ -108,9 +108,14 @@ class ProfileRepository
         return $this->parseTentProfile($entityUrl, $data);
     }
 
+    private function fixUri($entityUri)
+    {
+        return str_replace(array('https://', 'http://'), array('https-', 'http-'), $entityUri);
+    }
+
     private function parseDatabaseProfile($row)
     {
-        $profile = array('entity' => $row['entity']);
+        $profile = array('entity' => $this->fixUri($row['entity']), 'uri' => $row['entity']);
         foreach ($this->supportedProfileTypes as $profileType => $data) {
             $name = $data['name'];
 
@@ -128,8 +133,8 @@ class ProfileRepository
 
     private function parseTentProfile($entity, $data)
     {
-        $profiles = array('name' => $entity, 'entity' => $entity);
-        $row      = array();
+        $profile = array('name' => $entity, 'entity' => $this->fixUri($entity), 'uri' => $entity);
+        $row     = array();
 
         foreach ($this->supportedProfileTypes as $profileType => $profileData) {
             $name = $profileData['name'];
@@ -150,7 +155,7 @@ class ProfileRepository
         }
 
         if (!empty($profile['core']['entity'])) {
-            $profile['entity'] = $profile['core']['entity'];
+            $profile['entity'] = $this->fixUri($profile['core']['entity']);
         }
 
         $this->conn->insert('profiles', $row);

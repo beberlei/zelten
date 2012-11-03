@@ -32,7 +32,8 @@ class ProfileRepositoryTest extends TestCase
         $data = $profileRepository->getProfile(self::$databaseRow['entity']);
 
         $this->assertEquals(array(
-            'entity' => self::$databaseRow['entity'],
+            'uri' => self::$databaseRow['entity'],
+            'entity' => 'https-beberlei.tent.is',
             'core' => array(
                 'entity' => self::$databaseRow['entity'],
             ),
@@ -51,7 +52,7 @@ class ProfileRepositoryTest extends TestCase
     public function testGetProfileFromTent()
     {
         $tentData = array(
-            'entity' => self::$databaseRow['entity'],
+            'entity' => 'https://beberlei.tent.is',
             'https://tent.io/types/info/core/v0.1.0' => array(
                 'entity' => self::$databaseRow['entity'],
             ),
@@ -87,7 +88,8 @@ class ProfileRepositoryTest extends TestCase
         $data = $profileRepository->getProfile(self::$databaseRow['entity']);
 
         $this->assertEquals(array(
-            'entity' => self::$databaseRow['entity'],
+            'uri' => self::$databaseRow['entity'],
+            'entity' => str_replace("https://", "https-", self::$databaseRow['entity']),
             'core' => array(
                 'entity' => self::$databaseRow['entity'],
             ),
