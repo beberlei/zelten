@@ -1,0 +1,8 @@
+#!/bin/bash
+ 
+# precompile assets if any have been updated
+if git diff-index --name-only HEAD | egrep '^web/js' >/dev/null ; then
+    echo 'Precompiling assets...'
+    r.js -o require_build.js
+fi
+

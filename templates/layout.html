@@ -16,11 +16,14 @@
         <script type="text/javascript" language="javascript">
             var Zelten = Zelten || {};
             Zelten.ApplicationOptions = {
-                base: '{{ app.request.basepath}}' 
+                base: '{{ app.request.basepath}}'
             };
         </script>
         {% block javascripts %}{% endblock %}
-        <script data-main="{{ app.request.basepath }}/js/{{ app.request.get('_route') }}" src="{{ app.request.basepath }}/js/require.js"></script>
+        <script
+            data-main="{{ app.request.basepath }}/{% if app.debug %}js{% else %}build{%endif%}/{{ app.request.get('_route') }}"
+            src="{{ app.request.basepath }}/js/require.js">
+        </script>
         <script type="text/javascript">
             requirejs.config({
                 {% if app.debug %}
