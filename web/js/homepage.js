@@ -3,7 +3,7 @@ define(["jquery", "backbone", "zelten/view/notificationcount"], function($, Back
     $(document).ready(function() {
         $(".notifications").each(function() {
             var view = new NotificationCountView({
-                url: Zelten.ApplicationOptions.base + '/stream/notifications',
+                url: Zelten.ApplicationOptions.base + '/stream/notifications/count',
                 el: $(this)
             });
             view.render();

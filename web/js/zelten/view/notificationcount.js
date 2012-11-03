@@ -3,7 +3,7 @@
  * a notification count badge on the annotated view element.
  */
 define(["backbone"], function(Backbone) {
-    
+
     var NotificationCountView = Backbone.View.extend({
         initialize: function(args) {
             this.countUrl = args.url;
@@ -18,6 +18,7 @@ define(["backbone"], function(Backbone) {
             });
         },
         checkNewNotificationSuccess: function(data) {
+            console.log(data);
             if (data.count == 0) {
                 return;
             }

@@ -1,6 +1,6 @@
 define(
-    ["zelten/view/stream", "zelten/collection/message", "zelten/collection/follower", "zelten/collection/following", "zelten/view/userlist"],
-    function (StreamView, MessageCollection, FollowerCollection, FollowingCollection, UserListView) {
+    ["zelten/view/stream", "zelten/collection/message", "zelten/collection/follower", "zelten/collection/following", "zelten/view/userlist", "zelten/view/notificationcount"],
+    function (StreamView, MessageCollection, FollowerCollection, FollowingCollection, UserListView, NotificationCountView) {
 
     $(document).ready(function() {
         var followers = new FollowerCollection();
@@ -30,6 +30,14 @@ define(
             el: $(".follower")
         });
         followers.render();
+
+        $(".notifications").each(function() {
+            var view = new NotificationCountView({
+                url: Zelten.ApplicationOptions.base + '/stream/notifications/count',
+                el: $(this)
+            });
+            view.render();
+        });
     });
 });
 
