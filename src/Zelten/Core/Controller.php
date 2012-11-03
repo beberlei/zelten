@@ -30,6 +30,10 @@ class Controller implements ControllerProviderInterface
             return new RedirectResponse($app['url_generator']->generate('homepage'));
         })->bind('logout');
 
+        $controllers->get('/login', function (Application $app) {
+            return new RedirectResponse($app['url_generator']->generate('homepage'));
+        });
+
         $controllers->post('/login', function (Request $request, Application $app) {
             $entityUrl = $app['session']->get('entity_url');
 
