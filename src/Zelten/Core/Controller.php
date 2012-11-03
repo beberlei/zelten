@@ -37,7 +37,7 @@ class Controller implements ControllerProviderInterface
                 return new RedirectResponse($app['url_generator']->generate('stream'));
             }
 
-            $entityUrl = $request->request->get('entity_url');
+            $entityUrl = trim($request->request->get('entity_url'));
 
             if (!$entityUrl) {
                 return new RedirectResponse($app['url_generator']->generate('homepage'));
