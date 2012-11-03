@@ -3,7 +3,7 @@
 {% block title %}Bookmarks{% endblock %}
 
 {% block content %}
-<div id="bookmarks">
+<div id="bookmarks" data-entity="{{ app.session.get('entity_url') }}">
     <div class="box box-highlight">
         <div class="box-content">
             <form class="add" method="post" action="{{ path('save_bookmark') }}">
@@ -92,16 +92,7 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-<!--
-    Zelten.entity = '{{ app.session.get('entity_url') }}';
-    $(document).ready(function() {
-        var col = new BookmarksCollection({{ posts|json_encode|raw }});
-        var app = new BookmarkApplication({
-            collection: col,
-            el: $("#bookmarks")
-        });
-        app.render();
-    });
+    var ZeltenBookmarks = {{ posts|json_encode|raw }};
 -->
 </script>
 {% endblock %}

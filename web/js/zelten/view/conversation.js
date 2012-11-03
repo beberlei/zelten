@@ -1,4 +1,4 @@
-define(["backbone", "zelten/view/message", "zelten/view/userlink"], function(Backbone, Message, UserLinkView) {
+define(["backbone", "zelten/model/message", "zelten/view/message", "zelten/view/userlink"], function(Backbone, Message, MessageView, UserLinkView) {
     var conversationView = Backbone.View.extend({
         render: function() {
             var el = this.$el.find('.stream-message');

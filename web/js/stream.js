@@ -6,6 +6,7 @@ define(
     var following = new FollowingCollection();
 
     var app = new StreamView({
+        mentionedEntity: $("#stream").data('mentioned-entity'),
         url: Zelten.ApplicationOptions.base + '/stream',
         el: $("#stream"),
         collection: new MessageCollection(),

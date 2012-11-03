@@ -3,7 +3,7 @@
 {% block title %}{% if mentioned_entity is defined %}Notifications{% else %}Stream{% endif %}{% endblock %}
 
 {% block content %}
-<div id="stream">
+<div id="stream" {% if mentioned_entity is defined %}data-mentioned-entity="{{ mentioned_entity }}{% endif %}>
     {% if post_add %}
     <div class="stream-add-message-box">
         <form action="{{ path('stream_write') }}" method="message" class="stream-message-add">

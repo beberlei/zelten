@@ -19,6 +19,7 @@
                 base: '{{ app.request.basepath}}' 
             };
         </script>
+        {% block javascripts %}{% endblock %}
         <script data-main="{{ app.request.basepath }}/js/{{ app.request.get('_route') }}" src="{{ app.request.basepath }}/js/require.js"></script>
         <script type="text/javascript">
             requirejs.config({
@@ -34,7 +35,7 @@
                         //module value.
                         exports: 'Backbone'
                     },
-                    'jquery.timeago': ['jquery'],
+                    'timeago': ['jquery'],
                     'select2': ['jquery'],
                     'clickover': ['bootstrap'],
                     'bootstrap': ['jquery']
@@ -115,8 +116,5 @@
 </div>
 </script>
 
-        <script type="text/javascript" language="javascript">
-        </script>
-        {% block javascripts %}{% endblock %}
     </body>
 </html>

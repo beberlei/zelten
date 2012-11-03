@@ -9,7 +9,7 @@
 {% endif %}
         {% include "_profile.html" with {"profile": profile, "you": you} %}
 
-        <div id="stream">
+        <div id="stream" data-entity="{{ profile.entity }}">
             <div class="stream-notifications"></div>
             <div class="stream-messages"></div>
         </div>
@@ -34,30 +34,3 @@
 {% endif %}
 {% endblock %}
 
-{% block javascripts %}
-<script type="text/javascript" src="/js/stream.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        var app = new Zelten.MessageStreamApplication({
-            entity: '{{ profile.entity }}',
-            url: '{{ path('stream') }}',
-            el: $("#stream"),
-            collection: new Zelten.MessageCollection()
-        });
-        app.render();
-        app.checkNewMessages();
-
-        var following = new Zelten.UserListView({
-            url: '{{ path('user_following', {'entity': profile.entity}) }}',
-            el: $(".following")
-        });
-        following.render();
-
-        var followers = new Zelten.UserListView({
-            url: '{{ path('user_followers', {'entity': profile.entity}) }}',
-            el: $(".follower")
-        });
-        followers.render();
-    });
-</script>
-{% endblock %}
