@@ -80,7 +80,8 @@
                         <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Repost"><i class="icon-retweet post-type"></i></a>
                         {% endif %}
 
-                        <abbr class="timeago" title="{{ message.published|date('c') }}">{{ message.published|date }}</abbr> - {{ message.app.name }} -
+                        <abbr class="timeago" title="{{ message.published|date('c') }}">{{ message.published|date }}</abbr>
+                        - {% if message.app.url is defined %}<a href="{{ message.app.url }}" target="_blank">{% endif %}{{ message.app.name }}{% if message.app.url is defined %}</a>{% endif %}  -
 
                         {% if message.isPublic() %}
                         <a href="#" class="show-popover" rel="popover" data-content="This content is visible to everybody on the internet." data-original-title="Permissions">Public</a>
