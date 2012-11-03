@@ -1,8 +1,8 @@
-define(["backbone", "zelten/model/message", "jquery.autoresize", "select2"], function(Backbone, Message) {
+define(["backbone", "zelten/model/message", "autoresize", "select2"], function(Backbone, Message) {
 
     var writeStatusView = Backbone.View.extend({
         events: {
-            "click": "showActions",
+            "click .message": "showActions",
             "keyup .message": "showActions",
             "change .message": "showActions",
             "click .stream-message-add-cancel": "cancelPosting",
@@ -17,6 +17,11 @@ define(["backbone", "zelten/model/message", "jquery.autoresize", "select2"], fun
                 extraSpace: 0,
                 animate: {duration: 50, complete: function() {}}
             });
+
+            this.actions    = this.$el.find(".actions");
+            this.messageBox = this.$el.find('.message');
+            this.btn        = this.$el.find('.stream-message-add-btn');
+            this.charsLeft  = this.$el.find('.status-length-left');
 
             if (this.hasPermissions) {
                 this.$el.find('.complete-permissions').select2({
@@ -68,26 +73,24 @@ define(["backbone", "zelten/model/message", "jquery.autoresize", "select2"], fun
             this.cancelPosting();
         },
         showActions: function() {
-            var actions    = this.$el.find(".actions");
-            var messageBox = this.$el.find('.message');
-
-            if (actions.is(':hidden')) {
-                actions.slideDown();
+            if (this.actions.is(':hidden')) {
+                this.actions.slideDown();
 
                 if (this.hasPermissions) {
                     this.$el.find('.complete-permissions').select2('data', {id: 'public', text: 'Everybody'});
                 }
 
-                this.$el.find('.message').css('height', 60);
-                messageBox.data('AutoResizer').config.extraSpace = 50;
+                this.messageBox.css('height', 60);
+                this.messageBox.data('AutoResizer').config.extraSpace = 50;
+
                 if (this.mentions.length > 0) {
-                    this.$el.find('.message').val(this.mentions + ' ');
+                    this.messageBox.val(this.mentions + ' ');
                 }
             }
 
-            var msg = messageBox.val();
-            this.$el.find('.stream-message-add-btn').attr('disabled', (msg.length == 0));
-            this.$el.find('.status-length-left').text(256 - msg.length);
+            var msg = this.messageBox.val();
+            this.btn.attr('disabled', (msg.length == 0));
+            this.charsLeft.text(256 - msg.length);
         }
     });
 

@@ -23,6 +23,7 @@
         'timeago': ['jquery'],
         'select2': ['jquery'],
         'clickover': ['bootstrap'],
-        'bootstrap': ['jquery']
+        'bootstrap': ['jquery'],
+        'autoresize': ['jquery']
     }
 })

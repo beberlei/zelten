@@ -26,9 +26,7 @@
         </script>
         <script type="text/javascript">
             requirejs.config({
-                {% if app.debug %}
-                urlArgs: "bust=" +  (new Date()).getTime(),
-                {% endif %}
+                urlArgs: "v={{cachetoken}}",
                 shim: {
                     'backbone': {
                         //These script dependencies should be loaded before loading
@@ -41,7 +39,8 @@
                     'timeago': ['jquery'],
                     'select2': ['jquery'],
                     'clickover': ['bootstrap'],
-                    'bootstrap': ['jquery']
+                    'bootstrap': ['jquery'],
+                    'autoresize': ['jquery']
                 }
             });
         </script>
