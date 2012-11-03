@@ -34,6 +34,7 @@
 
         <ul>
             <li>Send and recieve status messages</li>
+            <li>Mark and list your favorite messages</li>
             <li>Save and share bookmarks</li>
         </ul>
     </div>
@@ -54,50 +55,23 @@
 
 <div class="row-fluid">
     <div class="span6">
-        <h3>Is this OpenSource?</h3>
-
-        <p>
-            Yes! The <a href="https://github.com/beberlei/zelten">application</a> is on Github
-            as well as the <a href="https://github.com/beberlei/TentPHP">TentPHP</a> client library that
-            is used internally.
-        </p>
-    </div>
-
-    <div class="span6">
         <h3>SocialSync</h3>
 
         <p>You can connect your Twitter account to this application and automatically push
             tent status posts to Twitter.</p>
     </div>
-</div>
 
-<div class="row-fluid">
-    <div class="span8">
-        <h3>Tent.io PostType for Bookmarks</h3>
+    <div class="span6">
+        <h3>Is this OpenSource?</h3>
 
         <p>
-            The url of this post type is "<strong>http://www.beberlei.de/tent/bookmark/v0.0.1</strong>".
-            Here is the schema:
+            Yes! The <a href="https://github.com/beberlei/zelten">application</a> is on Github
+            as well as the <a href="https://github.com/beberlei/TentPHP">TentPHP</a> client library that
+            is used internally. You can check <a href="{{ path('developers') }}">our developer resources</a>
+            for information on the Zelten specific Tent.io Post and Profile Info Types.
         </p>
-
-        <table class="table table-stripped">
-            <tr>
-                <td>url</td>
-                <td>Required</td>
-                <td>String</td>
-                <td>Url of the bookmark</td>
-            </tr>
-            <tr>
-                <td>title</td><td>Required</td><td>String</td><td>Title of the page</td>
-            </tr>
-            <tr><td> image</td><td>Optional</td><td>String</td><td>A link to an image found/explaining the url</td></tr>
-            <tr><td> description</td><td>Optional</td><td>String</td><td>A description of the contents to be found on the url.</td></tr>
-            <tr><td> locale</td><td>Optional</td><td>Array</td><td>The locale the content is available in</td></tr>
-            <tr><td> site_name</td><td>Optional</td><td>String</td><td>Name of the Website/Network the content is posted on.</td></tr>
-            <tr><td> tags</td><td>Optional</td><td>Array</td><td>A list of tags associated with this bookmark.</td></tr>
-            <tr><td> content</td><td>Optional</td><td>String</td><td>A copy of the content (as backup or for readbility)</td></tr>
-        </table>
     </div>
 </div>
+
 {% endblock %}
 

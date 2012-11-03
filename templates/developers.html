@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}Developer Resources{% endblock %}
+
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span8">
+        <h3>Tent.io PostTypes
+
+        <h4>Bookmarks</h3>
+
+        <p>
+            The url of this post type is "<strong>http://www.beberlei.de/tent/bookmark/v0.0.1</strong>".
+            Here is the schema:
+        </p>
+
+        <table class="table table-stripped">
+            <tr>
+                <td>url</td>
+                <td>Required</td>
+                <td>String</td>
+                <td>Url of the bookmark</td>
+            </tr>
+            <tr>
+                <td>title</td><td>Required</td><td>String</td><td>Title of the page</td>
+            </tr>
+            <tr><td> image</td><td>Optional</td><td>String</td><td>A link to an image found/explaining the url</td></tr>
+            <tr><td> description</td><td>Optional</td><td>String</td><td>A description of the contents to be found on the url.</td></tr>
+            <tr><td> locale</td><td>Optional</td><td>Array</td><td>The locale the content is available in</td></tr>
+            <tr><td> site_name</td><td>Optional</td><td>String</td><td>Name of the Website/Network the content is posted on.</td></tr>
+            <tr><td> tags</td><td>Optional</td><td>Array</td><td>A list of tags associated with this bookmark.</td></tr>
+            <tr><td> content</td><td>Optional</td><td>String</td><td>A copy of the content (as backup or for readbility)</td></tr>
+        </table>
+
+        <h4>Favorites</h4>
+
+        <p>
+            The url of this post type is "<strong>http://www.beberlei.de/tent/favorite/v0.0.1</strong>".
+            Here is the schema:
+        </p>
+
+        <table class="table table-stripped">
+            <tr>
+                <td>url</td>
+                <td>Required</td>
+                <td>String</td>
+                <td>Url of the bookmark</td>
+            </tr>
+            <tr>
+                <td>entity</td><td>Required</td><td>String</td><td>URI of entity that owns the post</td>
+            </tr>
+            <tr><td> post</td><td>Required</td><td>String</td><td>ID of the post that is favorited</td></tr>
+        </table>
+    </div>
+</div>
+{% endblock %}
