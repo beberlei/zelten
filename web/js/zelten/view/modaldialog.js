@@ -11,7 +11,7 @@ define(["backbone"], function(Backbone) {
             this.success = args.success;
             this.params = args.params;
         },
-        template: _.template($("#modal-confirm-dialog").html()),
+        template: _.template($("#modal-confirm-dialog").html() || ''),
         cancelAction: function() {
             this.$el.modal('hide');
             this.remove();
