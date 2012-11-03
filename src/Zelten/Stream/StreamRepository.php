@@ -214,7 +214,7 @@ class StreamRepository
 
         // switch a favorite
         if ($message->type == 'favorite') {
-            $message = $this->getPost($message->content['entity'], $message->content['post']);
+            return $this->getPost($message->content['entity'], $message->content['post']);
         }
 
         if ($message->type == 'status') {
