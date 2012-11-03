@@ -84,7 +84,7 @@ class Controller extends BaseController
         );
 
         $stream   = $app['zelten.stream'];
-        $comments = $stream->getMessages($entityUrl, $criteria);
+        $comments = array_reverse($stream->getMessages($entityUrl, $criteria));
         $post     = $stream->getPost($mentionedEntity, $id);
 
         $parent = null;
