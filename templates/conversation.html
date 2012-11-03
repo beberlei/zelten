@@ -8,6 +8,7 @@
         {% include "_message.html" with {'message': post} %}
     {% endif %}
 
+    <div class="others">
     {% if parent %}
         <h6>In reply to</h6>
         {% include "_conversation_message.html" with {"message": parent} %}
@@ -19,5 +20,16 @@
         {% include "_conversation_message.html" with {"message": message} %}
         {% endfor %}
     {% endif %}
+    </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript" src="/js/stream.js"></script>
+<script type="text/javascript">
+    var app = new Zelten.ConversationView({
+        el: $(".conversation")
+    });
+    app.render();
+</script>
 {% endblock %}

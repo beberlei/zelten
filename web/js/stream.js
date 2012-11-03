@@ -257,7 +257,9 @@ Zelten.MessageView = Backbone.View.extend({
             element: newMessage
         });
 
-        this.messages.add(newMessage);
+        if (this.messages) {
+            this.messages.add(newMessage);
+        }
     },
     clickShowConversations: function(e) {
         var link = $(e.currentTarget);
@@ -285,7 +287,8 @@ Zelten.MessageView = Backbone.View.extend({
         this.$el.find('a.show-conversation').filter('.btn').append(' ' + cnt);
         this.$el.find('a.show-conversation').attr('disabled', false).css('pointer-events', 'auto');
 
-        $(data).find('.user-details').each(function() {
+        this.$el.find('.conversations .timeago').timeago();
+        this.$el.find('.conversations').each(function() {
             var view = new Zelten.UserLinkView({
                 el: $(this)
             });
@@ -452,7 +455,7 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
         messageList.find('.stream-message').each(_.bind(this.addMessage, this));
     },
     addMessage: function(idx, snippet) {
-        el = $(snippet);
+        var el = $(snippet);
         var message = new Zelten.Message({
             id: el.data('message-id'),
             entity: el.data('entity'),
@@ -557,3 +560,28 @@ Zelten.MessageStreamApplication = Backbone.View.extend({
     }
 });
 
+Zelten.ConversationView = Backbone.View.extend({
+    render: function() {
+        var el = this.$el.find('.stream-message');
+        var message = new Zelten.Message({
+            id: el.data('message-id'),
+            entity: el.data('entity'),
+            published: el.data('published'),
+            element: el
+        });
+        var messageView = new Zelten.MessageView({
+            model: message,
+            el: message.get('element')
+        });
+        messageView.render();
+
+        // add all the other user details links
+        this.$el.find('.others a.user-details').each(function() {
+            var view = new Zelten.UserLinkView({
+                el: $(this)
+            });
+            view.render();
+        });
+        this.$el.find('.others .timeago').timeago();
+    }
+});
