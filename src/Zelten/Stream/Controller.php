@@ -128,6 +128,7 @@ class Controller extends BaseController
         if (!is_array($permissions)) {
             $permissions = array_filter(array_map('trim', explode(',', $permissions)));
         }
+        $permissions = array_map(array($this, 'urlize'), $permissions);
 
         if ($request->request->has('mentioned_entity')) {
             $mention = array(
