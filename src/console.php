@@ -28,6 +28,14 @@ $console
         $userTable->addColumn('bookmarks', 'integer', array('default' => 0));
         $userTable->setPrimaryKey(array('entity'));
 
+        $favoriteTable = $toSchema->createTable('favorites');
+        $favoriteTable->addColumn('id', 'integer', array('autoincrement' => true));
+        $favoriteTable->addColumn('owner_entity', 'string');
+        $favoriteTable->addColumn('entity', 'string');
+        $favoriteTable->addColumn('post', 'string');
+        $favoriteTable->addColumn('post_id', 'string');
+        $favoriteTable->setPrimaryKey(array('id'));
+
         $comp = new Comparator();
         $diff = $comp->compare($fromSchema, $toSchema);
 

@@ -64,6 +64,7 @@ $app->register(new TwigServiceProvider(), array(
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) use ($cacheToken) {
     // add custom globals, filters, tags, ...
     $twig->addGlobal('cachetoken', $cacheToken);
+    $twig->addExtension(new \Zelten\TwigExtension($app));
 
     return $twig;
 }));
@@ -84,6 +85,10 @@ $app['zelten.stream'] = $app->share(function ($app) {
         $app['url_generator'],
         $app['session']->get('entity_url')
     );
+});
+
+$app['zelten.favorite'] = $app->share(function ($app) {
+    return new \Zelten\Stream\FavoriteRepository($app['db'], $app['tent.client']);
 });
 
 return $app;

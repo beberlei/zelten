@@ -19,16 +19,18 @@ class StreamRepository
 
     private $supportedTypes = array(
         'https://tent.io/types/post/status/v0.1.0'    => 'status',
-        'http://www.beberlei.de/tent/bookmark/v0.0.1' => 'bookmark',
         'https://tent.io/types/post/essay/v0.1.0'     => 'essay',
         'https://tent.io/types/post/repost/v0.1.0'    => 'repost',
         'https://tent.io/types/post/follower/v0.1.0'  => 'follower',
+        'http://www.beberlei.de/tent/bookmark/v0.0.1' => 'bookmark',
+        'http://www.beberlei.de/tent/favorite/v0.0.1' => 'favorite',
     );
 
     private $supportedProfileTypes = array(
         'https://tent.io/types/info/basic/v0.1.0' => 'basic',
         'https://tent.io/types/info/core/v0.1.0' => 'core',
     );
+
     private $profileTypeDefaults = array(
         'basic' => array('name' => '', 'bio' => '', 'avatar_url' => '', 'birthdate' => '', 'location' => ''),
         'core'  => array('entity' => '', 'server' => ''),
@@ -209,6 +211,11 @@ class StreamRepository
         $message->mentions    = $post['mentions'];
         $message->permissions = $post['permissions'];
         $message->published   = new \DateTime('@' . $post['published_at']);
+
+        // switch a favorite
+        if ($message->type == 'favorite') {
+            $message = $this->getPost($message->content['entity'], $message->content['post']);
+        }
 
         if ($message->type == 'status') {
             if (preg_match_all('((\^[^\s]+))', $message->content['text'], $matches)) {

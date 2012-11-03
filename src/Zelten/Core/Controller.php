@@ -62,6 +62,7 @@ class Controller implements ControllerProviderInterface
                     'https://tent.io/types/post/essay/v0.1.0',
                     'https://tent.io/types/post/repost/v0.1.0',
                     'https://tent.io/types/post/follower/v0.1.0',
+                    'http://www.beberlei.de/tent/favorite/v0.0.1',
                 ), 'http://zelten.eu1.frbit.net/hook?hash='.hash_hmac('sha256', $entityUrl, $app['appsecret']));
             } catch(\TentPHP\Exception\EntityNotFoundException $e) {
                 return new RedirectResponse($app['url_generator']->generate('homepage', array('error' => 'invaild_tent_entity')));

@@ -40,6 +40,10 @@ class Controller extends BaseController
                     ->bind('post_conversation')
                     ->before(array($this, 'isAuthenticated'));
 
+        $controllers->post('/u/{entity}/{post}/favorite', array($this, 'favoriteAction'))
+                    ->bind('post_favorite')
+                    ->before(array($this, 'isAuthenticated'));
+
         $controllers->post('/u/{entity}/{post}', array($this, 'repostAction'))
                     ->bind('repost')
                     ->before(array($this, 'isAuthenticated'));
@@ -226,6 +230,21 @@ class Controller extends BaseController
 
         $stream   = $app['zelten.stream'];
         return $stream->getMessages($entityUrl, $criteria);
+    }
+
+    public function favoriteAction(Request $request, Application $app, $entity, $post)
+    {
+        $favoriteRepository = $app['zelten.favorite'];
+        $ownerEntity        = $this->getCurrentEntity();
+        $entity             = $this->urlize($entity);
+
+        if ($favoriteRepository->isFavorite($ownerEntity, $entity, $post)) {
+            $favoriteRepository->unmark($ownerEntity, $entity, $post);
+        } else {
+            $favoriteRepository->mark($ownerEntity, $entity, $post);
+        }
+
+        return new Response('', 204);
     }
 }
 

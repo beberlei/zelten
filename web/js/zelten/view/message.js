@@ -7,7 +7,9 @@ define(
             "click a.show-conversation": "clickShowConversations",
             "click a.show-reply": "clickReply",
             "click a.repost": "clickRepost",
-            "click a.more-content": "showMoreContent"
+            "click a.more-content": "showMoreContent",
+            "click a.favorite": "toggleFavorite",
+            "hover a.favorite": "hoverFavorite"
         },
         initialize: function(args) {
             this.messages = args.messages;
@@ -16,6 +18,36 @@ define(
                 collection: args.messages,
                 el: this.$el.find(".stream-message-add-replyto")
             });
+        },
+        hoverFavorite: function (e) {
+            var icon = $(e.currentTarget).find('i');
+            if (icon.hasClass('icon-star-empty')) {
+                icon.removeClass('icon-star-empty').addClass('icon-star');
+            } else {
+                icon.addClass('icon-star-empty').removeClass('icon-star');
+            }
+        },
+        toggleFavorite: function(e) {
+            var link = $(e.currentTarget);
+
+            $.ajax({
+                type: 'POST',
+                url: link.attr('href'),
+                success: _.bind(this.toggleFavoriteSuccess, this, link)
+            });
+
+            return false;
+        },
+        toggleFavoriteSuccess: function(link, data) {
+            var isFavorite = parseInt(link.data('is-favorite'));
+
+            if (isFavorite) {
+                link.data('is-favorite', 0).attr('title', 'Favorited');
+                link.find('i').addClass('icon-star-empty').removeClass('icon-star');
+            } else {
+                link.data('is-favorite', 1).attr('title', 'Favorite');
+                link.find('i').removeClass('icon-star-empty').addClass('icon-star');
+            }
         },
         showMoreContent: function(e) {
             $(e.currentTarget).hide();

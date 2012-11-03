@@ -23,6 +23,9 @@
         "beberlei/tent-php": "dev-master",
         "ruudk/twitter-oauth": "dev-master"
     },
+    "require-dev": {
+        "mockery/mockery": "dev-master"
+    },
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": { "": "src/" }

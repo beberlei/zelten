@@ -9,4 +9,4 @@ EOT
     );
 }
 
-$loader->add('TentPHP\Tests', __DIR__);
+$loader->add('Zelten\Tests', __DIR__);
