@@ -201,9 +201,16 @@ class Controller extends BaseController
         $criteria  = $request->query->get('criteria', array());
         $criteria['mentioned_entity'] = $entityUrl;
 
-        return $app->json(array(
-            'count' => $app['zelten.stream']->getMessageCount($entityUrl, $criteria))
-        );
+        $sql = 'SELECT UNIX_TIMESTAMP(last_notification_update) FROM users WHERE entity = ?';
+        $criteria['since_time'] = $app['db']->fetchColumn($sql, array($entityUrl));
+
+        $count = $app['zelten.stream']->getMessageCount($entityUrl, $criteria);
+
+        if ($count > 0) {
+            $app['db']->executeUpdate('UPDATE users SET last_notification_update = NOW() WHERE entity = ?', array($entityUrl));
+        }
+
+        return $app->json(array('count' => $count));
     }
 
     public function streamAction(Request $request, Application $app)

@@ -24,6 +24,7 @@ $console
         $userTable->addColumn('twitter_oauth_secret', 'tentecstring', array('notnull' => false));
         $userTable->addColumn('last_login', 'datetime');
         $userTable->addColumn('login_count', 'integer', array('default' => 0));
+        $userTable->addColumn('last_notification_update', 'datetime', array('default' => '2012-11-03 00:00:00'));
         $userTable->addColumn('bookmarks', 'integer', array('default' => 0));
         $userTable->setPrimaryKey(array('entity'));
 

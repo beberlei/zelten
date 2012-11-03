@@ -1,9 +1,6 @@
 var Zelten = Zelten || {};
 
 Zelten.NotificationCountView = Backbone.View.extend({
-    events: {
-        "click": "saveCheckedNotifications"
-    },
     initialize: function(args) {
         this.countUrl = args.url;
         setInterval(_.bind(this.checkNewNotification, this), 30000);
@@ -12,9 +9,8 @@ Zelten.NotificationCountView = Backbone.View.extend({
         );
     },
     checkNewNotification: function() {
-        var query = '?criteria[since_time]=' + this.lastUpdateTimestamp();
         $.ajax({
-            url: this.countUrl + query,
+            url: this.countUrl,
             success: _.bind(this.checkNewNotificationSuccess, this)
         });
     },
@@ -24,14 +20,6 @@ Zelten.NotificationCountView = Backbone.View.extend({
         }
 
         this.$el.find('.notification-count').text(data.count).show();
-    },
-    saveCheckedNotifications: function() {
-        var ts = Math.round((new Date()).getTime() / 1000);
-        $.cookie('zelten_notifications_update', null);
-        $.cookie('zelten_notifications_update', ts, {path: '/'});
-    },
-    lastUpdateTimestamp: function() {
-        return $.cookie('zelten_notifications_update');
     },
     render: function() {
         this.checkNewNotification();
