@@ -167,17 +167,6 @@ class Controller extends BaseController
         ));
     }
 
-    public function userAction(Request $request, Application $app, $entity)
-    {
-        $userEntity = $this->urlize($entity);
-
-        return $app['twig']->render('user_stream.html', array(
-            'messages'   => $this->getMessages($userEntity, array(), $app),
-            'profile'    => $stream->getFullProfile($userEntity),
-            'entity'     => $userEntity,
-        ));
-    }
-
     public function notificationsAction(Request $request, Application $app)
     {
         $entityUrl = $this->getCurrentEntity();
