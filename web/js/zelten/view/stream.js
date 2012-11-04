@@ -20,7 +20,7 @@ define(
 
             this.win = $(window);
             this.win.scroll(_.bind(this.scrollCheck, this));
-            setInterval(_.bind(this.checkNewMessages, this), 1000*15);
+            this.checkNewMessagesInterval = setInterval(_.bind(this.checkNewMessages, this), 1000*15);
             this.collection.bind('add', _.bind(this.renderMessage, this));
         },
         filterByPostType: function(e) {
@@ -59,8 +59,16 @@ define(
 
             $.ajax({
                 url: this.url + ((query.length > 0) ? '?' : '') + query,
-                success: _.bind(this.checkNewMessagesSuccess, this)
+                success: _.bind(this.checkNewMessagesSuccess, this),
+                error: _.bind(this.checkNewMessagesError, this)
             });
+        },
+        checkNewMessagesError: function(data) {
+            clearInterval(this.checkNewMessagesInterval);
+            var template = _.template($("#error-message").html());
+            $(".errors").html(template({
+                messages: ['We couldnt update the requested stream because an error occured. Please refresh the page.']
+            }));
         },
         checkNewMessagesSuccess: function(data) {
             var newEntries = $(data).find('.stream-message').addClass('hidden-content');
@@ -73,7 +81,7 @@ define(
             }
 
             newEntries.each(_.bind(this.addMessage, this));
-            
+
             if (this.newMessagesCount == 0) {
                 return;
             }
