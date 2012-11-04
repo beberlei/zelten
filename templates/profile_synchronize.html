@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Synchronizing Profile{% endblock %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        <h1>Synchronizing Profile</h1>
+
+        <p>To speed up your Zelten experience you can synchronize parts of
+            your public information into our database:</p>
+
+        <ul>
+            <li>Name, Avatar and public Profile Information</li>
+            <li>Persons you follow</li>
+            <li>Persons that follow you</li>
+        </ul>
+
+        <div>
+            <form method="post" action="{{ path('profile_synchronize') }}">
+                <input type="submit" value="Start Synchronize" class="btn btn-primary" />
+                <a href="{{ path('profile_synchronize_skip') }}" class="btn">Skip and proceed</a>
+            </form>
+        </div>
+   </div>
+</div>
+
+{% endblock %}
+

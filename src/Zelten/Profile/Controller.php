@@ -31,6 +31,17 @@ class Controller extends BaseController
     {
         $controllers = $app['controllers_factory'];
 
+        $controllers->get('/synchronize', array($this, 'synchronizeAction'))
+                    ->bind('profile_synchronize')
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->post('/synchronize', array($this, 'performSynchronizeAction'))
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->get('/synchronize/skip', array($this, 'synchronizeSkipAction'))
+                    ->bind('profile_synchronize_skip')
+                    ->before(array($this, 'isAuthenticated'));
+
         $controllers->get('/followers', array($this, 'myFollowersAction'))
                     ->bind('my_followers')
                     ->before(array($this, 'isAuthenticated'));
@@ -48,6 +59,23 @@ class Controller extends BaseController
                     ->before(array($this, 'isAuthenticated'));
 
         return $controllers;
+    }
+
+    public function synchronizeAction(Request $request, Application $app)
+    {
+        return $app['twig']->render('profile_synchronize.html');
+    }
+
+    public function performSynchronizeAction(Request $request, Application $app)
+    {
+        $app['zelten.profile']->synchronizeRelations($this->getCurrentEntity());
+        return new RedirectResponse($app['url_generator']->generate('stream'));
+    }
+
+    public function synchronizeSkipAction(Request $request, Application $app)
+    {
+        $app['zelten.profile']->updateLastSynchronizedRelations($this->getCurrentEntity());
+        return new RedirectResponse($app['url_generator']->generate('stream'));
     }
 
     public function myFollowingAction(Request $request, Application $app)

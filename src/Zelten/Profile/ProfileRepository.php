@@ -225,7 +225,28 @@ class ProfileRepository
         return $this->getPeoples($profile, $table, $column, $listMethod, $countMethod, $limit);
     }
 
-    public function sychronizeRelations($entityUrl)
+    public function synchronizeRelationsOverdue($entityUrl)
+    {
+        $sql             = "SELECT UNIX_TIMESTAMP(last_synchronized_relations) FROM profiles WHERE entity = ?";
+        $lastSynchronize = (int)$this->conn->fetchColumn($sql, array($entityUrl));
+        $resyncTreshold  = time() - 60 * 60 * 24 * 7;
+
+        return ($lastSynchronize < $resyncTreshold);
+    }
+
+    public function skipSynchronize($entityUrl)
+    {
+        $profile    = $this->getProfile($entityUrl);
+        $this->updateLastSynchronizedRelations($profile['id']);
+    }
+
+    private function updateLastSynchronizedRelations($id)
+    {
+        $sql = "UPDATE profiles SET last_synchronized_relations = NOW() WHERE id = ?";
+        $this->conn->executeUpdate($sql, array($id));
+    }
+
+    public function synchronizeRelations($entityUrl)
     {
         $profile    = $this->getProfile($entityUrl);
         $userClient = $this->tentClient->getUserClient($entityUrl, false);
@@ -236,8 +257,7 @@ class ProfileRepository
             $this->synchronizeRelationGroup($userClient, $profile['id'], 'followings', 'INSERT IGNORE INTO followings (profile_id, following_id) VALUES (?, ?)', 'getFollowings');
             $this->synchronizeRelationGroup($userClient, $profile['id'], 'followers', 'INSERT IGNORE INTO followers (profile_id, follower_id) VALUES (?, ?)', 'getFollowers');
 
-            $sql = "UPDATE profiles SET last_synchronized_relations = NOW() WHERE id = ?";
-            $this->conn->executeUpdate($sql, array($profile['id']));
+            $this->updateLastSynchronizedRelations($profile['id']);
 
             $this->conn->commit();
 
