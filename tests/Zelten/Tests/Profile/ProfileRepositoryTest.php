@@ -18,6 +18,8 @@ class ProfileRepositoryTest extends TestCase
         'email'      => 'foo@example.com',
         'occupation' => 'Something',
         'school'     => 'Some School',
+        'updated'    => 0,
+        'id'         => 1,
     );
 
     public function testGetProfileFromDatabase()
@@ -32,6 +34,7 @@ class ProfileRepositoryTest extends TestCase
         $data = $profileRepository->getProfile(self::$databaseRow['entity']);
 
         $this->assertEquals(array(
+            'id' => 1,
             'uri' => self::$databaseRow['entity'],
             'entity' => 'https-beberlei.tent.is',
             'core' => array(
@@ -83,11 +86,13 @@ class ProfileRepositoryTest extends TestCase
              ->andReturn(false);
         $conn->shouldReceive('insert')
              ->times(1);
+        $conn->shouldReceive('lastInsertId')->andReturn(1);
 
         $profileRepository = new ProfileRepository($conn, $client);
         $data = $profileRepository->getProfile(self::$databaseRow['entity']);
 
         $this->assertEquals(array(
+            'id' => 1,
             'uri' => self::$databaseRow['entity'],
             'entity' => str_replace("https://", "https-", self::$databaseRow['entity']),
             'core' => array(

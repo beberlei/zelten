@@ -87,12 +87,14 @@ class ProfileRepository
      */
     public function getProfile($entityUrl)
     {
-        $sql = 'SELECT * FROM profiles WHERE entity = ? AND updated > ?';
-        $row = $this->conn->fetchAssoc($sql, array($entityUrl, strtotime('-1 day')));
+        $sql = 'SELECT * FROM profiles WHERE entity = ?';
+        $row = $this->conn->fetchAssoc($sql, array($entityUrl));
 
-        if ($row) {
+        if ($row && strtotime($row['updated'])-3600 < time()) {
             return $this->parseDatabaseProfile($row);
         }
+
+        $id = isset($row['id']) ? $row['id'] : null;
 
         try {
             $userClient = $this->tentClient->getUserClient($entityUrl, false);
@@ -101,7 +103,7 @@ class ProfileRepository
             $data = array();
         }
 
-        return $this->parseTentProfile($entityUrl, $data);
+        return $this->parseTentProfile($entityUrl, $data, $id);
     }
 
     private function fixUri($entityUri)
@@ -111,7 +113,7 @@ class ProfileRepository
 
     private function parseDatabaseProfile($row)
     {
-        $profile = array('entity' => $this->fixUri($row['entity']), 'uri' => $row['entity']);
+        $profile = array('id' => $row['id'], 'entity' => $this->fixUri($row['entity']), 'uri' => $row['entity']);
         foreach ($this->supportedProfileTypes as $profileType => $data) {
             $name = $data['name'];
 
@@ -127,7 +129,7 @@ class ProfileRepository
         return $profile;
     }
 
-    private function parseTentProfile($entity, $data)
+    private function parseTentProfile($entity, $data, $id = false)
     {
         $profile = array('name' => $entity, 'entity' => $this->fixUri($entity), 'uri' => $entity);
         $row     = array('updated' => date('Y-m-d H:i:s'));
@@ -157,14 +159,15 @@ class ProfileRepository
             $profile['entity'] = $this->fixUri($profile['core']['entity']);
         }
 
-        try {
-            $this->conn->beginTransaction();
-            $this->conn->delete('profiles', array('entity' => $row['entity']));
+        if (empty($row['entity'])) {
+            return $profile;
+        }
+
+        if ($id) {
+            $this->conn->update('profiles', $row, array('id' => $id));
+        } else {
             $this->conn->insert('profiles', $row);
-            $this->conn->commit();
-        } catch(\Exception $e) {
-            $this->conn->rollback();
-            throw $e;
+            $profile['id'] = $this->conn->lastInsertId();
         }
 
         return $profile;
