@@ -28,6 +28,7 @@ $app->post('/hook', function(Request $request) use ($app) {
 
     // do stuff! hacked now. make it event listener and such
     $userRow = $app['db']->fetchAssoc('SELECT * FROM users WHERE entity = ?', array($entityUrl));
+
     if ($userRow && $post['type'] == 'https://tent.io/types/post/status/v0.1.0') {
         $sync    = strpos($post['content']['text'], '#social') !== false;
         $message = str_replace('#social', '', $post['content']['text']);
@@ -39,6 +40,13 @@ $app->post('/hook', function(Request $request) use ($app) {
             $twitter->setTokens($userRow['twitter_oauth_token'], $userRow['twitter_oauth_secret']);
             $twitter->post('statuses/update', array('status' => $message));
         }
+    }
+
+    if ($post['type'] == 'https://tent.io/types/post/following/v0.1.0') {
+        #$app['zelten.profile']->updateFollowing($entityUrl, 
+    }
+
+    if ($post['type'] == 'https://tent.io/types/post/follower/v0.1.0') {
     }
 
     return new Response('', 201);
