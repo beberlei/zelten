@@ -30,3 +30,4 @@ for example when using Apache put the following in your Vhost:
 All the mac seecrets and oauth tokens are saved in the database using
 blowish encryption and are save from database theft.
 
+
