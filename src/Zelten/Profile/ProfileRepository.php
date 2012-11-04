@@ -15,6 +15,7 @@ namespace Zelten\Profile;
 
 use Doctrine\DBAL\Connection;
 use TentPHP\Client;
+use TentPHP\Exception\EntityNotFoundException;
 use Guzzle\Common\Exception\GuzzleException;
 
 /**
@@ -100,6 +101,8 @@ class ProfileRepository
             $userClient = $this->tentClient->getUserClient($entityUrl, false);
             $data       = $userClient->getProfile();
         } catch(GuzzleException $e) {
+            $data = array();
+        } catch(EntityNotFoundException $e) {
             $data = array();
         }
 
