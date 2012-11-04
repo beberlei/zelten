@@ -15,7 +15,7 @@ namespace Zelten\Profile;
 
 use Doctrine\DBAL\Connection;
 use TentPHP\Client;
-use Guzzle\Http\Exception\CurlException;
+use Guzzle\Common\Exception\GuzzleException;
 
 /**
  * Repository for User Profiles
@@ -99,7 +99,7 @@ class ProfileRepository
         try {
             $userClient = $this->tentClient->getUserClient($entityUrl, false);
             $data       = $userClient->getProfile();
-        } catch(CurlException $e) {
+        } catch(GuzzleException $e) {
             $data = array();
         }
 
@@ -137,15 +137,17 @@ class ProfileRepository
         foreach ($this->supportedProfileTypes as $profileType => $profileData) {
             $name = $profileData['name'];
 
+            foreach ($profileData['fields'] as $tentName => $fieldName) {
+                if (empty($profile[$name][$fieldName])) {
+                    $profile[$name][$fieldName] = "";
+                }
+            }
+
             if (isset($data[$profileType])) {
                 foreach ($profileData['fields'] as $tentName => $fieldName) {
-                    $profile[$name][$fieldName] = $data[$profileType][$tentName];
-                    $row[$fieldName]            = $data[$profileType][$tentName];
-                }
-            } else {
-                foreach ($profileData['fields'] as $tentName => $fieldName) {
-                    if (empty($profile[$name][$fieldName])) {
-                        $profile[$name][$fieldName] = "";
+                    if (isset($data[$profileType][$tentName])) {
+                        $profile[$name][$fieldName] = $data[$profileType][$tentName];
+                        $row[$fieldName]            = $data[$profileType][$tentName];
                     }
                 }
             }
@@ -173,16 +175,111 @@ class ProfileRepository
         return $profile;
     }
 
-    public function getFollowings($entityUrl)
+    public function getFollowings($entityUrl, $limit = 5)
     {
+        $profile = $this->getProfile($entityUrl);
+        $table = 'followings';
+        $column = 'following_id';
+        $listMethod = 'getFollowings';
+        $countMethod = 'getFollowingCount';
+
+        return $this->getPeoples($profile, $table, $column, $listMethod, $countMethod, $limit);
     }
 
-    public function getFollowers($entityUrl)
+    private function getPeoples($profile, $table, $column, $listMethod, $countMethod, $limit)
     {
+        $userClient = $this->tentClient->getUserClient($profile['uri']);
+        $sql = "SELECT count(*) FROM $table f INNER JOIN profiles p ON p.id = f.$column WHERE profile_id = ?";
+        $cnt = $this->conn->fetchColumn($sql, array($profile['id']));
+
+        if ($cnt == 0) {
+            $results = $userClient->$listMethod(array('limit' => $limit));
+            $cnt     = $userClient->$countMethod();
+
+            $peoples = array();
+            foreach ($results as $result) {
+                $peoples[] = $this->getProfile($result['entity']);
+            }
+            $peoples = array_slice($peoples, 0, $limit);
+        } else {
+            $sql = "SELECT * FROM followings f INNER JOIN profiles p ON p.id = f.following_id WHERE profile_id = ? LIMIT " . intval($limit);
+            $rows = $this->conn->fetchAll($sql, array($profile['id']));
+
+            $peoples = array();
+            foreach ($rows as $row) {
+                $peoples[] = $this->parseDatabaseProfile($row);
+            }
+        }
+
+        return array('list' => $peoples, 'total' => $cnt);
+    }
+
+    public function getFollowers($entityUrl, $limit = 5)
+    {
+        $profile = $this->getProfile($entityUrl);
+        $table = 'followers';
+        $column = 'follower_id';
+        $listMethod = 'getFollowers';
+        $countMethod = 'getFollowerCount';
+
+        return $this->getPeoples($profile, $table, $column, $listMethod, $countMethod, $limit);
     }
 
     public function sychronizeRelations($entityUrl)
     {
+        $profile    = $this->getProfile($entityUrl);
+        $userClient = $this->tentClient->getUserClient($entityUrl, false);
+
+        $this->conn->beginTransaction();
+
+        try {
+            $this->synchronizeRelationGroup($userClient, $profile['id'], 'followings', 'INSERT IGNORE INTO followings (profile_id, following_id) VALUES (?, ?)', 'getFollowings');
+            $this->synchronizeRelationGroup($userClient, $profile['id'], 'followers', 'INSERT IGNORE INTO followers (profile_id, follower_id) VALUES (?, ?)', 'getFollowers');
+
+            $sql = "UPDATE profiles SET last_synchronized_relations = NOW() WHERE id = ?";
+            $this->conn->executeUpdate($sql, array($profile['id']));
+
+            $this->conn->commit();
+
+        } catch(\Exception $e) {
+            $this->conn->rollback();
+            throw $e;
+        }
+
+        return $profile['id'];
+    }
+
+    private function synchronizeRelationGroup($userClient, $profileId, $tableName, $sql, $method)
+    {
+        $this->conn->delete($tableName, array('profile_id' => $profileId));
+        $stmt = $this->conn->prepare($sql);
+        $params = array('limit' => 50);
+
+        $seenBefore = array();
+        do {
+            try {
+                $persons = $userClient->$method($params);
+            } catch(GuzzleException $e) {
+                $persons = array();
+            }
+
+            foreach ($persons as $person) {
+                $personProfile    = $this->getProfile($person['entity']);
+
+                if (isset($seenBefore[$personProfile['id']])) {
+                    return;
+                }
+
+                if (isset($personProfile['id'])) {
+                    $params['before_id'] = $person['id'];
+
+                    $stmt->bindValue(1, $profileId);
+                    $stmt->bindValue(2, $personProfile['id']);
+                    $stmt->execute();
+                }
+            }
+
+        } while(count($persons) == 50);
     }
 
     public function updateFollowing($entityUrl, $followingEntity, $action)

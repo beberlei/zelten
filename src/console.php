@@ -53,6 +53,16 @@ $console
         $profilesTable->setPrimaryKey(array('id'));
         $profilesTable->addUniqueIndex(array('entity'));
 
+        $followingsTable = $toSchema->createTable('followings');
+        $followingsTable->addColumn('profile_id', 'integer');
+        $followingsTable->addColumn('following_id', 'integer');
+        $followingsTable->setPrimaryKey(array('profile_id', 'following_id'));
+
+        $followerTable = $toSchema->createTable('followers');
+        $followerTable->addColumn('profile_id', 'integer');
+        $followerTable->addColumn('follower_id', 'integer');
+        $followerTable->setPrimaryKey(array('profile_id', 'follower_id'));
+
         $comp = new Comparator();
         $diff = $comp->compare($fromSchema, $toSchema);
 
