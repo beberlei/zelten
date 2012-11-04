@@ -10,6 +10,8 @@ $app->post('/hook', function(Request $request) use ($app) {
     $post      = json_decode($request->getContent(), true);
     $entityUrl = $post['entity'];
 
+    error_log("Hook: " .$entityUrl . " - " . $post['type'] . ' ' . date('Y-m-d H:i', $post['published_at']));
+
     if ($request->query->get('hash') !== hash_hmac('sha256', $post['entity'], $app['appsecret'])) {
         return new Response('', 403);
     }
@@ -43,10 +45,13 @@ $app->post('/hook', function(Request $request) use ($app) {
     }
 
     if ($post['type'] == 'https://tent.io/types/post/following/v0.1.0') {
-        #$app['zelten.profile']->updateFollowing($entityUrl, 
+        $action = $post['content']['action'] == 'delete' ? 'unfollow' : 'follow';
+        $app['zelten.profile']->updateFollowing($entityUrl, $post['content']['id'], $post['content']['entity'], $action);
     }
 
     if ($post['type'] == 'https://tent.io/types/post/follower/v0.1.0') {
+        $action = $post['content']['action'] == 'delete' ? 'unfollow' : 'follow';
+        $app['zelten.profile']->updateFollower($entityUrl, $post['content']['id'], $post['content']['entity'], $action);
     }
 
     return new Response('', 201);

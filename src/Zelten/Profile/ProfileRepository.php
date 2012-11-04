@@ -383,7 +383,7 @@ class ProfileRepository
         return $this->updateRelationship('followings', 'following_id', $profileEntity['id'], $followerEntity['id'], $tentId, $action);
     }
 
-    public function updateFollower($entityUrl, $followerId, $followEntity, $action)
+    public function updateFollower($entityUrl, $tentId, $followEntity, $action)
     {
         $profileEntity  = $this->getProfile($entity);
         $followerEntity = $this->getProfile($followEntity);
