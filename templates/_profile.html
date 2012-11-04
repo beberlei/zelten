@@ -22,9 +22,15 @@
 
         {% if not you %}
         <p align="center" style="padding-top: 10px">
-            <form class="follow" method="post" action="{{ path('stream_follow') }}">
+            <form class="follow" method="post" action="{{ path('profile_follow') }}">
                 <input type="hidden" name="entity" value="{{ profile.entity }}" />
+                {% if is_following(profile.entity) %}
+                <input class="action" type="hidden" name="action" value="unfollow" />
+                <input type="submit" class="btn btn-danger" value="Unfollow" />
+                {% else %}
+                <input class="action" type="hidden" name="action" value="follow" />
                 <input type="submit" class="btn btn-success" value="Follow" />
+                {% endif %}
             </form>
         </p>
         {% endif %}

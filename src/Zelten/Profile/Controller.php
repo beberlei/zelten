@@ -50,6 +50,10 @@ class Controller extends BaseController
                     ->bind('my_followings')
                     ->before(array($this, 'isAuthenticated'));
 
+        $controllers->post('/following', array($this, 'followAction'))
+                    ->bind('profile_follow')
+                    ->before(array($this, 'isAuthenticated'));
+
         $controllers->get('/{entity}/followers', array($this, 'followersAction'))
                     ->bind('user_followers')
                     ->before(array($this, 'isAuthenticated'));
@@ -125,4 +129,27 @@ class Controller extends BaseController
             'route' => 'user_following',
         ));
     }
+
+    public function followAction(Request $request, Application $app)
+    {
+        $entityUrl = $this->getCurrentEntity();
+
+        $followEntity = $this->urlize($request->request->get('entity'));
+        $stream       = $app['zelten.profile'];
+
+        if ($request->request->get('action', 'follow') == 'follow') {
+            $data = $stream->follow($entityUrl, $followEntity);
+        } else {
+            $data = $stream->unfollow($entityUrl, $followEntity);
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return $app->json($data);
+        }
+
+        return new RedirectResponse($app['url_generator']->generate('stream_user', array(
+            'entity' => $request->request->get('entity'),
+        )));
+    }
 }
+

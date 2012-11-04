@@ -102,5 +102,11 @@ class Controller implements ControllerProviderInterface
 
         return $controllers;
     }
+
+    public function follow($followEntity)
+    {
+        $userClient = $this->tentClient->getUserClient($this->currentEntity, true);
+        return $userClient->follow($followEntity);
+    }
 }
 

@@ -56,11 +56,13 @@ $console
         $followingsTable = $toSchema->createTable('followings');
         $followingsTable->addColumn('profile_id', 'integer');
         $followingsTable->addColumn('following_id', 'integer');
+        $followingsTable->addColumn('tent_id', 'string');
         $followingsTable->setPrimaryKey(array('profile_id', 'following_id'));
 
         $followerTable = $toSchema->createTable('followers');
         $followerTable->addColumn('profile_id', 'integer');
         $followerTable->addColumn('follower_id', 'integer');
+        $followerTable->addColumn('tent_id', 'string');
         $followerTable->setPrimaryKey(array('profile_id', 'follower_id'));
 
         $comp = new Comparator();

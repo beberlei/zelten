@@ -254,8 +254,8 @@ class ProfileRepository
         $this->conn->beginTransaction();
 
         try {
-            $this->synchronizeRelationGroup($userClient, $profile['id'], 'followings', 'INSERT IGNORE INTO followings (profile_id, following_id) VALUES (?, ?)', 'getFollowings');
-            $this->synchronizeRelationGroup($userClient, $profile['id'], 'followers', 'INSERT IGNORE INTO followers (profile_id, follower_id) VALUES (?, ?)', 'getFollowers');
+            $this->synchronizeRelationGroup($userClient, $profile['id'], 'followings', 'following_id', 'getFollowings');
+            $this->synchronizeRelationGroup($userClient, $profile['id'], 'followers', 'follower_id', 'getFollowers');
 
             $this->updateLastSynchronizedRelations($profile['id']);
 
@@ -269,8 +269,9 @@ class ProfileRepository
         return $profile['id'];
     }
 
-    private function synchronizeRelationGroup($userClient, $profileId, $tableName, $sql, $method)
+    private function synchronizeRelationGroup($userClient, $profileId, $tableName, $columnName, $method)
     {
+        $sql = 'INSERT IGNORE INTO ' . $tableName .' (profile_id, ' . $columnName . ', tent_id) VALUES (?, ?, ?)';
         $this->conn->delete($tableName, array('profile_id' => $profileId));
         $stmt = $this->conn->prepare($sql);
         $params = array('limit' => 50);
@@ -296,6 +297,7 @@ class ProfileRepository
 
                     $stmt->bindValue(1, $profileId);
                     $stmt->bindValue(2, $personProfile['id']);
+                    $stmt->bindValue(3, $person['id']);
                     $stmt->execute();
                 }
             }
@@ -303,12 +305,103 @@ class ProfileRepository
         } while(count($persons) == 50);
     }
 
-    public function updateFollowing($entityUrl, $followingEntity, $action)
+    /**
+     * Follow an entity
+     *
+     * @param string $currentEntity
+     * @param string $followEntity
+     * @return
+     */
+    public function follow($currentEntity, $followEntity)
     {
+        $profileEntity  = $this->getProfile($currentEntity);
+        $followerEntity = $this->getProfile($followEntity);
+
+        $userClient = $this->tentClient->getUserClient($currentEntity, true);
+        try {
+            $data       = $userClient->follow($followEntity);
+
+            $this->updateRelationship('followings', 'following_id', $profileEntity['id'], $followerEntity['id'], $data['id'], 'follow');
+            return $data;
+        } catch(GuzzleException $e) {
+            return array();
+        }
     }
 
-    public function updateFollower($entityUrl, $followerEntity, $action)
+    /**
+     * Unfollow an entity
+     *
+     * @param string $currentEntity
+     * @param string $followEntity
+     * @return
+     */
+    public function unfollow($currentEntity, $unfollowEntity)
     {
+        $profileEntity  = $this->getProfile($currentEntity);
+        $followerEntity = $this->getProfile($unfollowEntity);
+
+        $sql        = "SELECT tent_id FROM followings WHERE profile_id = ? AND following_id = ?";
+        $unfollowId = $this->conn->fetchColumn($sql, array($profileEntity['id'], $followerEntity['id']));
+
+        if (empty($unfollowId)) {
+            return;
+        }
+
+        $this->updateRelationship('followings', 'following_id', $profileEntity['id'], $followerEntity['id'], $unfollowId, 'unfollow');
+
+        $userClient = $this->tentClient->getUserClient($currentEntity, true);
+
+        try {
+            $userClient->unfollow($unfollowId);
+        } catch(GuzzleException $e) {
+        }
+    }
+
+    /**
+     * Is entity following the other entity?
+     *
+     * @param string $entity
+     * @param string $followEntity
+     * @return
+     */
+    public function isFollowing($entity, $followEntity)
+    {
+        $profileEntity  = $this->getProfile($entity);
+        $followerEntity = $this->getProfile($followEntity);
+
+        $sql = "SELECT count(*) FROM followings WHERE profile_id = ? AND following_id = ?";
+
+        $isFollowing = $this->conn->fetchColumn($sql, array($profileEntity['id'], $followerEntity['id'])) > 0;
+        return $isFollowing;
+    }
+
+    public function updateFollowing($entityUrl, $tentId, $followEntity, $action)
+    {
+        $profileEntity  = $this->getProfile($entity);
+        $followrEntity = $this->getProfile($followEntity);
+
+        return $this->updateRelationship('followings', 'following_id', $profileEntity['id'], $followerEntity['id'], $tentId, $action);
+    }
+
+    public function updateFollower($entityUrl, $followerId, $followEntity, $action)
+    {
+        $profileEntity  = $this->getProfile($entity);
+        $followerEntity = $this->getProfile($followEntity);
+
+        return $this->updateRelationship('followers', 'follower_id', $profileEntity['id'], $followerEntity['id'], $tentId, $action);
+    }
+
+    private function updateRelationship($table, $relatedTable, $profileId, $followerId, $tentId, $action)
+    {
+        if ($action == "follow") {
+            $sql    = "INSERT IGNORE INTO $table (profile_id, $relatedTable, tent_id) VALUES (?, ?, ?)";
+            $params = array($profileId, $followerId, $tentId);
+        } else if ($action == "unfollow") {
+            $sql = "DELETE FROM $table WHERE profile_id = ? AND $relatedTable = ?";
+            $params = array($profileId, $followerId);
+        }
+
+        $this->conn->executeUpdate($sql, $params);
     }
 }
 

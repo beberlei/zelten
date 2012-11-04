@@ -16,11 +16,22 @@ define(["backbone"], function(Backbone) {
             return false;
         },
         followUserSuccess: function() {
-            this.$el.find('form.follow .btn')
-                    .addClass('btn-danger')
-                    .removeClass('btn-success')
-                    .attr('value', 'Unfollow')
-                    .attr('disabled', true);
+            var btn = this.$el.find('form.follow .btn');
+            var action = this.$el.find('form.follow .action');
+
+            if (action.val() == 'follow') {
+                action.val('unfollow');
+                btn.addClass('btn-danger')
+                   .removeClass('btn-success')
+                   .attr('value', 'Unfollow')
+                   .attr('disabled', false);
+            } else {
+                action.val('follow');
+                btn.removeClass('btn-danger')
+                   .addClass('btn-success')
+                   .attr('value', 'Follow')
+                   .attr('disabled', false);
+            }
         }
     });
 

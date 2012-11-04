@@ -60,28 +60,7 @@ class Controller extends BaseController
                     ->bind('stream_user')
                     ->before(array($this, 'isAuthenticated'));
 
-        $controllers->post('/followings', array($this, 'followAction'))
-                    ->bind('stream_follow')
-                    ->before(array($this, 'isAuthenticated'));
-
         return $controllers;
-    }
-
-    public function followAction(Request $request, Application $app)
-    {
-        $entityUrl = $this->getCurrentEntity();
-
-        $followEntity = $this->urlize($request->request->get('entity'));
-        $stream = $app['zelten.stream'];
-        $data   = $stream->follow($followEntity);
-
-        if ($request->isXmlHttpRequest()) {
-            return $app->json($data);
-        }
-
-        return new RedirectResponse($app['url_generator']->generate('stream_user', array(
-            'entity' => $request->request->get('entity'),
-        )));
     }
 
     public function conversationAction(Request $request, Application $app, $entity, $id)
