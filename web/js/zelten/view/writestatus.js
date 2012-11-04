@@ -64,7 +64,9 @@ define(["backbone", "zelten/model/message", "autoresize", "select2"], function(B
                 element: newMessage
             });
 
-            this.collection.add(message);
+            if (this.collection) {
+                this.collection.add(message);
+            }
 
             this.$el.find('.stream-message-add-btn').attr('disabled', false);
             this.$el.each(function() {
