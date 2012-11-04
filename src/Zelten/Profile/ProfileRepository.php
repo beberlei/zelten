@@ -266,7 +266,7 @@ class ProfileRepository
             foreach ($persons as $person) {
                 $personProfile    = $this->getProfile($person['entity']);
 
-                if (isset($seenBefore[$personProfile['id']])) {
+                if (isset($personProfile['id']) && isset($seenBefore[$personProfile['id']])) {
                     return;
                 }
 

@@ -317,43 +317,10 @@ class StreamRepository
         );
     }
 
-    public function getFollowers($entity, $limit = 5)
-    {
-        $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
-        $followers  = $userClient->getFollowers();
-        $count      = $userClient->getFollowerCount();
-
-        return $this->preparePeopleList($count, $followers, $limit);
-    }
-
     public function follow($followEntity)
     {
         $userClient = $this->tentClient->getUserClient($this->currentEntity, true);
         return $userClient->follow($followEntity);
-    }
-
-    public function getFollowings($entity, $limit = 5)
-    {
-        $userClient = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
-        $followings = $userClient->getFollowings();
-        $count      = $userClient->getFollowingCount();
-
-        return $this->preparePeopleList($count, $followings, $limit);
-    }
-
-    private function preparePeopleList($count, $peoples, $limit)
-    {
-        $result = array('total' => $count, 'list' => array());
-
-        foreach ($peoples as $people) {
-            $result['list'][] = $this->getPublicProfile($people['entity']);
-
-            if (count($result['list']) >= $limit) {
-                break;
-            }
-        }
-
-        return $result;
     }
 }
 
