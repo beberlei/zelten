@@ -239,3 +239,60 @@ form.stream-message-add-replyto {
 .conversation {
     max-width: 700px;
 }
+
+@media (max-width: 767px) {
+    body {
+        padding:0!important;
+        font-size:13px!important
+    }
+
+    .box {
+        border:none!important;
+        padding:5px!important
+    }
+
+    .content {
+        padding:0!important
+    }
+
+    .sidebar {
+        height: 90px;
+    }
+
+    .sidebar li {
+        float:left
+    }
+
+    .sidebar div {
+        font-size:20px!important
+    }
+
+    .pull-right {
+        text-align:right
+    }
+
+    .btn {
+        float:right;
+        margin-top:5px
+    }
+
+    #header {
+        padding:5px
+    }
+
+    .hidden-phone {
+        display:block!important;
+        float:left!important;
+        width:32px!important;
+        margin-right:16px!important
+    }
+
+    .img-polaroid {
+        width:32px;
+        height:32px;
+        border:none!important;
+        box-shadow:none!important;
+        webkit-box-shadow:none!important;
+        padding:8px!important
+    }
+}
