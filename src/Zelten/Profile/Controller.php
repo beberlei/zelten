@@ -78,7 +78,7 @@ class Controller extends BaseController
 
     public function synchronizeSkipAction(Request $request, Application $app)
     {
-        $app['zelten.profile']->updateLastSynchronizedRelations($this->getCurrentEntity());
+        $app['zelten.profile']->skipSynchronize($this->getCurrentEntity());
         return new RedirectResponse($app['url_generator']->generate('stream'));
     }
 
