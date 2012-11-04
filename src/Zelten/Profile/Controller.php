@@ -100,9 +100,10 @@ class Controller extends BaseController
         }
 
         return $app['twig']->render('users.html', array(
-            'users' => $followers,
-            'title' => 'Follower',
-            'profile' => $profileRepository->getProfile($entity)
+            'users'   => $followers,
+            'title'   => 'Follower',
+            'profile' => $profileRepository->getProfile($entity),
+            'route'   => 'user_followers',
         ));
     }
 
@@ -120,7 +121,8 @@ class Controller extends BaseController
         return $app['twig']->render('users.html', array(
             'users'   => $following,
             'title'   => 'Following',
-            'profile' => $profileRepository->getProfile($entity)
+            'profile' => $profileRepository->getProfile($entity),
+            'route' => 'user_following',
         ));
     }
 }
