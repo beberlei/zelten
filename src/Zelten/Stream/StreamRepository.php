@@ -26,11 +26,6 @@ class StreamRepository
         'http://www.beberlei.de/tent/favorite/v0.0.1' => 'favorite',
     );
 
-    private $supportedProfileTypes = array(
-        'https://tent.io/types/info/basic/v0.1.0' => 'basic',
-        'https://tent.io/types/info/core/v0.1.0' => 'core',
-    );
-
     private $profileTypeDefaults = array(
         'basic' => array('name' => '', 'bio' => '', 'avatar_url' => '', 'birthdate' => '', 'location' => ''),
         'core'  => array('entity' => '', 'server' => ''),
