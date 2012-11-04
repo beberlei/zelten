@@ -272,6 +272,7 @@ class ProfileRepository
 
                 if (isset($personProfile['id'])) {
                     $params['before_id'] = $person['id'];
+                    $seenBefore[$personProfile['id']] = true;
 
                     $stmt->bindValue(1, $profileId);
                     $stmt->bindValue(2, $personProfile['id']);
