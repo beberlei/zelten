@@ -54,8 +54,8 @@
     {% for message in messages.messages %}
         {% include "_message.html" with {'message': message} %}
     {% endfor %}
-        <div class="hidden-desktop">
-            <div class="alert alert-info">
+        <div class="hidden-desktop visible-tablet visible-phone">
+            <div class="alert alert-info" style="text-align:center;">
                 <a href="#" class="loadOlderPosts">Load more posts</a>
             </div>
         </div>
