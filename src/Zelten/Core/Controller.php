@@ -93,7 +93,7 @@ class Controller implements ControllerProviderInterface
 
             $app['db']->executeUpdate('UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($app['session']->get('entity_url')));
 
-            $app['zelten.profile']->sychronizeRelations($app['session']->get('entity_url'));
+            //$app['zelten.profile']->sychronizeRelations($app['session']->get('entity_url'));
 
             return new RedirectResponse($app['url_generator']->generate('stream'));
         })->bind('oauth_accept');
