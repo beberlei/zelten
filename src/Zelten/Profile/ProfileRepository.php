@@ -188,7 +188,7 @@ class ProfileRepository
 
     private function getPeoples($profile, $table, $column, $listMethod, $countMethod, $limit)
     {
-        $userClient = $this->tentClient->getUserClient($profile['uri']);
+        $userClient = $this->tentClient->getUserClient($profile['uri'], false);
         $sql = "SELECT count(*) FROM $table f INNER JOIN profiles p ON p.id = f.$column WHERE profile_id = ?";
         $cnt = $this->conn->fetchColumn($sql, array($profile['id']));
 
