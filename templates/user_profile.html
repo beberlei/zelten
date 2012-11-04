@@ -15,14 +15,18 @@
 <div class="following">
     {% include "_user_list.html" with {
         users: {'list': [], 'total': ''},
-        title: 'following'
+        title: 'following',
+        profile: profile,
+        route: 'user_following'
     } %}
 </div>
 
 <div class="follower">
     {% include "_user_list.html" with {
         users: {'list': [], 'total': ''},
-        title: 'followed by'
+        title: 'followed by',
+        profile: profile,
+        route: 'user_followers'
         } %}
 </div>
 {% endblock %}

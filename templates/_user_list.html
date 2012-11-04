@@ -1,7 +1,7 @@
 
-<strong>{{ title }} <span class="total">{{ users.total }}</span></strong> (<a href="#">View All</a>)
+<strong>{{ title }} <span class="total">{{ users.total }}</span></strong> (<a href="{{ path('user_followers', {'entity': profile.entity}) }}">View All</a>)
 
-<ul class="people-list">
+<ul class="people-list" data-url="{{ path('user_followers', {'entity': profile.entity}) }}">
     {% for user in users.list %}
     <li class="user">
         <a class="user-details" href="{{ path('stream_user', {'entity': user.entity}) }}">

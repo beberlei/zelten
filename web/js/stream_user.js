@@ -20,13 +20,11 @@ define(
         app.checkNewMessages();
 
         var following = new UserListView({
-            url: Zelten.ApplicationOptions.base + '/profile/' + entity + '/following',
             el: $(".following")
         });
         following.render();
 
         var followers = new UserListView({
-            url: Zelten.ApplicationOptions.base + '/profile/' + entity + '/followers',
             el: $(".follower")
         });
         followers.render();

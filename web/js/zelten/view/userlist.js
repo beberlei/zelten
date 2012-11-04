@@ -2,7 +2,7 @@ define(["backbone", "zelten/view/userlink"], function(Backbone, UserLinkView) {
 
     var userListView = Backbone.View.extend({
         initialize: function(args) {
-            this.url = args.url;
+            this.url = this.$el.find('.people-list').data('url');
             this.loadUsers();
         },
         loadUsers: function() {

@@ -62,9 +62,10 @@ class Controller extends BaseController
 
     public function followersAction(Request $request, Application $app, $entity)
     {
-        $limit     = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
+        $entity            = $this->urlize($entity);
+        $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
         $profileRepository = $app['zelten.profile'];
-        $followers         = $profileRepository->getFollowers($this->urlize($entity), $limit);
+        $followers         = $profileRepository->getFollowers($entity, $limit);
 
         if ($this->acceptJson($request)) {
             return $app->json($followers);
@@ -73,22 +74,25 @@ class Controller extends BaseController
         return $app['twig']->render('users.html', array(
             'users' => $followers,
             'title' => 'Follower',
+            'profile' => $profileRepository->getProfile($entity)
         ));
     }
 
     public function followingAction(Request $request, Application $app, $entity)
     {
+        $entity = $this->urlize($entity);
         $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
         $profileRepository = $app['zelten.profile'];
-        $following         = $profileRepository->getFollowings($this->urlize($entity), $limit);
+        $following         = $profileRepository->getFollowings($entity, $limit);
 
         if ($this->acceptJson($request)) {
             return $app->json($following);
         }
 
         return $app['twig']->render('users.html', array(
-            'users' => $following,
-            'title' => 'Following',
+            'users'   => $following,
+            'title'   => 'Following',
+            'profile' => $profileRepository->getProfile($entity)
         ));
     }
 }
