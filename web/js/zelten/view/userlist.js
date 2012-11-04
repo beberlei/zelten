@@ -10,6 +10,7 @@ define(["backbone", "zelten/view/userlink"], function(Backbone, UserLinkView) {
 
             $.ajax({
                 url: this.url,
+                timeout: 4000,
                 success: _.bind(this.loadUsersSuccess, this)
             });
         },

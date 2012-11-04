@@ -80,12 +80,16 @@
                     </footer>
                 </div>
 
-                <div class="span11">
+                <div class="span7">
                     <div class="content">
                         <div class="errors"></div>
 
                         {% block content %}{% endblock %}
                     </div>
+                </div>
+
+                <div class="span4" style="padding-top: 50px;">
+                    {% block sidebar %}{% endblock %}
                 </div>
             </div>
 

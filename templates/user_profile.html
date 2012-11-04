@@ -3,34 +3,27 @@
 {% block title %}{{ profile.name }}{% endblock %}
 
 {% block content %}
-{% if not app.request.isXmlHttpRequest() %}
-<div class="row-fluid">
-    <div class="span9">
-{% endif %}
         {% include "_profile.html" with {"profile": profile, "you": you} %}
 
         <div id="stream" data-entity="{{ profile.entity }}">
             <div class="stream-notifications"></div>
             <div class="stream-messages"></div>
         </div>
-{% if not app.request.isXmlHttpRequest() %}
-    </div>
-    <div class="span3">
-        <div class="following">
-            {% include "_user_list.html" with {
-                users: {'list': [], 'total': ''},
-                title: 'following'
-            } %}
-        </div>
+{% endblock %}
 
-        <div class="follower">
-            {% include "_user_list.html" with {
-                users: {'list': [], 'total': ''},
-                title: 'followed by'
-                } %}
-        </div>
-    </div>
+{% block sidebar %}
+<div class="following">
+    {% include "_user_list.html" with {
+        users: {'list': [], 'total': ''},
+        title: 'following'
+    } %}
 </div>
-{% endif %}
+
+<div class="follower">
+    {% include "_user_list.html" with {
+        users: {'list': [], 'total': ''},
+        title: 'followed by'
+        } %}
+</div>
 {% endblock %}
 
