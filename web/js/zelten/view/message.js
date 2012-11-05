@@ -118,7 +118,7 @@ define(
             this.$el.find('.conversation-pane').removeClass('loading');
             this.$el.find('.conversations').html(data);
             var cnt = this.$el.find('.conversations .conversation-message').length;
-            this.$el.find('a.show-conversation').filter('.btn').append(' ' + cnt);
+            this.$el.find('a.show-conversation').filter('.btn').find('.total-replies').text(' ' + cnt);
             this.$el.find('a.show-conversation').attr('disabled', false).css('pointer-events', 'auto');
 
             this.$el.find('.conversations .timeago').timeago();
