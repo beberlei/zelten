@@ -55,13 +55,19 @@
 
                     {% if message.content.description is defined %}<p class="bookmark-description">{{ message.content.description }}</p>{% endif %}
                 {% elseif message.type == 'essay' %}
+                    {% if message.content.title is defined %}
                     <h4>{{ message.content.title }}</h4>
+                    {% endif %}
 
+                    {% if message.content.excerpt is defined %}
                     <p>{{ message.content.excerpt }} <a href="#" class="more-content">show more</a></p>
 
                     <div class="hidden-content">
                         {{ message.content.body|raw }}
                     </div>
+                    {% else %}
+                    {{ message.content.body|raw }}
+                    {% endif %}
                 {% elseif message.type == 'repost' %}
                     {% include "_conversation_message.html" with {"message": message.content.original} %}
                 {% endif %}

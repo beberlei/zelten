@@ -1,4 +1,4 @@
-define(["backbone", "zelten/model/message", "autoresize", "select2"], function(Backbone, Message) {
+define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autoresize", "select2"], function(Backbone, Message, ModalConfirmDialogView) {
 
     var writeStatusView = Backbone.View.extend({
         events: {
@@ -40,8 +40,27 @@ define(["backbone", "zelten/model/message", "autoresize", "select2"], function(B
             var msg = form.find('.message').val();
 
             if (typeof(msg) == 'undefined' || msg.length == 0) {
+                form.find('.message').addClass('error');
                 return false;
             }
+
+            if (msg.length > 255) {
+                var modal = new ModalConfirmDialogView({
+                    params: {
+                        title: 'Publish this Post as Essay?',
+                        post: 'The text of this status message is longer than 255 chars. Do you want to post the status as an essay instead?',
+                        label: 'Yes, publish!'
+                    },
+                    success: _.bind(this.sendMessage, this, form)
+                });
+                modal.render();
+                return false;
+            }
+
+            this.sendMessage(form);
+            return false;
+        },
+        sendMessage: function(form) {
 
             form.find('.stream-message-add-btn').attr('disabled', true);
 

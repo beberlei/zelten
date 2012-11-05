@@ -68,8 +68,6 @@ define(
                 success: _.bind(this.confirmClickRepost, this, $(e.currentTarget).attr('href'))
             });
             modal.render();
-
-            return false;
         },
         confirmClickRepost: function(url) {
             $.ajax({
@@ -94,6 +92,8 @@ define(
             if (this.messages) {
                 this.messages.add(newMessage);
             }
+
+            return false;
         },
         clickShowConversations: function(e) {
             var link = $(e.currentTarget);

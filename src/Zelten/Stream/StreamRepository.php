@@ -6,7 +6,9 @@ use TentPHP\PostCriteria;
 use TentPHP\Post;
 use TentPHP\Util\Mentions;
 use Kwi\UrlLinker;
+
 use Zelten\Util\Washtml;
+use Zelten\Util\String;
 
 class StreamRepository
 {
@@ -44,12 +46,25 @@ class StreamRepository
         $this->mentions          = new Mentions();
     }
 
+    /**
+     * Write Status Post or Essay depending on the length.
+     *
+     * @param string $message
+     * @param array $mention
+     * @param array $permissions
+     */
     public function write($message, $mention = null, array $permissions = array())
     {
         $client = $this->tentClient->getUserClient($this->currentEntity, true);
 
-        $post = Post::create('https://tent.io/types/post/status/v0.1.0');
-        $post->setContent(array('text' => substr($message, 0, 256)));
+        if (strlen($message) < 256) {
+            $post = Post::create('https://tent.io/types/post/status/v0.1.0');
+            $post->setContent(array('text' => $message));
+        } else {
+            $message = String::autoParagraph($message);
+            $post = Post::create('https://tent.io/types/post/essay/v0.1.0');
+            $post->setContent(array('body' => $message));
+        }
 
         foreach ($permissions as $permission) {
             switch(strtolower($permission)) {
