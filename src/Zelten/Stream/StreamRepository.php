@@ -57,7 +57,7 @@ class StreamRepository
     {
         $client = $this->tentClient->getUserClient($this->currentEntity, true);
 
-        if (strlen($message) < 256) {
+        if (strlen($message) <= 256) {
             $post = Post::create('https://tent.io/types/post/status/v0.1.0');
             $post->setContent(array('text' => $message));
         } else {
