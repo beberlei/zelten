@@ -90,9 +90,9 @@
                         - {% if message.app.url is defined %}<a href="{{ message.app.url }}" target="_blank">{% endif %}{{ message.app.name }}{% if message.app.url is defined %}</a>{% endif %}  -
 
                         {% if message.isPublic() %}
-                        <a href="#" class="show-popover" rel="popover" data-content="This content is visible to everybody on the internet." data-original-title="Permissions">Public</a>
+                        <a href="#" class="show-popover" rel="popover" data-content="This content is visible to everyone on the internet." data-original-title="Permissions">Public</a>
                         {% elseif message.isPrivate() %}
-                            <a href="#" class="show-popover" rel="popover" data-content="This content is private any only visible to you." data-original-title="Permissions">Private</a>
+                            <a href="#" class="show-popover" rel="popover" data-content="This content is private to you and anyone mentioned." data-original-title="Permissions">Private</a>
                         {% else %}
                         <a href="#" class="show-popover" rel="popover" data-content="
     {% spaceless %}
