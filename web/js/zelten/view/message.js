@@ -122,7 +122,7 @@ define(
             this.$el.find('a.show-conversation').attr('disabled', false).css('pointer-events', 'auto');
 
             this.$el.find('.conversations .timeago').timeago();
-            this.$el.find('.conversations').each(function() {
+            this.$el.find('.conversations .user-details').each(function() {
                 var view = new UserLinkView({
                     el: $(this)
                 });
