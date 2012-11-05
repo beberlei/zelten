@@ -172,7 +172,7 @@ class StreamRepository
 
         $criteria = array_merge(array(
                 'post_types' => implode(",", $types),
-                'limit'      => 10,
+                'limit'      => 20,
             ), $criteria);
 
         $supportedTypes = array_flip($this->supportedTypes);

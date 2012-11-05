@@ -108,7 +108,7 @@ define(
             document.title = this.title;
         },
         scrollCheck: function () {
-            if (this.win.height() + this.win.scrollTop() == $(document).height()) {
+            if (this.win.height() + this.win.scrollTop() + 100 > $(document).height()) {
                 this.$el.trigger('scroll-bottom');
             }
         },
