@@ -63,7 +63,10 @@ class StreamRepository
         } else {
             $message = String::autoParagraph($message);
             $post = Post::create('https://tent.io/types/post/essay/v0.1.0');
-            $post->setContent(array('body' => $message));
+            $post->setContent(array(
+                'body'    => $message,
+                'excerpt' => String::getFirstParagraph($message)
+            ));
         }
 
         foreach ($permissions as $permission) {

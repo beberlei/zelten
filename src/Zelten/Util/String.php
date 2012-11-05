@@ -103,5 +103,20 @@ class String
     {
         return str_replace("\n", "<WPPreserveNewline />", $matches[0]);
     }
+
+    /**
+     * Get the first paragraph of an html text as snippet
+     *
+     * @param string $html
+     * @return string
+     */
+    static public function getFirstParagraph($html)
+    {
+        $dom = new \DOMDocument('UTF-8');
+        $dom->loadHtml($html);
+
+        $xpath = new \DOMXPath($dom);
+        return $xpath->evaluate('string(//p[1])');
+    }
 }
 
