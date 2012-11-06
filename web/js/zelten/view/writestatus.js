@@ -117,3 +117,4 @@ define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autoresi
 
     return writeStatusView;
 });
+
