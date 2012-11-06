@@ -241,7 +241,7 @@ class StreamRepository
                 $message->content['mentions'] = array("^". str_replace(array("https://", "http://"), "", $post['entity']));
             }
             $message->content['mentions'] = array_map(function($mention) {
-                return rtrim($mention, '.?!,');
+                return rtrim($mention, ")'?.!,;:");
             }, $message->content['mentions']);
 
             $currentEntity = $this->currentEntity;
