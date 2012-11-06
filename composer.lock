@@ -11,7 +11,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/beberlei/TentPHP/zipball/0bb15265cfd52354ff7dc4727401d42d719fcac3",
+                "url": "https://github.com/beberlei/TentPHP/archive/0bb15265cfd52354ff7dc4727401d42d719fcac3.zip",
                 "reference": "0bb15265cfd52354ff7dc4727401d42d719fcac3",
                 "shasum": ""
             },
@@ -125,7 +125,6 @@
                 "php": ">=5.3.2",
                 "doctrine/common": ">=2.3-dev,<2.5-dev"
             },
-            "time": "1350322364",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -168,7 +167,8 @@
                 "persistence",
                 "dbal",
                 "queryobject"
-            ]
+            ],
+            "time": "1350322364"
         },
         {
             "name": "guzzle/guzzle",
@@ -176,12 +176,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle",
-                "reference": "28ce9375ece3c47f1d1b2e9f548db3cd28c5239b"
+                "reference": "v3.0.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/guzzle/zipball/28ce9375ece3c47f1d1b2e9f548db3cd28c5239b",
-                "reference": "28ce9375ece3c47f1d1b2e9f548db3cd28c5239b",
+                "url": "https://github.com/guzzle/guzzle/archive/v3.0.3.zip",
+                "reference": "v3.0.3",
                 "shasum": ""
             },
             "require": {
@@ -228,7 +228,7 @@
                 "zend/zend-cache": "2.0.0beta3",
                 "zend/zend-log": "2.0.0beta3"
             },
-            "time": "1351829108",
+            "time": "1352061063",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -286,7 +286,7 @@
             "suggest": {
                 "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server"
             },
-            "time": "2012-04-22 11:27:40",
+            "time": "2012-04-22 09:27:40",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -329,7 +329,6 @@
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "1347278988",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -356,7 +355,8 @@
             "keywords": [
                 "dependency injection",
                 "container"
-            ]
+            ],
+            "time": "1347278988"
         },
         {
             "name": "ruudk/twitter-oauth",
@@ -375,7 +375,6 @@
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "1347886121",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -391,7 +390,8 @@
                 }
             ],
             "description": "PHP 5.3 version of abraham/twitteroauth",
-            "homepage": "http://github.com/ruudk/twitteroauth"
+            "homepage": "http://github.com/ruudk/twitteroauth",
+            "time": "1347886121"
         },
         {
             "name": "silex/silex",
@@ -399,12 +399,12 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/fabpot/Silex.git",
-                "reference": "dd39fd366b7e978ed6b48923290f0b55d99d0d91"
+                "reference": "04feaff05e6cb0437f405e715adb720dccf8313a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Silex/zipball/dd39fd366b7e978ed6b48923290f0b55d99d0d91",
-                "reference": "dd39fd366b7e978ed6b48923290f0b55d99d0d91",
+                "url": "https://github.com/fabpot/Silex/archive/04feaff05e6cb0437f405e715adb720dccf8313a.zip",
+                "reference": "04feaff05e6cb0437f405e715adb720dccf8313a",
                 "shasum": ""
             },
             "require": {
@@ -439,7 +439,7 @@
                 "symfony/css-selector": ">=2.1,<2.3-dev",
                 "symfony/dom-crawler": ">=2.1,<2.3-dev"
             },
-            "time": "1351701053",
+            "time": "1352219531",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -483,7 +483,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/BrowserKit/zipball/v2.1.3",
+                "url": "https://github.com/symfony/BrowserKit/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -538,7 +538,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/ClassLoader/zipball/v2.1.3",
+                "url": "https://github.com/symfony/ClassLoader/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -588,7 +588,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Config/zipball/v2.1.3",
+                "url": "https://github.com/symfony/Config/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -631,18 +631,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console",
-                "reference": "v2.1.3"
+                "reference": "fda96868928f4731986152a2e51052ea32b88e25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Console/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/Console/archive/fda96868928f4731986152a2e51052ea32b88e25.zip",
+                "reference": "fda96868928f4731986152a2e51052ea32b88e25",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1350916632",
+            "time": "1352017759",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -682,7 +682,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/CssSelector/zipball/v2.1.3",
+                "url": "https://github.com/symfony/CssSelector/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -729,7 +729,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/DomCrawler/zipball/v2.1.3",
+                "url": "https://github.com/symfony/DomCrawler/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -782,7 +782,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/EventDispatcher/zipball/v2.1.3",
+                "url": "https://github.com/symfony/EventDispatcher/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -879,12 +879,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Form",
-                "reference": "852f706eacf7cae6bbe2a0c43e8fa80bea3d0516"
+                "reference": "ddcaa70191ccd79d2ad57c8beff6ede573edfa7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Form/zipball/852f706eacf7cae6bbe2a0c43e8fa80bea3d0516",
-                "reference": "852f706eacf7cae6bbe2a0c43e8fa80bea3d0516",
+                "url": "https://github.com/symfony/Form/zipball/ddcaa70191ccd79d2ad57c8beff6ede573edfa7d",
+                "reference": "ddcaa70191ccd79d2ad57c8beff6ede573edfa7d",
                 "shasum": ""
             },
             "require": {
@@ -901,7 +901,7 @@
                 "symfony/validator": "2.1.*",
                 "symfony/http-foundation": "2.1.*"
             },
-            "time": "1351864459",
+            "time": "1352017759",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -941,7 +941,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/HttpFoundation/zipball/989b9a4d5a63dc51b33bcc5c855a555f4961ba82",
+                "url": "https://github.com/symfony/HttpFoundation/archive/989b9a4d5a63dc51b33bcc5c855a555f4961ba82.zip",
                 "reference": "989b9a4d5a63dc51b33bcc5c855a555f4961ba82",
                 "shasum": ""
             },
@@ -989,7 +989,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/HttpKernel/zipball/45f07adedfc956e07fdef8ba49f4eae402139ced",
+                "url": "https://github.com/symfony/HttpKernel/archive/45f07adedfc956e07fdef8ba49f4eae402139ced.zip",
                 "reference": "45f07adedfc956e07fdef8ba49f4eae402139ced",
                 "shasum": ""
             },
@@ -1056,7 +1056,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Locale/zipball/v2.1.3",
+                "url": "https://github.com/symfony/Locale/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -1106,7 +1106,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/MonologBridge/zipball/v2.1.3",
+                "url": "https://github.com/symfony/MonologBridge/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -1155,7 +1155,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/OptionsResolver/zipball/v2.1.3",
+                "url": "https://github.com/symfony/OptionsResolver/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -1207,7 +1207,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Process/zipball/v2.1.3",
+                "url": "https://github.com/symfony/Process/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -1250,12 +1250,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing",
-                "reference": "29792d8ac4ed7308acdeed4933cb6d91b7f6510f"
+                "reference": "b4c39ea080cfcce4efbfa90fc6cac4222c36432b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Routing/zipball/29792d8ac4ed7308acdeed4933cb6d91b7f6510f",
-                "reference": "29792d8ac4ed7308acdeed4933cb6d91b7f6510f",
+                "url": "https://github.com/symfony/Routing/zipball/b4c39ea080cfcce4efbfa90fc6cac4222c36432b",
+                "reference": "b4c39ea080cfcce4efbfa90fc6cac4222c36432b",
                 "shasum": ""
             },
             "require": {
@@ -1272,7 +1272,7 @@
                 "symfony/config": "2.2.*",
                 "symfony/yaml": "2.2.*"
             },
-            "time": "1351466734",
+            "time": "1352017821",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1312,7 +1312,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Security/zipball/v2.1.3",
+                "url": "https://github.com/symfony/Security/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -1377,7 +1377,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Translation/zipball/v2.1.3",
+                "url": "https://github.com/symfony/Translation/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -1428,12 +1428,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/TwigBridge",
-                "reference": "v2.1.3"
+                "reference": "30c7b13c713c0af73e5c3357d1b3f71bd2795915"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/TwigBridge/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/TwigBridge/zipball/30c7b13c713c0af73e5c3357d1b3f71bd2795915",
+                "reference": "30c7b13c713c0af73e5c3357d1b3f71bd2795915",
                 "shasum": ""
             },
             "require": {
@@ -1456,7 +1456,7 @@
                 "symfony/yaml": "2.1.*",
                 "symfony/security": "2.1.*"
             },
-            "time": "1349363877",
+            "time": "1352017759",
             "type": "symfony-bridge",
             "extra": {
                 "branch-alias": {
@@ -1496,7 +1496,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Validator/zipball/v2.1.3",
+                "url": "https://github.com/symfony/Validator/archive/v2.1.3.zip",
                 "reference": "v2.1.3",
                 "shasum": ""
             },
@@ -1548,18 +1548,18 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/fabpot/Twig.git",
-                "reference": "a009821dd31fa783269602507542cea978c9714a"
+                "reference": "58f2a8dfb75ce54c52ede9fe1c3c4fac8bf600e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Twig/zipball/a009821dd31fa783269602507542cea978c9714a",
-                "reference": "a009821dd31fa783269602507542cea978c9714a",
+                "url": "https://github.com/fabpot/Twig/archive/58f2a8dfb75ce54c52ede9fe1c3c4fac8bf600e7.zip",
+                "reference": "58f2a8dfb75ce54c52ede9fe1c3c4fac8bf600e7",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "1351927661",
+            "time": "1352204459",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1592,7 +1592,61 @@
             ]
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [
+        {
+            "name": "mockery/mockery",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/padraic/mockery.git",
+                "reference": "b6adea3c241798c5afcbe2a2ac9294ce635a096f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/padraic/mockery/zipball/b6adea3c241798c5afcbe2a2ac9294ce635a096f",
+                "reference": "b6adea3c241798c5afcbe2a2ac9294ce635a096f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "suggest": {
+                "Hamcrest": "1.0.0"
+            },
+            "time": "1348513062",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Mockery": "library/"
+                }
+            },
+            "license": [
+                "New BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Pádraic Brady",
+                    "email": "padraic.brady@gmail.com",
+                    "homepage": "http://blog.astrumfutura.com"
+                }
+            ],
+            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succint API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
+            "homepage": "http://github.com/padraic/mockery",
+            "keywords": [
+                "testing",
+                "library",
+                "BDD",
+                "TDD",
+                "test",
+                "mockery",
+                "mock",
+                "stub",
+                "test double",
+                "mock objects"
+            ]
+        }
+    ],
     "aliases": [
 
     ],
