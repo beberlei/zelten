@@ -63,7 +63,11 @@ define(
                 error: _.bind(this.checkNewMessagesError, this)
             });
         },
-        checkNewMessagesError: function(data) {
+        checkNewMessagesError: function(data, textStatus) {
+            if (textStatus == "abort") {
+                return;
+            }
+
             clearInterval(this.checkNewMessagesInterval);
             var template = _.template($("#error-message").html());
             $(".errors").html(template({
