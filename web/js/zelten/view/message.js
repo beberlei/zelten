@@ -51,7 +51,11 @@ define(
         },
         showMoreContent: function(e) {
             $(e.currentTarget).hide();
-            this.$el.find('.hidden-content').slideDown();
+            var hiddenContent = this.$el.find('.hidden-content');
+            this.$el.find('.excerpt').slideUp('fast', function() {
+                hiddenContent.slideDown();
+            });
+
             return false;
         },
         clickReply: function(e) {

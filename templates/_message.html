@@ -60,7 +60,7 @@
                     {% endif %}
 
                     {% if message.content.excerpt is defined %}
-                    <p>{{ message.content.excerpt }} <a href="#" class="more-content">show more</a></p>
+                    <p class="excerpt">{{ message.content.excerpt }} <a href="#" class="more-content">show more</a></p>
 
                     <div class="hidden-content">
                         {{ message.content.body|raw }}
