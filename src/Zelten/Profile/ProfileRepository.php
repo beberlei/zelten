@@ -88,25 +88,35 @@ class ProfileRepository
      */
     public function getProfile($entityUrl)
     {
-        $sql = 'SELECT * FROM profiles WHERE entity = ?';
-        $row = $this->conn->fetchAssoc($sql, array($entityUrl));
-
-        if ($row && strtotime($row['updated'])-3600 < time()) {
-            return $this->parseDatabaseProfile($row);
-        }
-
-        $id = isset($row['id']) ? $row['id'] : null;
-
+        $this->conn->beginTransaction();
         try {
-            $userClient = $this->tentClient->getUserClient($entityUrl, false);
-            $data       = $userClient->getProfile();
-        } catch(GuzzleException $e) {
-            $data = array();
-        } catch(EntityNotFoundException $e) {
-            $data = array();
+            $sql = 'SELECT * FROM profiles WHERE entity = ?';
+            $row = $this->conn->fetchAssoc($sql, array($entityUrl));
+
+            if ($row && strtotime($row['updated'])-3600 < time()) {
+                return $this->parseDatabaseProfile($row);
+            }
+
+            $id = isset($row['id']) ? $row['id'] : null;
+
+            try {
+                $userClient = $this->tentClient->getUserClient($entityUrl, false);
+                $data       = $userClient->getProfile();
+            } catch(GuzzleException $e) {
+                $data = array();
+            } catch(EntityNotFoundException $e) {
+                $data = array();
+            }
+
+            $profile = $this->parseTentProfile($entityUrl, $data, $id);
+
+            $this->conn->commit();
+        } catch(\Exception $e) {
+            $this->conn->rollBack();
+            throw $e;
         }
 
-        return $this->parseTentProfile($entityUrl, $data, $id);
+        return $profile;
     }
 
     private function fixUri($entityUri)

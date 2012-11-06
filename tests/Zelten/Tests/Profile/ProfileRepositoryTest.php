@@ -26,6 +26,8 @@ class ProfileRepositoryTest extends TestCase
     {
         $client = $this->mock('TentPHP\Client');
         $conn = $this->mock('Doctrine\DBAL\Connection');
+        $conn->shouldReceive('beginTransaction');
+        $conn->shouldReceive('commit');
         $conn->shouldReceive('fetchAssoc')
              ->times(1)
              ->andReturn(self::$databaseRow);
@@ -81,6 +83,8 @@ class ProfileRepositoryTest extends TestCase
                ->andReturn($userClient);
 
         $conn = $this->mock('Doctrine\DBAL\Connection');
+        $conn->shouldReceive('beginTransaction');
+        $conn->shouldReceive('commit');
         $conn->shouldReceive('fetchAssoc')
              ->times(1)
              ->andReturn(false);
