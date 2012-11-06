@@ -234,7 +234,7 @@ class StreamRepository
         }
 
         if ($message->type == 'status') {
-            if (preg_match_all('((\^[^\s]+))', $message->content['text'], $matches)) {
+            /*if (preg_match_all('((\^[^\s]+))', $message->content['text'], $matches)) {
                 $matches[1][] = "^". str_replace(array("https://", "http://"), "", $post['entity']);
                 $message->content['mentions'] = array_unique($matches[1]);
             } else {
@@ -249,22 +249,28 @@ class StreamRepository
                 $message->content['mentions'],
                 function($mentionedEntity) use($currentEntity) {
                     return ltrim($mentionedEntity, "^") && strpos($currentEntity, ltrim($mentionedEntity, "^")) === false;
-            }));
+            }));*/
 
             $message->content['text'] = nl2br($this->linker->parse($message->content['text']));
+            $message->content['mentions']  = array();
 
             foreach ($message->mentions as $mention) {
-                if (!empty($mention['post'])) {
-                    $message->content['reply'] = array(
-                        'post'   => $mention['post'],
-                        'entity' => $this->getPublicProfile($mention['entity'])
-                    );
-                }
-
                 $parts = parse_url($mention['entity']);
 
                 if (!isset($parts['host'])) {
                     continue;
+                }
+
+                $profile = $this->getPublicProfile($mention['entity']);
+                if (!empty($mention['post'])) {
+                    $message->content['reply'] = array(
+                        'post'   => $mention['post'],
+                        'entity' => $profile,
+                    );
+                }
+
+                if ($mention['entity'] !== $this->currentEntity) {
+                    $message->content['mentions'][] = $mention['entity'];
                 }
 
                 $shortname = "^" . substr($parts['host'], 0, strpos($parts['host'], "."));
@@ -273,10 +279,13 @@ class StreamRepository
                 $mentionNames = array("^" . $mention['entity'], "^" . $parts['host'], $shortname);
                 $message->content['text'] = str_replace(
                     $mentionNames,
-                    '<a class="user-details" href="' . $userLink .'">' . $shortname . '</a>',
+                    '<a class="label label-info user-details" href="' . $userLink .'">' . $profile['name'] . '</a>',
                     $message->content['text']
                 );
             }
+
+            $message->content['mentions'] = implode(" ", $message->content['mentions']);
+
         } else if ($message->type == 'follower') {
             $message->content['follower'] = $this->getPublicProfile($message->content['entity']);
         } else if ($message->type == 'repost') {
