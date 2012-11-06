@@ -11,8 +11,8 @@ class MessageTest extends TestCase
     {
         return array(
             array(
-                'http://f.cl.ly/items/0S142I071o130u1h2145/Screen%20Shot%202012-11-01%20at%208.08.25%20PM.png',
-                '<a href="http://f.cl.ly/items/0S142I071o130u1h2145/Screen%20Shot%202012-11-01%20at%208.08.25%20PM.png">f.cl.ly/items/0S142I071o130u1h2145/Screen%20Shot%202012-11-01%20at%208.08.25%20PM.png</a>'
+                'testing long link: http://f.cl.ly/items/0S142I071o130u1h2145/Screen%20Shot%202012-11-01%20at%208.08.25%20PM.png',
+                'testing long link: <a href="http://f.cl.ly/items/0S142I071o130u1h2145/Screen%20Shot%202012-11-01%20at%208.08.25%20PM.png">f.cl.ly/items/0S142I071o130u1h2145/Screen%20Shot%202012-11-01%20at%208.08.25%20PM.png</a>'
             ),
             array(
                 'https://foo:bar@domain.com/lol%20catz!',

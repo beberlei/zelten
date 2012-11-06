@@ -73,6 +73,11 @@ class UrlLinker
 
             $url = rtrim($url, self::TRAILING_PUNCTUATION);
 
+            if ($url[0] == " ") {
+                $url = ltrim($url);
+                $urlPosition++;
+            }
+
             // Add the text leading up to the URL.
             $html .= htmlspecialchars(substr($text, $position, $urlPosition - $position));
 
@@ -91,6 +96,7 @@ class UrlLinker
                 'path' => '',
                 'query' => '',
                 'fragment' => '',
+                'host' => '',
                 ), parse_url($url));
 
             $scheme      = $urlParts['scheme'];
