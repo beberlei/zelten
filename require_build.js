@@ -24,6 +24,7 @@
         'select2': ['jquery'],
         'clickover': ['bootstrap'],
         'bootstrap': ['jquery'],
-        'autoresize': ['jquery']
+        'autoresize': ['jquery'],
+        'autosize': ['jquery']
     }
 })

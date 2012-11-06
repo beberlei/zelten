@@ -1,4 +1,4 @@
-define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autoresize", "select2"], function(Backbone, Message, ModalConfirmDialogView) {
+define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autosize", "select2"], function(Backbone, Message, ModalConfirmDialogView) {
 
     var writeStatusView = Backbone.View.extend({
         events: {
@@ -13,10 +13,7 @@ define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autoresi
             this.hasPermissions = this.$el.find('.complete-permissions').length > 0;
         },
         render: function() {
-            this.$el.find('textarea').autoResize({
-                extraSpace: 0,
-                animate: {duration: 50, complete: function() {}}
-            });
+            this.$el.find('textarea').autosize({});
 
             this.actions    = this.$el.find(".actions");
             this.messageBox = this.$el.find('.message');
