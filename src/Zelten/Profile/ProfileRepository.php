@@ -372,6 +372,10 @@ class ProfileRepository
         $profileEntity  = $this->getProfile($entity);
         $followerEntity = $this->getProfile($followEntity);
 
+        if ( ! isset($profileEntity['id']) || ! isset($followerEntity['id'])) {
+            return false;
+        }
+
         $sql = "SELECT count(*) FROM followings WHERE profile_id = ? AND following_id = ?";
 
         $isFollowing = $this->conn->fetchColumn($sql, array($profileEntity['id'], $followerEntity['id'])) > 0;
