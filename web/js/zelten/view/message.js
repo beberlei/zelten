@@ -72,6 +72,8 @@ define(
                 success: _.bind(this.confirmClickRepost, this, $(e.currentTarget).attr('href'))
             });
             modal.render();
+
+            return false;
         },
         confirmClickRepost: function(url) {
             $.ajax({
