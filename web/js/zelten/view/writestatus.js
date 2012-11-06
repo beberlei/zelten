@@ -44,11 +44,11 @@ define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autoresi
                 return false;
             }
 
-            if (msg.length > 255) {
+            if (msg.length > 256) {
                 var modal = new ModalConfirmDialogView({
                     params: {
                         title: 'Publish this Post as Essay?',
-                        post: 'The text of this status message is longer than 255 chars. Do you want to post the status as an essay instead?',
+                        post: 'The text of this status message is longer than 256 chars. Do you want to post the status as an essay instead?',
                         label: 'Yes, publish!'
                     },
                     success: _.bind(this.sendMessage, this, form)
