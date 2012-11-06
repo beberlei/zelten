@@ -73,7 +73,7 @@ class UrlLinker
 
             $url = rtrim($url, self::TRAILING_PUNCTUATION);
 
-            if ($url[0] == " ") {
+            if (ltrim($url) !== $url) {
                 $url = ltrim($url);
                 $urlPosition++;
             }

@@ -18,6 +18,10 @@ class MessageTest extends TestCase
                 'https://foo:bar@domain.com/lol%20catz!',
                 '<a href="https://foo:bar&#64;domain.com/lol%20catz">domain.com/lol%20catz</a>!',
             ),
+            array(
+                "testing short link first in line:\nhttp://foo.com",
+                "testing short link first in line:\n<a href=\"http://foo.com\">foo.com</a>",
+            )
         );
     }
 
