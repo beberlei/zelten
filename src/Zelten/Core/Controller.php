@@ -113,9 +113,10 @@ class Controller implements ControllerProviderInterface
 
             $app['db']->executeUpdate('UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($entityUrl));
 
-            if ($app['zelten.profile']->synchronizeRelationsOverdue($entityUrl)) {
+            $app['zelten.profile']->synchronizeRelations($entityUrl);
+            /*if ($app['zelten.profile']->synchronizeRelationsOverdue($entityUrl)) {
                 return new RedirectResponse($app['url_generator']->generate('profile_synchronize'));
-            }
+            }*/
 
             return new RedirectResponse($app['url_generator']->generate('stream'));
         })->bind('oauth_accept');
