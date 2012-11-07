@@ -62,6 +62,10 @@ class Controller extends BaseController
                     ->bind('user_following')
                     ->before(array($this, 'isAuthenticated'));
 
+        $controllers->get('/{entity}/avatar', array($this, 'imageAction'))
+                    ->bind('user_avatar')
+                    ->before(array($this, 'isAuthenticated'));
+
         return $controllers;
     }
 
@@ -150,6 +154,35 @@ class Controller extends BaseController
         return new RedirectResponse($app['url_generator']->generate('stream_user', array(
             'entity' => $request->request->get('entity'),
         )));
+    }
+
+    public function imageAction(Request $request, Application $app, $entity)
+    {
+        $profileRepository = $app['zelten.profile'];
+        $profile           = $profileRepository->getProfile($this->urlize($entity));
+
+        if (strpos($profile['basic']['avatar'], 'http') === false) {
+            return new RedirectResponse($app['url_generator']->generate('homepage', array(), true) . "/zelten.png", 301);
+        }
+
+        $file = "/tmp/zavatar_" . md5($entity);
+
+        if (!file_exists($file)) {
+            ini_set('default_socket_timeout', 1);
+            $info = @getimagesize($profile['basic']['avatar']);
+
+            if ($info === false) {
+                copy(__DIR__ . "/../../../web/zelten.png", $file);
+            } else {
+                $content = file_get_contents($profile['basic']['avatar']);
+                file_put_contents($file, $content);
+            }
+        } else {
+            $content = file_get_contents($file);
+            $info    = getimagesize($file);
+        }
+
+        return new Response($content, 200, array('Content-Type: ' . $info['mime']));
     }
 }
 
