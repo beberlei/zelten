@@ -165,24 +165,7 @@ class Controller extends BaseController
             return new RedirectResponse($app['url_generator']->generate('homepage', array(), true) . "/zelten.png", 301);
         }
 
-        $file = "/tmp/zavatar_" . md5($entity);
-
-        if (!file_exists($file)) {
-            ini_set('default_socket_timeout', 1);
-            $info = @getimagesize($profile['basic']['avatar']);
-
-            if ($info === false) {
-                copy(__DIR__ . "/../../../web/zelten.png", $file);
-            } else {
-                $content = file_get_contents($profile['basic']['avatar']);
-                file_put_contents($file, $content);
-            }
-        } else {
-            $content = file_get_contents($file);
-            $info    = getimagesize($file);
-        }
-
-        return new Response($content, 200, array('Content-Type: ' . $info['mime']));
+        return new RedirectResponse($profile['basic']['avatar'], 301);
     }
 }
 
