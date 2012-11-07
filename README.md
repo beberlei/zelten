@@ -1,7 +1,7 @@
 # Zelten
 
 A social client that runs on the Tent protocol. https://tent.io/
-Visit Zelten: http://zelten.eu1.frbit.net
+Visit Zelten: http://zelten.cc
 
 This is open source, and not yet easily installable on any
 server.  If you want to do it, make sure to run:
