@@ -81,18 +81,24 @@ class StreamRepository
             }
         }
 
+        $alreadyMentioned = array();
+
         if ($mention) {
+            $alreadyMentioned[$mention['entity']] = true;
             $post->addMention($mention['entity'], $mention['post']);
         }
 
         $mentions = $this->mentions->extractMentions($message, $this->currentEntity);
 
         foreach ($mentions as $mention) {
-            if ($mention['entity'] === $this->currentEntity) {
+            if ($mention['entity'] === $this->currentEntity ||
+                isset($alreadyMentioned[$mention['entity']])) {
+
                 continue;
             }
 
             $post->addMention($mention['entity']);
+            $alreadyMentioned[$mention['entity']] = true;
         }
 
         $data = $client->createPost($post);
