@@ -267,7 +267,7 @@ class StreamRepository
                 );
             }
 
-            $message->content['mentions'][] = $this->currentEntity;
+            $message->content['mentions'][] = $post['entity'];
             $message->content['mentions'] = implode(" ", $message->content['mentions']);
 
         } else if ($message->type == 'follower') {
