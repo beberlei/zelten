@@ -32,6 +32,9 @@ $app['twitter.options'] = array(
 );
 
 // CHANGE!!!
-$app['appsecret'] = envvar('APPSECRET', 'OoH8eevahThahyiinge');
+$app['appsecret']            = envvar('APPSECRET', 'OoH8eevahThahyiinge');
 TentPHP\DBAL\DoctrineUserStorage::registerTentEncryptionStringType($app['appsecret']);
 
+// only if the current request host equals the given host,
+// a notification url will be appended to the login url.
+$app['notification_domain'] = envvar('NOTIFICATION_DOMAIN', false);

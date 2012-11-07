@@ -28,7 +28,6 @@ define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autosize
         },
         cancelPosting: function() {
             var actions = this.$el.find(".actions");
-            this.$el.find('.message').css('height', 30);
             actions.slideUp();
         },
         writeMessage: function(e) {
@@ -96,8 +95,6 @@ define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autosize
                 if (this.hasPermissions) {
                     this.$el.find('.complete-permissions').select2('data', {id: 'public', text: 'Everybody'});
                 }
-
-                this.messageBox.css('height', 60);
 
                 if (this.mentions.length > 0) {
                     this.messageBox.val(this.mentions + ' ');

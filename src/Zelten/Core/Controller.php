@@ -17,7 +17,13 @@ class Controller implements ControllerProviderInterface
     {
         $controllers = $app['controllers_factory'];
 
-        $controllers->get('/', function (Application $app) {
+        $controllers->get('/', function (Application $app, Request $request) {
+            $entityUrl = $app['session']->get('entity_url');
+
+            if (!$entityUrl && in_array($request->server->get('HTTP_HOST'), array('zelten.eu1.frbit.net', 'www.zelten.cc'))) {
+                return new RedirectResponse('http://zelten.cc', 301);
+            }
+
             $stats = $app['db']->fetchAssoc(
                 'SELECT count(*) as total_users, sum(bookmarks) as total_bookmarks FROM users'
             );
@@ -59,6 +65,10 @@ class Controller implements ControllerProviderInterface
 
             $callbackUrl = $app['url_generator']->generate('oauth_accept', array(), true);
 
+            $notificationsUrl = ($request->server->get('HTTP_HOST') == $app['notification_domain'])
+                ? $app['url_generator']->generateUrl('hook', array('hash' => hash_hmac('sha256', $entityUrl, $app['appsecret'])), true)
+                : null;
+
             try {
                 $loginUrl    = $app['tent.client']->getLoginUrl($entityUrl, null, $callbackUrl, null, array(
                     'http://www.beberlei.de/tent/bookmark/v0.0.1',
@@ -68,7 +78,8 @@ class Controller implements ControllerProviderInterface
                     'https://tent.io/types/post/follower/v0.1.0',
                     'https://tent.io/types/post/following/v0.1.0',
                     'http://www.beberlei.de/tent/favorite/v0.0.1',
-                ), 'http://zelten.eu1.frbit.net/hook?hash='.hash_hmac('sha256', $entityUrl, $app['appsecret']));
+                ), $notificationsUrl);
+
             } catch(\TentPHP\Exception\EntityNotFoundException $e) {
                 return new RedirectResponse($app['url_generator']->generate('homepage', array('error' => 'invaild_tent_entity')));
             }
@@ -87,14 +98,17 @@ class Controller implements ControllerProviderInterface
         })->bind('login');
 
         $controllers->get('/oauth/accept', function(Request $request, Application $app) {
-            $app['session']->set('entity_url', $app['tent.client']->authorize(
+            $entityUrl = $app['tent.client']->authorize(
                 $request->query->get('state'),
                 $request->query->get('code')
-            ));
+            );
 
-            $app['db']->executeUpdate('UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($app['session']->get('entity_url')));
+            $app['session']->set('entity_url', $entityUrl);
+            $app['tent.client']->updateApplication($entityUrl);
 
-            if ($app['zelten.profile']->synchronizeRelationsOverdue($app['session']->get('entity_url'))) {
+            $app['db']->executeUpdate('UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($entityUrl));
+
+            if ($app['zelten.profile']->synchronizeRelationsOverdue($entityUrl)) {
                 return new RedirectResponse($app['url_generator']->generate('profile_synchronize'));
             }
 
