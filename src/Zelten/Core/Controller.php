@@ -20,7 +20,7 @@ class Controller implements ControllerProviderInterface
         $controllers->get('/', function (Application $app, Request $request) {
             $entityUrl = $app['session']->get('entity_url');
 
-            if (!$entityUrl && in_array($request->server->get('HTTP_HOST'), array('zelten.eu1.frbit.net', 'www.zelten.cc'))) {
+            if (!$entityUrl && in_array($request->server->get('HTTP_HOST'), array('zelten.eu1.frbit.net'))) {
                 return new RedirectResponse('http://zelten.cc', 301);
             }
 
