@@ -80,8 +80,14 @@ class Controller implements ControllerProviderInterface
                     'http://www.beberlei.de/tent/favorite/v0.0.1',
                 ), $notificationsUrl);
 
+
             } catch(\TentPHP\Exception\EntityNotFoundException $e) {
                 return new RedirectResponse($app['url_generator']->generate('homepage', array('error' => 'invaild_tent_entity')));
+            }
+
+            $appData = $app['tent.client']->getApplication($entityUrl);
+            if (!in_array($callbackUrl, $appData['redirect_uris'])) {
+                $app['tent.client']->updateApplication($entityUrl);
             }
 
             $sql = "SELECT * FROM users WHERE entity = ?";
@@ -104,7 +110,6 @@ class Controller implements ControllerProviderInterface
             );
 
             $app['session']->set('entity_url', $entityUrl);
-            $app['tent.client']->updateApplication($entityUrl);
 
             $app['db']->executeUpdate('UPDATE users SET last_login = NOW(), login_count = login_count + 1 WHERE entity = ?', array($entityUrl));
 
