@@ -66,7 +66,7 @@ class Controller implements ControllerProviderInterface
             $callbackUrl = $app['url_generator']->generate('oauth_accept', array(), true);
 
             $notificationsUrl = ($request->server->get('HTTP_HOST') == $app['notification_domain'])
-                ? $app['url_generator']->generateUrl('hook', array('hash' => hash_hmac('sha256', $entityUrl, $app['appsecret'])), true)
+                ? $app['url_generator']->generate('hook', array('hash' => hash_hmac('sha256', $entityUrl, $app['appsecret'])), true)
                 : null;
 
             try {
