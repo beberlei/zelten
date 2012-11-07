@@ -269,8 +269,8 @@ class StreamRepository
 
             $message->content['mentions'][] = $post['entity'];
             $message->content['mentions'] = implode(" ", array_map(function ($mentionedEntity) {
-                return "^" . $message->content['mentions'];
-            }));
+                return "^" . $mentionedEntity;
+            }, $message->content['mentions']));
 
         } else if ($message->type == 'follower') {
             $message->content['follower'] = $this->getPublicProfile($message->content['entity']);
