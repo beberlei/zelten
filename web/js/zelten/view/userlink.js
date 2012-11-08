@@ -10,7 +10,6 @@ define(["backbone", "zelten/view/user", "clickover"], function(Backbone, UserVie
                 placement: function(a, link) {
                     var pos = $(link).offset();
                     var windowWith = $(window).width();
-                    console.log(pos);
 
                     return (((pos.left / windowWith) * 100) > 50) ? 'left' : 'right';
                 },
