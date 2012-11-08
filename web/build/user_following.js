@@ -1,0 +1,1 @@
+define(["jquery","backbone","zelten/view/notificationcount","zelten/view/userlink"],function(e,t,n,r){e(".user-details").each(function(){var t=new r({el:e(this)});t.render()})})
