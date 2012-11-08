@@ -95,7 +95,7 @@ class Controller extends BaseController
     public function followersAction(Request $request, Application $app, $entity)
     {
         $entity            = $this->urlize($entity);
-        $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
+        $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 50);
         $profileRepository = $app['zelten.profile'];
         $followers         = $profileRepository->getFollowers($entity, $limit);
 
@@ -114,7 +114,7 @@ class Controller extends BaseController
     public function followingAction(Request $request, Application $app, $entity)
     {
         $entity = $this->urlize($entity);
-        $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
+        $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 50);
         $profileRepository = $app['zelten.profile'];
         $following         = $profileRepository->getFollowings($entity, $limit);
 

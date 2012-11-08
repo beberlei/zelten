@@ -1,6 +1,6 @@
 <strong>{{ title }} <span class="total">{{ users.total }}</span></strong> (<a href="{{ path(route, {'entity': profile.entity}) }}">View All</a>)
 
-<ul class="people-list" data-url="{{ path(route, {'entity': profile.entity}) }}">
+<ul class="clearfix people-list" data-url="{{ path(route, {'entity': profile.entity}) }}">
     {% for user in users.list %}
     <li class="user">
         <a class="user-details" href="{{ path('stream_user', {'entity': user.entity}) }}">

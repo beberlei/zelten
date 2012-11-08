@@ -138,6 +138,11 @@ footer {
 .people-list li {
     margin-bottom: 3px;
 }
+.content .people-list li  {
+    float: left;
+    width: 33%;
+    height: 60px;
+}
 .loading {
     background-position: center;
     background-repeat: no-repeat;
@@ -295,3 +300,4 @@ form.stream-message-add-replyto {
         padding:8px!important
     }
 }
+
