@@ -3,14 +3,73 @@ define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autosize
     var writeStatusView = Backbone.View.extend({
         events: {
             "click .message": "showActions",
-            "keyup .message": "showActions",
-            "change .message": "showActions",
             "click .stream-message-add-cancel": "cancelPosting",
-            "submit": "writeMessage"
+            "click .link-add-toggle": "linkAddToggle",
+            "paste .link-add": "linkAddPaste",
+            "click .link-add-btn": "linkAddClick",
+            "submit": "writeMessage",
+            "click .close": "closePanel"
         },
         initialize: function(args) {
             this.mentions = args.mentions || '';
             this.hasPermissions = this.$el.find('.complete-permissions').length > 0;
+        },
+        closePanel: function(e) {
+            var link = $(e.currentTarget);
+            link.parents('.' + link.data('dismiss')).hide();
+            this.linkAddReset();
+        },
+        linkAddPaste: function(e) {
+            setTimeout(_.bind(this.linkAddFetchDetails, this, $(e.currentTarget)), 0);
+        },
+        linkAddClick: function(e) {
+            this.linkAddFetchDetails(this.$el.find('.link-add'));
+        },
+        linkAddFetchDetails: function(link) {
+            this.$el.find('.link-add-btn').attr('disabled', true);
+            $.ajax({
+                url: link.data('parse-link') + '?url=' + link.val(),
+                type: 'GET',
+                dataType: 'json',
+                success: _.bind(this.linkAddShowDetails, this),
+                error: _.bind(this.linkAddError, this)
+            });
+        },
+        linkAddShowDetails: function(data) {
+            var form = this.$el.find('.link-add-form');
+            form.hide();
+            form.find('.link-add-title').val(data.title);
+            form.find('.link-add-description').val(data.description);
+            form.find('.link-add-image').val(data.image);
+
+            var details = this.$el.find('.link-add-details').show();
+            details.find('.link-add-title').text(data.title);
+            details.find('.link-add-description').text(data.description);
+            details.find('.link-add-image').attr('src', data.image);
+        },
+        linkAddError: function() {
+            this.$el.find('.link-add-btn').attr('disabled', false);
+        },
+        linkAddToggle: function(e) {
+            if (this.$el.find('.actions').is(':hidden')) {
+                this.showActions();
+            }
+
+            if (this.$el.find('.link-add-form').is(':hidden')) {
+                this.linkAddReset();
+                this.$el.find('.link-add-btn').attr('disabled', false);
+                this.$el.find('.link-add-details').hide();
+                this.$el.find('.link-add-form').toggle();
+                this.$el.find('.link-add').focus();
+            } else {
+                this.$el.find('.link-add-form').toggle();
+            }
+
+            return false;
+        },
+        linkAddReset: function() {
+            this.$el.find('.link-add-form input[type="hidden"]').val(''); // reset
+            this.$el.find('.link-add').val('');
         },
         render: function() {
             this.$el.find('textarea').autosize({});

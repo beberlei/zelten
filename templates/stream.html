@@ -6,19 +6,46 @@
 <div id="stream" {% if mentioned_entity is defined %}data-mentioned-entity="{{ mentioned_entity }}"{% endif %}>
     {% if post_add %}
     <div class="stream-add-message-box">
-        <form action="{{ path('stream_write') }}" method="message" class="stream-message-add">
+        <form action="{{ path('stream_write') }}" method="message" class="stream-message-add form-inline">
             <div class="box box-highlight">
                 <div class="box-content">
                     <div  class="form-inline">
                         <textarea class="message span11" name="message" rows="1" placeholder="Share whats new..."></textarea>
-                        <a href="#" class="btn show-tooltip" data-original-title="Add Link to Post"><i class="icon-link"></i></a>
+                        <a href="#" class="btn show-tooltip link-add-toggle" data-original-title="Add Link to Post"><i class="icon-link"></i></a>
                     </div>
                 </div>
                 <div class="box-footer actions hidden-content">
-                    <div class="row-fluid">
-                        <div class="span2"><small>Visible to:</small></div>
+                    <div class="row-fluid link-add-form hidden-content">
+                        <div class="span1 show-tooltip" data-original-title="Add Link">
+                            <big><i class="icon-link pull-right"></i></big>
+                        </div>
+                        <div class="span11">
+                            <input type="text" class="span10 link-add" data-parse-link="{{ path('bookmark_parse') }}" name="url" value="" />
+                            <input type="button" class="btn link-add-btn" value="Add" />
+                            <input type="hidden" class="link-add-title" value="" />
+                            <input type="hidden" class="link-add-description" value="" />
+                            <input type="hidden" class="link-add-image" value="" />
+                        </div>
+                    </div>
+
+                    <div class="row-fluid link-add-details hidden-content">
+                        <div class="span2">
+                            <img class="link-add-image" width="100" />
+                        </div>
                         <div class="span10">
-                            <input type="text" class="complete-permissions span12" name="permissions" value="" />
+                            <button type="button" class="close" data-dismiss="link-add-details">×</button>
+                            <p><span class="link-add-title"></span> &raquo;</p>
+                            <p class="link-add-description"></p>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span1 show-tooltip" data-original-title="Permissions">
+                            <big><i class="icon-filter pull-right"></i></big>
+                        </div>
+                        <div class="span11">
+                            <input type="text" class="span10" name="permissions" value="" placeholder="[+] Add more people" />
+                            <button class="btn"><i class="icon-user"></i></button>
                         </div>
                     </div>
 

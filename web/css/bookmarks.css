@@ -32,7 +32,13 @@ body {
     padding: 4px;
     padding-left: 10px;
     font-size: 12pt;
+}
+.box-footer .status-length-left {
     color: #c4c4c4;
+}
+.box-footer .row-fluid {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 p.bookmark-description {
     color: #777777;
