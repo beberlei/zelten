@@ -17,6 +17,7 @@ $before = json_decode( $_POST[ 'before' ] );
 $after  = json_decode( $_POST[ 'after' ] );
 
 file_put_contents(sys_get_temp_dir() . "/cache.token", $after->commit);
+apc_clear_cache('user');
 
 print json_encode(array(
     'status'  => 'ok',

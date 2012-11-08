@@ -6,7 +6,9 @@ use TentPHP\PostCriteria;
 use TentPHP\Post;
 use TentPHP\Util\Mentions;
 use Kwi\UrlLinker;
+
 use Zelten\Util\Washtml;
+use Zelten\Util\String;
 
 class StreamRepository
 {
@@ -44,12 +46,28 @@ class StreamRepository
         $this->mentions          = new Mentions();
     }
 
+    /**
+     * Write Status Post or Essay depending on the length.
+     *
+     * @param string $message
+     * @param array $mention
+     * @param array $permissions
+     */
     public function write($message, $mention = null, array $permissions = array())
     {
         $client = $this->tentClient->getUserClient($this->currentEntity, true);
 
-        $post = Post::create('https://tent.io/types/post/status/v0.1.0');
-        $post->setContent(array('text' => substr($message, 0, 256)));
+        if (strlen($message) <= 256) {
+            $post = Post::create('https://tent.io/types/post/status/v0.1.0');
+            $post->setContent(array('text' => $message));
+        } else {
+            $message = String::autoParagraph($message);
+            $post = Post::create('https://tent.io/types/post/essay/v0.1.0');
+            $post->setContent(array(
+                'body'    => $message,
+                'excerpt' => String::getFirstParagraph($message)
+            ));
+        }
 
         foreach ($permissions as $permission) {
             switch(strtolower($permission)) {
@@ -63,18 +81,24 @@ class StreamRepository
             }
         }
 
+        $alreadyMentioned = array();
+
         if ($mention) {
+            $alreadyMentioned[$mention['entity']] = true;
             $post->addMention($mention['entity'], $mention['post']);
         }
 
         $mentions = $this->mentions->extractMentions($message, $this->currentEntity);
 
         foreach ($mentions as $mention) {
-            if ($mention['entity'] === $this->currentEntity) {
+            if ($mention['entity'] === $this->currentEntity ||
+                isset($alreadyMentioned[$mention['entity']])) {
+
                 continue;
             }
 
             $post->addMention($mention['entity']);
+            $alreadyMentioned[$mention['entity']] = true;
         }
 
         $data = $client->createPost($post);
@@ -154,7 +178,7 @@ class StreamRepository
 
         $criteria = array_merge(array(
                 'post_types' => implode(",", $types),
-                'limit'      => 10,
+                'limit'      => 20,
             ), $criteria);
 
         $supportedTypes = array_flip($this->supportedTypes);
@@ -216,37 +240,26 @@ class StreamRepository
         }
 
         if ($message->type == 'status') {
-            if (preg_match_all('((\^[^\s]+))', $message->content['text'], $matches)) {
-                $matches[1][] = "^". str_replace(array("https://", "http://"), "", $post['entity']);
-                $message->content['mentions'] = array_unique($matches[1]);
-            } else {
-                $message->content['mentions'] = array("^". str_replace(array("https://", "http://"), "", $post['entity']));
-            }
-            $message->content['mentions'] = array_map(function($mention) {
-                return rtrim($mention, '.?!,');
-            }, $message->content['mentions']);
-
-            $currentEntity = $this->currentEntity;
-            $message->content['mentions'] = implode(" ", array_filter(
-                $message->content['mentions'],
-                function($mentionedEntity) use($currentEntity) {
-                    return ltrim($mentionedEntity, "^") && strpos($currentEntity, ltrim($mentionedEntity, "^")) === false;
-            }));
-
             $message->content['text'] = nl2br($this->linker->parse($message->content['text']));
+            $message->content['mentions']  = array();
 
             foreach ($message->mentions as $mention) {
-                if (!empty($mention['post'])) {
-                    $message->content['reply'] = array(
-                        'post'   => $mention['post'],
-                        'entity' => $this->getPublicProfile($mention['entity'])
-                    );
-                }
-
                 $parts = parse_url($mention['entity']);
 
                 if (!isset($parts['host'])) {
                     continue;
+                }
+
+                $profile = $this->getPublicProfile($mention['entity']);
+                if (!empty($mention['post'])) {
+                    $message->content['reply'] = array(
+                        'post'   => $mention['post'],
+                        'entity' => $profile,
+                    );
+                }
+
+                if ($mention['entity'] !== $this->currentEntity) {
+                    $message->content['mentions'][] = $mention['entity'];
                 }
 
                 $shortname = "^" . substr($parts['host'], 0, strpos($parts['host'], "."));
@@ -255,10 +268,16 @@ class StreamRepository
                 $mentionNames = array("^" . $mention['entity'], "^" . $parts['host'], $shortname);
                 $message->content['text'] = str_replace(
                     $mentionNames,
-                    '<a class="user-details" href="' . $userLink .'">' . $shortname . '</a>',
+                    '<a class="label label-info user-details" href="' . $userLink .'">' . $profile['name'] . '</a>',
                     $message->content['text']
                 );
             }
+
+            $message->content['mentions'][] = $post['entity'];
+            $message->content['mentions'] = implode(" ", array_map(function ($mentionedEntity) {
+                return "^" . $mentionedEntity;
+            }, $message->content['mentions']));
+
         } else if ($message->type == 'follower') {
             $message->content['follower'] = $this->getPublicProfile($message->content['entity']);
         } else if ($message->type == 'repost') {

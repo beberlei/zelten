@@ -51,7 +51,11 @@ define(
         },
         showMoreContent: function(e) {
             $(e.currentTarget).hide();
-            this.$el.find('.hidden-content').slideDown();
+            var hiddenContent = this.$el.find('.hidden-content');
+            this.$el.find('.excerpt').slideUp('fast', function() {
+                hiddenContent.slideDown();
+            });
+
             return false;
         },
         clickReply: function(e) {
@@ -94,6 +98,8 @@ define(
             if (this.messages) {
                 this.messages.add(newMessage);
             }
+
+            return false;
         },
         clickShowConversations: function(e) {
             var link = $(e.currentTarget);
@@ -118,11 +124,11 @@ define(
             this.$el.find('.conversation-pane').removeClass('loading');
             this.$el.find('.conversations').html(data);
             var cnt = this.$el.find('.conversations .conversation-message').length;
-            this.$el.find('a.show-conversation').filter('.btn').append(' ' + cnt);
+            this.$el.find('a.show-conversation').filter('.btn').find('.total-replies').text(' ' + cnt);
             this.$el.find('a.show-conversation').attr('disabled', false).css('pointer-events', 'auto');
 
             this.$el.find('.conversations .timeago').timeago();
-            this.$el.find('.conversations').each(function() {
+            this.$el.find('.conversations .user-details').each(function() {
                 var view = new UserLinkView({
                     el: $(this)
                 });

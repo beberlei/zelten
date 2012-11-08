@@ -36,9 +36,12 @@ $app->register(new TentServiceProvider(), array(
     'tent.application.options' => array(
         'name'          => 'Zelten',
         'description'   => 'Bookmarks, Social Sync and other Tent related services',
-        'url'           => 'http://zelten.eu1.frbit.net/login',
+        'url'           => 'http://zelten.cc',
         'redirect_uris' => array(
+            'http://zelten.cc/oauth/accept',
             'http://zelten.eu1.frbit.net/oauth/accept',
+            'http://www.zelten.cc/oauth/accept',
+            // for local development
             'http://zelten/oauth/accept',
             'http://zelten/index_dev.php/oauth/accept',
         ),

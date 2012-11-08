@@ -82,31 +82,70 @@ class ProfileRepository
     }
 
     /**
+     * Get or create the profile id for an entity url.
+     *
+     * @param string $entityUrl
+     * @return int
+     */
+    private function getProfileId($entityUrl)
+    {
+        $sql = 'SELECT id FROM profiles WHERE entity = ?';
+        $row = $this->conn->fetchAssoc($sql, array($entityUrl));
+
+        if ($row) {
+            $id = isset($row['id']) ? $row['id'] : null;
+        } else {
+            $entity = array();
+            foreach ($this->supportedProfileTypes as $data) {
+                foreach ($data['fields'] as $columnName) {
+                    $entity[$columnName] = '';
+                }
+            }
+            $entity['entity'] = $entityUrl;
+
+            $this->conn->insert('profiles', $entity);
+            $id = $this->conn->lastInsertId();
+        }
+
+        return $id;
+    }
+
+    /**
      * Get the profile for a given entity.
      *
      * @return array
      */
     public function getProfile($entityUrl)
     {
-        $sql = 'SELECT * FROM profiles WHERE entity = ?';
-        $row = $this->conn->fetchAssoc($sql, array($entityUrl));
-
-        if ($row && strtotime($row['updated'])-3600 < time()) {
-            return $this->parseDatabaseProfile($row);
-        }
-
-        $id = isset($row['id']) ? $row['id'] : null;
-
+        $this->conn->beginTransaction();
         try {
-            $userClient = $this->tentClient->getUserClient($entityUrl, false);
-            $data       = $userClient->getProfile();
-        } catch(GuzzleException $e) {
-            $data = array();
-        } catch(EntityNotFoundException $e) {
-            $data = array();
+            $sql = 'SELECT * FROM profiles WHERE entity = ?';
+            $row = $this->conn->fetchAssoc($sql, array($entityUrl));
+
+            if ($row && strtotime($row['updated'])-3600 < time()) {
+                $profile = $this->parseDatabaseProfile($row);
+            } else {
+                $id = isset($row['id']) ? $row['id'] : null;
+
+                try {
+                    $userClient = $this->tentClient->getUserClient($entityUrl, false);
+                    $data       = $userClient->getProfile();
+                } catch(GuzzleException $e) {
+                    $data = array();
+                } catch(EntityNotFoundException $e) {
+                    $data = array();
+                }
+
+                $profile = $this->parseTentProfile($entityUrl, $data, $id);
+            }
+
+            $this->conn->commit();
+        } catch(\Exception $e) {
+            $this->conn->rollBack();
+            throw $e;
         }
 
-        return $this->parseTentProfile($entityUrl, $data, $id);
+        return $profile;
     }
 
     private function fixUri($entityUri)
@@ -279,33 +318,37 @@ class ProfileRepository
         $stmt = $this->conn->prepare($sql);
         $params = array('limit' => 50);
 
-        $seenBefore = array();
+        $firstId = null;
+        $persons = array();
         do {
             try {
-                $persons = $userClient->$method($params);
+                $result = $userClient->$method($params);
+                $lastPerson = end($result);
+                $params['before_id'] = $lastPerson['id'];
+
+                foreach ($result as $person) {
+                    try {
+                        $person['profile_id'] = $this->getProfileId($person['entity']);
+                        $persons[]            = $person;
+                    } catch(GuzzleException $e) {
+                    }
+                }
             } catch(GuzzleException $e) {
-                $persons = array();
+                break;
             }
+        } while(count($result) > 0);
 
-            foreach ($persons as $person) {
-                $personProfile    = $this->getProfile($person['entity']);
+        $unique = array();
 
-                if (isset($personProfile['id']) && isset($seenBefore[$personProfile['id']])) {
-                    return;
-                }
+        foreach ($persons as $person) {
+            $stmt->bindValue(1, $profileId);
+            $stmt->bindValue(2, $person['profile_id']);
+            $stmt->bindValue(3, $person['id']);
+            $stmt->execute();
+            $unique[$person['id']] = true;
+        }
 
-                if (isset($personProfile['id'])) {
-                    $params['before_id'] = $person['id'];
-                    $seenBefore[$personProfile['id']] = true;
-
-                    $stmt->bindValue(1, $profileId);
-                    $stmt->bindValue(2, $personProfile['id']);
-                    $stmt->bindValue(3, $person['id']);
-                    $stmt->execute();
-                }
-            }
-
-        } while(count($persons) == 50);
+        $stmt->closeCursor();
     }
 
     /**
@@ -372,6 +415,10 @@ class ProfileRepository
         $profileEntity  = $this->getProfile($entity);
         $followerEntity = $this->getProfile($followEntity);
 
+        if ( ! isset($profileEntity['id']) || ! isset($followerEntity['id'])) {
+            return false;
+        }
+
         $sql = "SELECT count(*) FROM followings WHERE profile_id = ? AND following_id = ?";
 
         $isFollowing = $this->conn->fetchColumn($sql, array($profileEntity['id'], $followerEntity['id'])) > 0;
@@ -380,7 +427,7 @@ class ProfileRepository
 
     public function updateFollowing($entityUrl, $tentId, $followEntity, $action)
     {
-        $profileEntity  = $this->getProfile($entity);
+        $profileEntity  = $this->getProfile($entityUrl);
         $followerEntity = $this->getProfile($followEntity);
 
         return $this->updateRelationship('followings', 'following_id', $profileEntity['id'], $followerEntity['id'], $tentId, $action);

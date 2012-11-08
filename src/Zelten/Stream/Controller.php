@@ -112,7 +112,7 @@ class Controller extends BaseController
     {
         $entityUrl = $this->getCurrentEntity();
 
-        $text        = substr(strip_tags($request->request->get('message')), 0, 256);
+        $text        = $request->request->get('message');
         $mention     = array();
         $permissions = $request->request->get('permissions', array());
 

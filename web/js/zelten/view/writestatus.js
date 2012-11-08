@@ -1,4 +1,4 @@
-define(["backbone", "zelten/model/message", "autoresize", "select2"], function(Backbone, Message) {
+define(["backbone", "zelten/model/message", "zelten/view/modaldialog", "autosize", "select2"], function(Backbone, Message, ModalConfirmDialogView) {
 
     var writeStatusView = Backbone.View.extend({
         events: {
@@ -13,10 +13,7 @@ define(["backbone", "zelten/model/message", "autoresize", "select2"], function(B
             this.hasPermissions = this.$el.find('.complete-permissions').length > 0;
         },
         render: function() {
-            this.$el.find('textarea').autoResize({
-                extraSpace: 0,
-                animate: {duration: 50, complete: function() {}}
-            });
+            this.$el.find('textarea').autosize({});
 
             this.actions    = this.$el.find(".actions");
             this.messageBox = this.$el.find('.message');
@@ -31,8 +28,6 @@ define(["backbone", "zelten/model/message", "autoresize", "select2"], function(B
         },
         cancelPosting: function() {
             var actions = this.$el.find(".actions");
-            this.$el.find('.message').data('AutoResizer').config.extraSpace = 0;
-            this.$el.find('.message').css('height', 30);
             actions.slideUp();
         },
         writeMessage: function(e) {
@@ -40,8 +35,27 @@ define(["backbone", "zelten/model/message", "autoresize", "select2"], function(B
             var msg = form.find('.message').val();
 
             if (typeof(msg) == 'undefined' || msg.length == 0) {
+                form.find('.message').addClass('error');
                 return false;
             }
+
+            if (msg.length > 256) {
+                var modal = new ModalConfirmDialogView({
+                    params: {
+                        title: 'Publish this Post as Essay?',
+                        post: 'The text of this status message is longer than 256 chars. Do you want to post the status as an essay instead?',
+                        label: 'Yes, publish!'
+                    },
+                    success: _.bind(this.sendMessage, this, form)
+                });
+                modal.render();
+                return false;
+            }
+
+            this.sendMessage(form);
+            return false;
+        },
+        sendMessage: function(form) {
 
             form.find('.stream-message-add-btn').attr('disabled', true);
 
@@ -82,9 +96,6 @@ define(["backbone", "zelten/model/message", "autoresize", "select2"], function(B
                     this.$el.find('.complete-permissions').select2('data', {id: 'public', text: 'Everybody'});
                 }
 
-                this.messageBox.css('height', 60);
-                this.messageBox.data('AutoResizer').config.extraSpace = 50;
-
                 if (this.mentions.length > 0) {
                     this.messageBox.val(this.mentions + ' ');
                 }
@@ -98,3 +109,4 @@ define(["backbone", "zelten/model/message", "autoresize", "select2"], function(B
 
     return writeStatusView;
 });
+

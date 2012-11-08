@@ -1,5 +1,4 @@
-
-<strong>{{ title }} <span class="total">{{ users.total }}</span></strong> (<a href="{{ path('user_followers', {'entity': profile.entity}) }}">View All</a>)
+<strong>{{ title }} <span class="total">{{ users.total }}</span></strong> (<a href="{{ path(route, {'entity': profile.entity}) }}">View All</a>)
 
 <ul class="people-list" data-url="{{ path(route, {'entity': profile.entity}) }}">
     {% for user in users.list %}
