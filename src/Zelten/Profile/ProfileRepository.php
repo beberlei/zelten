@@ -174,7 +174,7 @@ class ProfileRepository
     private function parseTentProfile($entity, $data, $id = false)
     {
         $profile = array('name' => $entity, 'entity' => $this->fixUri($entity), 'uri' => $entity);
-        $row     = array('updated' => date('Y-m-d H:i:s'));
+        $row     = array('name' => $entity, 'updated' => date('Y-m-d H:i:s'));
 
         foreach ($this->supportedProfileTypes as $profileType => $profileData) {
             $name = $profileData['name'];
