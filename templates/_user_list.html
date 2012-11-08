@@ -4,7 +4,7 @@
     {% for user in users.list %}
     <li class="user">
         <a class="user-details" href="{{ path('stream_user', {'entity': user.entity}) }}">
-            <img class="img-polaroid" height="30" width="30" src="{{ path('user_avatar', {'entity': user.entity}) }}" />
+            <img class="img-polaroid" height="30" width="30" src="{{ path('user_avatar', {'entity': profile.entity}) }}" />
         {{ user.name }}
         </a>
     </li>
