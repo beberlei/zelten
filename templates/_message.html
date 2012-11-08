@@ -31,7 +31,7 @@
                     <div class="row-fluid">
                         <div class="span6">
                             <strong>
-                                <a class="user-details" href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}">{% if message.entity.name %}{{ message.entity.name }}{% else %}{{ message.entity.uri }}{% endif %}</a>
+                                <a class="user-details" href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}">{% if message.entity.name %}{{ message.entity.name }}{% else %}{{ message.entity.entity }}{% endif %}</a>
                             </strong>
                         </div>
                         <div class="span6">
