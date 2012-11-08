@@ -16,7 +16,7 @@ class Message
 
     public function getEntityShortname()
     {
-        return str_replace(array('https://', 'http://'), array('https-', 'http-'), $this->entity['entity']);
+        return $this->entity['entity'];
     }
 
     public function isLimited()
