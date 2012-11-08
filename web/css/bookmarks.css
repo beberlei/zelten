@@ -227,6 +227,9 @@ form.stream-message-add-replyto {
 .popover-user-details {
     width: 400px;
 }
+.popover .arrow {
+    top: 25px !important;
+}
 .notification-count {
     position: relative;
     z-index: 999;
