@@ -7,12 +7,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:beberlei/TentPHP.git",
-                "reference": "9a345155462c11d76d87a1534dd156f5c718a45b"
+                "reference": "d211b4e4e70eb7176091fdc4243789cbb16de806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/beberlei/TentPHP/archive/9a345155462c11d76d87a1534dd156f5c718a45b.zip",
-                "reference": "9a345155462c11d76d87a1534dd156f5c718a45b",
+                "url": "https://github.com/beberlei/TentPHP/archive/d211b4e4e70eb7176091fdc4243789cbb16de806.zip",
+                "reference": "d211b4e4e70eb7176091fdc4243789cbb16de806",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,7 @@
             "suggest": {
                 "doctrine/dbal": "*"
             },
-            "time": "1352323196",
+            "time": "1352397963",
             "type": "library",
             "installation-source": "source",
             "autoload": {
