@@ -14,7 +14,7 @@
     </div>
     <div class="span3">
         {% if profile.basic.avatar %}
-        <img src="{{ path('user_avatar', {'entity': profile.entity}) }}"
+        <img src="{{ profile.basic.avatar }}"
             class="img-polaroid"
             height="{% if not app.request.isXmlHttpRequest() %}1{% endif %}75"
             width="{% if not app.request.isXmlHttpRequest() %}1{% endif %}75" />
