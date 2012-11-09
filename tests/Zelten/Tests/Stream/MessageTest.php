@@ -37,6 +37,10 @@ class MessageTest extends TestCase
             array(
                 "See this thread (https://github.com/beberlei/zelten/issues/106).",
                 'See this thread (<a href="https://github.com/beberlei/zelten/issues/106">github.com/beberlei/zelten/issues/106</a>).'
+            ),
+            array(
+                'Has there already been some talk about a tent:// schema? Thinking about what should happen if you get a new mention and Tentia shows it in Notification Center, if you click on it it should show it in conversation view. Perhaps I will use tentia:// for it.',
+                'Has there already been some talk about a tent:// schema? Thinking about what should happen if you get a new mention and Tentia shows it in Notification Center, if you click on it it should show it in conversation view. Perhaps I will use tentia:// for it.'
             )
         );
     }

@@ -20,7 +20,7 @@
             width="{% if not app.request.isXmlHttpRequest() %}1{% endif %}75" />
         {% endif %}
 
-        {% if not you and app.session.get('entityUrl') %}
+        {% if not you and app.session.get('entity_url') %}
         <p align="center" style="padding-top: 10px">
             <form class="follow" method="post" action="{{ path('profile_follow') }}">
                 <input type="hidden" name="entity" value="{{ profile.entity }}" />

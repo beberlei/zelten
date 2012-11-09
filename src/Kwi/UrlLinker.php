@@ -87,6 +87,14 @@ class UrlLinker
                 continue;
             }
 
+            $urlParts = parse_url($url);
+
+            if ($urlParts === false) {
+                $html    .= htmlspecialchars($url);
+                $position = $urlPosition + strlen($url);
+                continue;
+            }
+
             $urlParts = array_merge(array(
                 'scheme' => '',
                 'username' => '',
@@ -96,7 +104,7 @@ class UrlLinker
                 'query' => '',
                 'fragment' => '',
                 'host' => '',
-                ), parse_url($url));
+                ), $urlParts);
 
             $scheme      = $urlParts['scheme'];
             $username    = $urlParts['username'];

@@ -112,7 +112,7 @@
                     </div>
                     <div class="span4">
                         <div class="btn-group pull-right">
-                            {% if app.session.get('entityUrl') %}
+                            {% if app.session.get('entity_url') %}
                                 <a href="{{ path('post_favorite', {'entity': message.entity.uri|url_encode, 'post': message.id}) }}" class="btn show-tooltip favorite"
                                     {% if message_is_favorite(message) %}
                                     data-original-title="Favorited" data-is-favorite="1"><i class="icon-star"></i></a>
