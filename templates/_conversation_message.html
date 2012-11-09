@@ -1,11 +1,11 @@
 <div class="row-fluid conversation-message">
     <div class="span1">
-        <img src="{% if message.entity.basic.avatar %}{{ message.entity.basic.avatar }}{% else %}/zelten.png{% endif %}" width="30" height="30" class="img-polaroid" />
+        <a href="{{ path('stream_user', {'entity': message.entity.uri|url_encode}) }}" class="user-details"><img src="{% if message.entity.basic.avatar %}{{ message.entity.basic.avatar }}{% else %}/zelten.png{% endif %}" width="30" height="30" class="img-polaroid" /></a>
     </div>
     <div class="span11">
         <header>
-            <a class="user-details" href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}">{{ message.entity.name }}</a>
-            -  <a class="timeago" title="{{ message.published|date('c') }}" href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}">{{ message.published|date('H:i') }}</a>
+            <a class="user-details" href="{{ path('stream_user', {'entity': message.entity.uri|url_encode}) }}">{{ message.entity.name }}</a>
+            -  <a class="timeago" title="{{ message.published|date('c') }}" href="{{ path('post_conversation', {'id': message.id, 'entity': message.entity.uri|url_encode}) }}">{{ message.published|date('H:i') }}</a>
         </header>
         {% if message.type == "status" %}
         <p>{{ message.content.text|raw }}</p>

@@ -32,6 +32,12 @@ class Controller extends BaseController
                     ->bind('stream')
                     ->before(array($this, 'isAuthenticated'));
 
+        $controllers->get('/u/{entity}', array($this, 'profileAction'))
+                    ->bind('stream_user');
+
+        $controllers->get('/u/{entity}/stream', array($this, 'userStreamAction'))
+                    ->bind('stream_user2');
+
         $controllers->post('/', array($this, 'postAction'))
                     ->bind('stream_write')
                     ->before(array($this, 'isAuthenticated'));
@@ -54,9 +60,6 @@ class Controller extends BaseController
         $controllers->get('/u/0', array($this, 'myProfileAction'))
                     ->bind('my_stream')
                     ->before(array($this, 'isAuthenticated'));
-
-        $controllers->get('/u/{entity}', array($this, 'profileAction'))
-                    ->bind('stream_user');
 
         return $controllers;
     }
@@ -151,7 +154,7 @@ class Controller extends BaseController
 
         return $app['twig']->render('user_profile.html', array(
             'profile' => $app['zelten.stream']->getFullProfile($userEntity),
-            'you'     => ($this->hasCurrentEntity() && $userEntity === $this->getCurrentEntity())
+            'you'     => ($userEntity === $this->getCurrentEntity())
         ));
     }
 
@@ -196,6 +199,15 @@ class Controller extends BaseController
         $messages  = $this->getMessages($entityUrl, $request->query->get('criteria', array()), $app);
 
         return $app['twig']->render('stream.html', array('messages' => $messages, 'post_add' => true));
+    }
+
+    public function userStreamAction(Request $request, Application $app, $entity)
+    {
+        syslog(LOG_INFO, "Stream: " . $entity);
+        $entity = $this->urlize($entity);
+        $messages  = $this->getMessages($entity, $request->query->get('criteria', array()), $app);
+
+        return $app['twig']->render('stream.html', array('messages' => $messages, 'post_add' => false));
     }
 
     private function getMessages($entityUrl, $criteria, Application $app)

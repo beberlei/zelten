@@ -32,15 +32,12 @@ abstract class BaseController implements ControllerProviderInterface
 
     protected function getCurrentEntity()
     {
-        if (!$this->entityUrl) {
-            throw new AccessDeniedHttpException();
-        }
         return $this->entityUrl;
     }
 
     protected function urlize($entity)
     {
-        return str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
+        return urldecode(str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity));
     }
 }
 

@@ -55,12 +55,10 @@ class Controller extends BaseController
                     ->before(array($this, 'isAuthenticated'));
 
         $controllers->get('/{entity}/followers', array($this, 'followersAction'))
-                    ->bind('user_followers')
-                    ->before(array($this, 'isAuthenticated'));
+                    ->bind('user_followers');
 
         $controllers->get('/{entity}/following', array($this, 'followingAction'))
-                    ->bind('user_following')
-                    ->before(array($this, 'isAuthenticated'));
+                    ->bind('user_following');
 
         return $controllers;
     }

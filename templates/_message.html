@@ -3,12 +3,12 @@
     {% if message.content.mentions is defined %}data-mentions="{{ message.content.mentions }}"{% endif %}>
     {% if message.type == "follower" %}
     <div class="span1 hidden-phone">
-        <a class="user-details" href="{{ path('stream_user', {'entity': message.content.follower.entity}) }}"><img src="{% if message.content.follower.basic.avatar %}{{ message.content.follower.basic.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>
+        <a class="user-details" href="{{ path('stream_user', {'entity': message.content.follower.uri|url_encode}) }}"><img src="{% if message.content.follower.basic.avatar %}{{ message.content.follower.basic.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>
     </div>
     <div class="span11">
         <div class="box">
             <div class="box-content">
-                <a href="{{ path('stream_user', {'entity': message.content.follower.entity}) }}" class="user-details">{{ message.content.follower.name }}</a> now follows you!
+                <a href="{{ path('stream_user', {'entity': message.content.follower.uri|url_encode}) }}" class="user-details">{{ message.content.follower.name }}</a> now follows you!
             </div>
             <div class="box-footer">
                 <div class="row-fluid message-stats">
@@ -22,7 +22,7 @@
     </div>
     {% else %}
     <div class="span1 hidden-phone">
-        <a class="user-details" href="{{ path('stream_user', {'entity': message.getEntityShortname()}) }}"><img src="{% if message.entity.basic.avatar %}{{ message.entity.basic.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>
+        <a class="user-details" href="{{ path('stream_user', {'entity': message.entity.uri|url_encode}) }}"><img src="{% if message.entity.basic.avatar %}{{ message.entity.basic.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>
     </div>
     <div class="span11">
         <div class="box">
@@ -31,13 +31,13 @@
                     <div class="row-fluid">
                         <div class="span6">
                             <strong>
-                                <a class="user-details" href="{{ path('stream_user', {'entity': message.entity.entity}) }}">{% if message.entity.name %}{{ message.entity.name }}{% else %}{{ message.entity.uri }}{% endif %}</a>
+                                <a class="user-details" href="{{ path('stream_user', {'entity': message.entity.uri|url_encode}) }}">{% if message.entity.name %}{{ message.entity.name }}{% else %}{{ message.entity.uri }}{% endif %}</a>
                             </strong>
                         </div>
                         <div class="span6">
 
                             {% if message.content.reply is defined %}
-                            <p class="pull-right"><a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-conversation">In reply to {{ message.content.reply.entity.name }}</a></p>
+                            <p class="pull-right"><a href="{{ path('post_conversation', {'id': message.id, 'entity': message.entity.uri|url_encode}) }}" class="show-conversation">In reply to {{ message.content.reply.entity.name }}</a></p>
                             {% endif %}
                         </div>
                     </div>
@@ -77,13 +77,13 @@
                 <div class="row-fluid">
                     <div class="span8 message-stats">
                         {% if message.type == 'status' %}
-                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Status Message"><i class="icon-envelope post-type"></i></a>
+                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.entity.uri|url_encode}) }}" class="show-tooltip" data-original-title="Status Message"><i class="icon-envelope post-type"></i></a>
                         {% elseif message.type == 'bookmark' %}
-                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Bookmark"><i class="icon-link post-type"></i></a>
+                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.entity.uri|url_encode}) }}" class="show-tooltip" data-original-title="Bookmark"><i class="icon-link post-type"></i></a>
                         {% elseif message.type == 'essay' %}
-                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Essay"><i class="icon-pencil post-type"></i></a>
+                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.entity.uri|url_encode}) }}" class="show-tooltip" data-original-title="Essay"><i class="icon-pencil post-type"></i></a>
                         {% elseif message.type == 'repost' %}
-                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="show-tooltip" data-original-title="Repost"><i class="icon-retweet post-type"></i></a>
+                        <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.entity.uri|url_encode}) }}" class="show-tooltip" data-original-title="Repost"><i class="icon-retweet post-type"></i></a>
                         {% endif %}
 
                         <abbr class="timeago" title="{{ message.published|date('c') }}">{{ message.published|date }}</abbr>
@@ -113,7 +113,7 @@
                     <div class="span4">
                         <div class="btn-group pull-right">
                             {% if app.session.get('entityUrl') %}
-                                <a href="{{ path('post_favorite', {'entity': message.getEntityShortname(), 'post': message.id}) }}" class="btn show-tooltip favorite"
+                                <a href="{{ path('post_favorite', {'entity': message.entity.uri|url_encode, 'post': message.id}) }}" class="btn show-tooltip favorite"
                                     {% if message_is_favorite(message) %}
                                     data-original-title="Favorited" data-is-favorite="1"><i class="icon-star"></i></a>
                                     {% else %}
@@ -121,8 +121,8 @@
                                 {% endif %}
 
                                 {% if message.type == "status" %}
-                                <a href="{{ path('repost', {'post': message.id, 'entity': message.getEntityShortname()}) }}" class="btn show-tooltip repost" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
-                                <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.getEntityShortname()}) }}" class="btn show-tooltip show-conversation" data-original-title="View Conversation"><i class="icon-comments-alt"></i> <span class="total-replies"></span></a>
+                                <a href="{{ path('repost', {'post': message.id, 'entity': message.entity.uri|url_encode}) }}" class="btn show-tooltip repost" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
+                                <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.entity.uri|url_encode}) }}" class="btn show-tooltip show-conversation" data-original-title="View Conversation"><i class="icon-comments-alt"></i> <span class="total-replies"></span></a>
                                 <a href="#" class="btn show-tooltip show-reply" data-original-title="Reply"><i class="icon-share-alt"></i></a>
                                 {% endif %}
                             {% endif %}
@@ -135,13 +135,13 @@
                     <div class="span12">
                         <form method="post" action="{{ path('stream_write') }}" class="stream-message-add-replyto">
                             <input type="hidden" name="type" value="comment" />
-                            <input type="hidden" name="mentioned_entity" value="{{ message.entity.entity }}" />
+                            <input type="hidden" name="mentioned_entity" value="{{ message.entity.uri }}" />
                             <input type="hidden" name="mentioned_post" value="{{ message.id }}" />
 
                             {% if message.isPublic() %}
                             <input type="hidden" name="permissions" value="public" />
                             {% else %}
-                            <input type="hidden" name="permissions" value="{{ message.entity.entity }}" />
+                            <input type="hidden" name="permissions" value="{{ message.entity.uri }}" />
                             {% endif %}
                             {% for entity in message.getVisibleEntities() %}
                             <input type="hidden" name="permissions" value="{{ entity }}" />

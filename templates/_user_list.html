@@ -1,9 +1,9 @@
-<strong>{{ title }} <span class="total">{{ users.total }}</span></strong> (<a href="{{ path(route, {'entity': profile.entity}) }}">View All</a>)
+<strong>{{ title }} <span class="total">{{ users.total }}</span></strong> (<a href="{{ path(route, {'entity': profile.uri|url_encode}) }}">View All</a>)
 
-<ul class="clearfix people-list" data-url="{{ path(route, {'entity': profile.entity}) }}">
+<ul class="clearfix people-list" data-url="{{ path(route, {'entity': profile.uri|url_encode}) }}">
     {% for user in users.list %}
     <li class="user">
-        <a class="user-details" href="{{ path('stream_user', {'entity': user.entity}) }}">
+        <a class="user-details" href="{{ path('stream_user', {'entity': user.uri|url_encode}) }}">
             <img class="img-polaroid" height="30" width="30" src="{% if user.basic.avatar %}{{ user.basic.avatar }}{% else%}/zelten.png{% endif %}" />
         {{ user.name }}
         </a>

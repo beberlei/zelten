@@ -9,8 +9,7 @@ define(
         var entity = $("#stream").data('entity');
 
         var app = new StreamView({
-            entity: entity,
-            url: Zelten.ApplicationOptions.base + '/stream/',
+            url: Zelten.ApplicationOptions.base + '/stream/u/' + entity + '/stream',
             el: $("#stream"),
             collection: new MessageCollection(),
             followers: followers,
