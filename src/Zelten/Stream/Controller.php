@@ -37,8 +37,7 @@ class Controller extends BaseController
                     ->before(array($this, 'isAuthenticated'));
 
         $controllers->get('/u/{entity}/{id}', array($this, 'conversationAction'))
-                    ->bind('post_conversation')
-                    ->before(array($this, 'isAuthenticated'));
+                    ->bind('post_conversation');
 
         $controllers->post('/u/{entity}/{post}/favorite', array($this, 'favoriteAction'))
                     ->bind('post_favorite')
@@ -57,17 +56,19 @@ class Controller extends BaseController
                     ->before(array($this, 'isAuthenticated'));
 
         $controllers->get('/u/{entity}', array($this, 'profileAction'))
-                    ->bind('stream_user')
-                    ->before(array($this, 'isAuthenticated'));
+                    ->bind('stream_user');
 
         return $controllers;
     }
 
     public function conversationAction(Request $request, Application $app, $entity, $id)
     {
-        $entityUrl = $this->getCurrentEntity();
-
         $mentionedEntity = $this->urlize($entity);
+        // use either logged in entity, or the fetched entity for the client.
+        $entityUrl = $this->hasCurrentEntity()
+            ? $this->getCurrentEntity()
+            : $mentionedEntity;
+
         $criteria = array(
             //'mentioned_entity' => $mentionedEntity,
             'mentioned_post'   => $id,
@@ -75,7 +76,7 @@ class Controller extends BaseController
         );
 
         $stream   = $app['zelten.stream'];
-        $comments = array_reverse($stream->getMessages($entityUrl, $criteria));
+        $comments = array_reverse($stream->getMessages($entityUrl ?: $mentionedEntity, $criteria));
         $post     = $stream->getPost($mentionedEntity, $id);
 
         $parent = null;
@@ -150,7 +151,7 @@ class Controller extends BaseController
 
         return $app['twig']->render('user_profile.html', array(
             'profile' => $app['zelten.stream']->getFullProfile($userEntity),
-            'you'     => ($userEntity === $this->getCurrentEntity())
+            'you'     => ($this->hasCurrentEntity() && $userEntity === $this->getCurrentEntity())
         ));
     }
 
