@@ -32,6 +32,10 @@ class Controller extends BaseController
                     ->bind('stream')
                     ->before(array($this, 'isAuthenticated'));
 
+        $controllers->get('/u/0', array($this, 'myProfileAction'))
+                    ->bind('my_stream')
+                    ->before(array($this, 'isAuthenticated'));
+
         $controllers->get('/u/{entity}', array($this, 'profileAction'))
                     ->bind('stream_user');
 
@@ -55,10 +59,6 @@ class Controller extends BaseController
 
         $controllers->post('/u/{entity}/{post}', array($this, 'repostAction'))
                     ->bind('repost')
-                    ->before(array($this, 'isAuthenticated'));
-
-        $controllers->get('/u/0', array($this, 'myProfileAction'))
-                    ->bind('my_stream')
                     ->before(array($this, 'isAuthenticated'));
 
         return $controllers;
