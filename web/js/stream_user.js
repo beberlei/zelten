@@ -1,6 +1,6 @@
 define(
-    ["zelten/view/stream", "zelten/collection/message", "zelten/collection/follower", "zelten/collection/following", "zelten/view/userlist", "zelten/view/notificationcount"],
-    function (StreamView, MessageCollection, FollowerCollection, FollowingCollection, UserListView, NotificationCountView) {
+    ["zelten/view/stream", "zelten/collection/message", "zelten/collection/follower", "zelten/collection/following", "zelten/view/userlist"],
+    function (StreamView, MessageCollection, FollowerCollection, FollowingCollection, UserListView) {
 
     $(document).ready(function() {
         var followers = new FollowerCollection();

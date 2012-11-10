@@ -1,1 +1,38 @@
-define(["backbone","zelten/view/user","clickover"],function(e,t){var n=e.View.extend({render:function(){this.$el.clickover({title:"User-Details",content:"&nbsp;",html:!0,width:400,placement:function(e,t){var n=$(t).offset(),r=$(window).width();return n.left/r*100>50?"left":"right"},template:'<div class="popover popover-user-details"><div class="arrow"></div><div class="popover-inner"><div class="popover-content loading"><p></p></div></div></div>'}).bind("shown",this.clickoverIsShown)},clickoverIsShown:function(e){var n=$(this);$.get($(e.currentTarget).attr("href"),function(e){e=$(e);var r=new t({el:e});n.data("clickover").tip().find(".popover-content").removeClass("loading").html(e)})}});return n})
+define(["backbone", "zelten/view/user", "clickover"], function(Backbone, UserView) {
+    var userLinkView = Backbone.View.extend({
+        render: function() {
+
+            this.$el.clickover({
+                title:'User-Details',
+                content: '&nbsp;',
+                html: true,
+                width: 400,
+                placement: function(a, link) {
+                    var pos = $(link).offset();
+                    var windowWith = $(window).width();
+
+                    return (((pos.left / windowWith) * 100) > 50) ? 'left' : 'right';
+                },
+                template: '<div class="popover popover-user-details"><div class="arrow"></div><div class="popover-inner"><div class="popover-content loading"><p></p></div></div></div>'
+            }).bind('shown', this.clickoverIsShown);
+        },
+        clickoverIsShown: function(e) {
+            var link = $(this);
+
+
+            $.get($(e.currentTarget).attr('href'), function(data) {
+                data = $(data);
+                var userView = new UserView({
+                    el: data
+                });
+
+                link.data('clickover')
+                    .tip()
+                    .find('.popover-content')
+                    .removeClass('loading').html(data);
+            });
+        }
+    });
+
+    return userLinkView;
+});

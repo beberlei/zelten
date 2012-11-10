@@ -1,1 +1,6 @@
-define(["backbone"],function(e){var t=e.Model.extend({});return t})
+define(["backbone"], function(Backbone) {
+
+    var message = Backbone.Model.extend({});
+
+    return message;
+});

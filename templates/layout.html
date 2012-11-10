@@ -27,6 +27,8 @@
         <script type="text/javascript">
             requirejs.config({
                 urlArgs: "v={{cachetoken}}",
+                deps: ["global"],
+                callback: function(global) {},
                 shim: {
                     'backbone': {
                         //These script dependencies should be loaded before loading
@@ -52,9 +54,14 @@
             <div class="container-fluid">
                 <a href="{{ path('homepage') }}" class="brand">Zelten</a>
                 {% if app.session.get('entity_url') %}
-                <div class="pull-right">
-                    <span class="help-inline"><strong>{{ app.session.get('entity_url') }}</strong></span>
-                    <a href="{{ path('logout') }}" class="btn"><i class="icon-signout"></i> Logout</a>
+                <div class="pull-right current-profile">
+                    <a id="notifications" class="btn" href="{{ path('stream_notifications') }}"><div class="icon-envelope"></div> <span class="count"></span></a>
+
+                    {% if current_entity().basic.avatar %}
+                    <img class="avatar img-polaroid" src="{{ current_entity().basic.avatar }}" width="50" height="50" />
+                    {% else %}
+                    <img class="avatar img-polaroid" src="/zelten.png" height="50" width="50" />
+                    {% endif %}
                 </div>
                 {% endif %}
             </div>
@@ -66,7 +73,6 @@
                     {% if app.session.get('entity_url') %}
                     <ul>
                         <li><a href="{{ path('stream') }}"><div class="icon-inbox"></div> Stream</a></li>
-                        <li><a class="notifications" href="{{ path('stream_notifications') }}"><div class="icon-envelope"></div> Notifications</a></li>
                         <li><a href="{{ path('my_stream') }}"><div class="icon-user"></div> Profile</a></li>
                         <li><a href="{{ path('bookmarks') }}"><div class="icon-link"></div> Bookmarks</a></li>
                         {#<li><div class="icon-camera-retro"></div> Photos</li>#}
@@ -121,6 +127,11 @@
         <a href="#" class="btn btn-primary action-success"><%- label %></a>
     </div>
 </div>
+</script>
+
+<script type="text/html" id="profile-dialog" data-name="{{ current_entity().name }}">
+    <a href="{{ path('my_stream') }}" class="btn btn-info"><div class="icon-user"></div> View Profile</a></li>
+    <a href="{{ path('logout') }}" class="btn"><i class="icon-signout"></i> Logout</a>
 </script>
 
     </body>

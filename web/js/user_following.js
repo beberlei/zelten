@@ -1,4 +1,4 @@
-define(["jquery", "backbone", "zelten/view/notificationcount", "zelten/view/userlink"], function($, Backbone, NotificationCountView, UserLinkView) {
+define(["jquery", "backbone", "zelten/view/userlink"], function($, Backbone, UserLinkView) {
 
     $(".user-details").each(function() {
         var userLink = new UserLinkView({
@@ -6,6 +6,5 @@ define(["jquery", "backbone", "zelten/view/notificationcount", "zelten/view/user
         });
         userLink.render();
     });
-
 });
 

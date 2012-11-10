@@ -1,6 +1,6 @@
 define(
-    ["zelten/view/stream", "zelten/collection/message", "zelten/collection/follower", "zelten/collection/following", "zelten/view/notificationcount"],
-    function (StreamView, MessageCollection, FollowerCollection, FollowingCollection, NotificationCountView) {
+    ["zelten/view/stream", "zelten/collection/message", "zelten/collection/follower", "zelten/collection/following"],
+    function (StreamView, MessageCollection, FollowerCollection, FollowingCollection) {
 
     $(document).ready(function() {
         var followers = new FollowerCollection();
@@ -15,13 +15,5 @@ define(
             following: following
         });
         app.render();
-
-        $(".notifications").each(function() {
-            var view = new NotificationCountView({
-                url: Zelten.ApplicationOptions.base + '/stream/notifications/count',
-                el: $(this)
-            });
-            view.render();
-        });
     });
 });

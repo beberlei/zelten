@@ -1,1 +1,29 @@
-define(["backbone"],function(e){var t=e.View.extend({initialize:function(e){this.countUrl=e.url,this.$el.append('<span class="notification-count badge badge-info hidden-content">0</span>')},checkNewNotification:function(){$.ajax({url:this.countUrl,success:_.bind(this.checkNewNotificationSuccess,this)})},checkNewNotificationSuccess:function(e){if(e.count==0)return;this.$el.find(".notification-count").text(e.count).show()},render:function(){setInterval(_.bind(this.checkNewNotification,this),3e4),this.checkNewNotification()}});return t})
+/**
+ * View that Regularly checks for notifications and updates
+ * a notification count badge on the annotated view element.
+ */
+define(["backbone"], function(Backbone) {
+
+    var NotificationCountView = Backbone.View.extend({
+        initialize: function(args) {
+            this.countUrl = args.url;
+        },
+        checkNewNotification: function() {
+            $.ajax({
+                url: this.countUrl,
+                success: _.bind(this.checkNewNotificationSuccess, this)
+            });
+        },
+        checkNewNotificationSuccess: function(data) {
+            this.$el.find('.count').text(data.count);
+        },
+        render: function() {
+            this.$el.find('.count').text("0");
+            setInterval(_.bind(this.checkNewNotification, this), 30000);
+            this.checkNewNotification();
+        }
+    });
+
+    return NotificationCountView;
+});
+

@@ -152,12 +152,18 @@ footer {
 
 div#header {
     background-color: #00C8FA;
-    height: 60px;
+    height: 70px;
     color: #ffffff;
     font-family: 'Overlock', cursive;
 }
 div#header .help-inline {
     color: #ffffff;
+}
+div#header .current-profile {
+    padding-top: 5px;
+}
+.popover {
+    width: 300px;
 }
 div#header .navbar-inner {
     background-color: #00C8FA;
