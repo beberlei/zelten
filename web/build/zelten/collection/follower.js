@@ -1,6 +1,1 @@
-define(["zelten/collection/user"], function(UserCollection) {
-    var followerCollection = UserCollection.extend({
-        path: '/profile/followers'
-    });
-    return followerCollection;
-});
+define(["zelten/collection/user"],function(e){var t=e.extend({path:"/profile/followers"});return t})

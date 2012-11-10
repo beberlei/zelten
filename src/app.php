@@ -13,12 +13,11 @@ use TentPHP\Silex\TentServiceProvider;
 
 $cacheTokenFile = sys_get_temp_dir() . "/cache.token";
 if (file_exists($cacheTokenFile)) {
-    $cacheToken = file_get_contents($cacheTokenFile);
-    $cacheDir = sys_get_temp_dir() . "/" . $cacheToken;
+    $cacheToken = trim(file_get_contents($cacheTokenFile));
 } else {
     $cacheToken = filemtime(__DIR__ . "/../composer.json");
-    $cacheDir = __DIR__ . "/../cache";
 }
+$cacheDir = __DIR__ . "/../cache";
 
 $app = new Application();
 $app->register(new DoctrineServiceProvider(), array(

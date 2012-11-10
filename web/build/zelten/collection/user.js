@@ -1,14 +1,1 @@
-define(["zelten/model/user", "zelten/collection"], function(User, Collection) {
-
-    var userCollection = Collection.extend({
-        model: User,
-        url: function() {
-            return this.getBasePath() + this.path;
-        },
-        parse: function(resp, jxhr) {
-            return resp.list;
-        }
-    });
-
-    return userCollection;
-});
+define(["zelten/model/user","zelten/collection"],function(e,t){var n=t.extend({model:e,url:function(){return this.getBasePath()+this.path},parse:function(e,t){return e.list}});return n})
