@@ -244,7 +244,7 @@ class StreamRepository
             $message->content['mentions']  = array();
 
             foreach ($message->mentions as $mention) {
-                $parts = parse_url($mention['entity']);
+                $parts = @parse_url($mention['entity']);
 
                 if (!isset($parts['host'])) {
                     continue;
