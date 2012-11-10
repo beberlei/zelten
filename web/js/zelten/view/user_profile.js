@@ -1,4 +1,4 @@
-define(["jquery", "backbone"], function() {
+define(["jquery", "backbone", "bootstrap"], function() {
     var UserProfile = Backbone.View.extend({
         render: function() {
             this.$el.find(".avatar").popover({
