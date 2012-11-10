@@ -129,7 +129,7 @@ class ProfileRepository
             $sql = 'SELECT * FROM profiles WHERE entity = ?';
             $row = $this->conn->fetchAssoc($sql, array($entityUrl));
 
-            if ($row && strtotime($row['updated'])-3600 < time()) {
+            if ($row && strtotime($row['updated'])+3600 > time()) {
                 $profile = $this->parseDatabaseProfile($row);
             } else {
                 $id = isset($row['id']) ? $row['id'] : null;
@@ -182,7 +182,7 @@ class ProfileRepository
     private function parseTentProfile($entity, $data, $id = false)
     {
         $profile = array('name' => $entity, 'entity' => $this->fixUri($entity), 'uri' => $entity);
-        $row     = array('name' => $entity, 'updated' => date('Y-m-d H:i:s'));
+        $row     = array('updated' => date('Y-m-d H:i:s'));
 
         foreach ($this->supportedProfileTypes as $profileType => $profileData) {
             $name = $profileData['name'];
