@@ -177,7 +177,7 @@ class ProfileRepository
             }
         }
 
-        $profile['name'] = $profile['basic']['name'];
+        $profile['name'] = $profile['basic']['name'] ?: $row['entity'];
 
         return $profile;
     }
