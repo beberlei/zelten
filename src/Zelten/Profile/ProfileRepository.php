@@ -128,6 +128,13 @@ class ProfileRepository
             return $this->profiles[$entityUrl];
         }
 
+        $key = "profile_" . $entityUrl;
+        $data = apc_fetch($key);
+
+        if ($data) {
+            return $data;
+        }
+
         $this->conn->beginTransaction();
         try {
             $sql = 'SELECT * FROM profiles WHERE entity = ?';
@@ -151,6 +158,7 @@ class ProfileRepository
             }
 
             $this->profiles[$entityUrl] = $profile;
+            apc_store($key, $profile);
 
             $this->conn->commit();
         } catch(\Exception $e) {
