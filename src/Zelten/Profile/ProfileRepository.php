@@ -124,8 +124,8 @@ class ProfileRepository
      */
     public function getProfile($entityUrl)
     {
-        if (isset($this->profiles[$entity])) {
-            return $this->profiles[$entity];
+        if (isset($this->profiles[$entityUrl])) {
+            return $this->profiles[$entityUrl];
         }
 
         $this->conn->beginTransaction();
@@ -150,7 +150,7 @@ class ProfileRepository
                 $profile = $this->parseTentProfile($entityUrl, $data, $id);
             }
 
-            $this->profiles[$entity] = $profile;
+            $this->profiles[$entityUrl] = $profile;
 
             $this->conn->commit();
         } catch(\Exception $e) {
