@@ -69,7 +69,11 @@
                     {{ message.content.body|raw }}
                     {% endif %}
                 {% elseif message.type == 'repost' %}
+                    {% if message.content.original.type == 'status' %}
                     {% include "_conversation_message.html" with {"message": message.content.original} %}
+                    {% else %}
+                    {{ message.entity.name }} <a href="{{ path('post_conversation', {'entity': message.content.original.entity.uri|url_encode, 'id': message.content.original.id}) }}">reposted something by {{ message.content.original.entity.name }}</a>.
+                    {% endif %}
                 {% endif %}
                 </div>
             </div>
@@ -120,8 +124,10 @@
                                     data-original-title="Favorite" data-is-favorite="0"><i class="icon-star-empty"></i></a>
                                 {% endif %}
 
-                                {% if message.type == "status" %}
+                                {% if message.canBeReposted() %}
                                 <a href="{{ path('repost', {'post': message.id, 'entity': message.entity.uri|url_encode}) }}" class="btn show-tooltip repost" data-original-title="Repost this Message"><i class="icon-retweet"></i></a>
+                                {% endif %}
+                                {% if message.type == "status" %}
                                 <a href="{{ path('post_conversation', {'id': message.id, 'entity': message.entity.uri|url_encode}) }}" class="btn show-tooltip show-conversation" data-original-title="View Conversation"><i class="icon-comments-alt"></i> <span class="total-replies"></span></a>
                                 <a href="#" class="btn show-tooltip show-reply" data-original-title="Reply"><i class="icon-share-alt"></i></a>
                                 {% endif %}

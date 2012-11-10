@@ -19,6 +19,11 @@ class Message
         return $this->entity['entity'];
     }
 
+    public function canBeReposted()
+    {
+        return in_array($this->type, array('status', 'essay'));
+    }
+
     public function isLimited()
     {
         return !$this->isPublic() && (!empty($this->permissions['groups']) || !empty($this->permissions['entities']));
