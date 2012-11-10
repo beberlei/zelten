@@ -8,6 +8,7 @@ use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
+use Silex\Provider\MonologServiceProvider;
 use TentPHP\Silex\TentServiceProvider;
 
 $cacheTokenFile = sys_get_temp_dir() . "/cache.token";
@@ -55,6 +56,9 @@ $app->register(new TentServiceProvider(), array(
             'read_permissions' => 'Read Permissions',
         ),
     )
+));
+$app->register(new MonologServiceProvider(), array(
+    'monolog.logfile' => sys_get_temp_dir() . '/zelten.log',
 ));
 $app->register(new FormServiceProvider());
 $app->register(new SessionServiceProvider());

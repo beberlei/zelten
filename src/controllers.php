@@ -68,7 +68,7 @@ $app->error(function (\Exception $e, $code) use ($app) {
     }
 
 
-    error_log(sprintf('%s [%s:%d]: %s %s', get_class($e), $e->getFile(), $e->getLine(), $e->getMessage(), $e->getTraceAsString()));
+    $app['monolog']->addError(sprintf('%s [%s:%d]: %s %s', get_class($e), $e->getFile(), $e->getLine(), $e->getMessage(), $e->getTraceAsString()));
 
     $page = 404 == $code ? '404.html' : '500.html';
 
