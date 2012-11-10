@@ -75,6 +75,13 @@ class ProfileRepository
         ),
     );
 
+    /**
+     * Local cache of profiles per request.
+     *
+     * @param array
+     */
+    private $profiles = array();
+
     public function __construct(Connection $conn, Client $tentClient)
     {
         $this->conn       = $conn;
@@ -117,6 +124,10 @@ class ProfileRepository
      */
     public function getProfile($entityUrl)
     {
+        if (isset($this->profiles[$entity])) {
+            return $this->profiles[$entity];
+        }
+
         $this->conn->beginTransaction();
         try {
             $sql = 'SELECT * FROM profiles WHERE entity = ?';
@@ -138,6 +149,8 @@ class ProfileRepository
 
                 $profile = $this->parseTentProfile($entityUrl, $data, $id);
             }
+
+            $this->profiles[$entity] = $profile;
 
             $this->conn->commit();
         } catch(\Exception $e) {
