@@ -272,7 +272,7 @@ class ProfileRepository
                 if ($row && strtotime($row['updated'])+3600 > time()) {
                     $peoples[] = $this->parseDatabaseProfile($row);
                 } else {
-                    $peoples[] = $this->parseTentProfile($entityUrl, $row['id']);
+                    $peoples[] = $this->parseTentProfile($row['entity'], $row['id']);
                 }
             }
         }
