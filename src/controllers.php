@@ -10,8 +10,6 @@ $app->post('/hook', function(Request $request) use ($app) {
     $post      = json_decode($request->getContent(), true);
     $entityUrl = $post['entity'];
 
-    error_log("Hook: " .$entityUrl . " - " . $post['type'] . ' ' . date('Y-m-d H:i', $post['published_at']) . " " . $request->server->get('HTTP_HOST'));
-
     if ($request->query->get('hash') !== hash_hmac('sha256', $post['entity'], $app['appsecret'])) {
         return new Response('', 403);
     }
