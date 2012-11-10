@@ -128,12 +128,12 @@ class ProfileRepository
             return $this->profiles[$entityUrl];
         }
 
-        $key = "profile_" . $entityUrl;
+        /*$key = "profile_" . $entityUrl;
         $data = apc_fetch($key);
 
         if ($data) {
             return $data;
-        }
+        }*/
 
         $this->conn->beginTransaction();
         try {
@@ -148,7 +148,7 @@ class ProfileRepository
             }
 
             $this->profiles[$entityUrl] = $profile;
-            apc_store($key, $profile);
+            //apc_store($key, $profile);
 
             $this->conn->commit();
         } catch(\Exception $e) {
@@ -264,7 +264,7 @@ class ProfileRepository
             }
             $peoples = array_slice($peoples, 0, $limit);
         } else {
-            $sql = "SELECT * FROM followings f INNER JOIN profiles p ON p.id = f.following_id WHERE profile_id = ? LIMIT " . intval($limit);
+            $sql = "SELECT * FROM $table f INNER JOIN profiles p ON p.id = f.following_id WHERE profile_id = ? LIMIT " . intval($limit);
             $rows = $this->conn->fetchAll($sql, array($profile['id']));
 
             $peoples = array();
