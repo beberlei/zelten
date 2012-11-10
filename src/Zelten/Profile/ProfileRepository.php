@@ -143,18 +143,8 @@ class ProfileRepository
             if ($row && strtotime($row['updated'])+3600 > time()) {
                 $profile = $this->parseDatabaseProfile($row);
             } else {
-                $id = isset($row['id']) ? $row['id'] : null;
-
-                try {
-                    $userClient = $this->tentClient->getUserClient($entityUrl, false);
-                    $data       = $userClient->getProfile();
-                } catch(GuzzleException $e) {
-                    $data = array();
-                } catch(EntityNotFoundException $e) {
-                    $data = array();
-                }
-
-                $profile = $this->parseTentProfile($entityUrl, $data, $id);
+                $id      = isset($row['id']) ? $row['id'] : null;
+                $profile = $this->parseTentProfile($entityUrl, $id);
             }
 
             $this->profiles[$entityUrl] = $profile;
@@ -192,8 +182,17 @@ class ProfileRepository
         return $profile;
     }
 
-    private function parseTentProfile($entity, $data, $id = false)
+    private function parseTentProfile($entity, $id = false)
     {
+        try {
+            $userClient = $this->tentClient->getUserClient($entityUrl, false);
+            $data       = $userClient->getProfile();
+        } catch(GuzzleException $e) {
+            $data = array();
+        } catch(EntityNotFoundException $e) {
+            $data = array();
+        }
+
         $profile = array('name' => $entity, 'entity' => $this->fixUri($entity), 'uri' => $entity);
         $row     = array('updated' => date('Y-m-d H:i:s'));
 
@@ -270,7 +269,11 @@ class ProfileRepository
 
             $peoples = array();
             foreach ($rows as $row) {
-                $peoples[] = $this->parseDatabaseProfile($row);
+                if ($row && strtotime($row['updated'])+3600 > time()) {
+                    $peoples[] = $this->parseDatabaseProfile($row);
+                } else {
+                    $peoples[] = $this->parseTentProfile($entityUrl, $row['id']);
+                }
             }
         }
 
