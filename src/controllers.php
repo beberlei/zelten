@@ -67,7 +67,8 @@ $app->error(function (\Exception $e, $code) use ($app) {
         return;
     }
 
-    error_log(get_class($e) . ": " . $e->getMessage() . " " . $e->getTraceAsString());
+
+    error_log(sprintf('%s [%s:%d]: %s %s', get_class($e), $e->getFile(), $e->getLine(), $e->getMessage(), $e->getTraceAsString()));
 
     $page = 404 == $code ? '404.html' : '500.html';
 
