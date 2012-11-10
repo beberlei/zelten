@@ -81,9 +81,12 @@ class Controller implements ControllerProviderInterface
                 return new RedirectResponse($app['url_generator']->generate('homepage', array('error' => 'invaild_tent_entity')));
             }
 
-            $appData = $app['tent.client']->getApplication($entityUrl);
-            if (!in_array($callbackUrl, $appData['redirect_uris'])) {
-                $app['tent.client']->updateApplication($entityUrl);
+            try {
+                $appData = $app['tent.client']->getApplication($entityUrl);
+                if (!in_array($callbackUrl, $appData['redirect_uris'])) {
+                    $app['tent.client']->updateApplication($entityUrl);
+                }
+            } catch(\Exception $e) {
             }
 
             $sql = "SELECT * FROM users WHERE entity = ?";
