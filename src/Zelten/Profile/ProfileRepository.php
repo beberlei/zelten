@@ -185,7 +185,7 @@ class ProfileRepository
     private function parseTentProfile($entity, $id = false)
     {
         try {
-            $userClient = $this->tentClient->getUserClient($entityUrl, false);
+            $userClient = $this->tentClient->getUserClient($entity, false);
             $data       = $userClient->getProfile();
         } catch(GuzzleException $e) {
             $data = array();
