@@ -87,7 +87,7 @@ class UrlLinker
                 continue;
             }
 
-            $urlParts = parse_url($url);
+            $urlParts = @parse_url($url);
 
             if ($urlParts === false) {
                 $html    .= htmlspecialchars($url);
