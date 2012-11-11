@@ -59,7 +59,7 @@ class ProfileRepository
         'https://tent.io/types/info/core/v0.1.0' => array(
             'name'   => 'core',
             'fields' => array(
-                'entity' => 'entity',
+                'entity' => 'normalized_entity',
             ),
         ),
         'https://tent.io/types/info/basic/v0.1.0'  => array(
@@ -217,10 +217,6 @@ class ProfileRepository
 
         if (!empty($profile['basic']['name'])) {
             $profile['name'] = $profile['basic']['name'];
-        }
-
-        if (!empty($profile['core']['entity'])) {
-            $profile['entity'] = $this->fixUri($profile['core']['entity']);
         }
 
         if (empty($row['entity'])) {

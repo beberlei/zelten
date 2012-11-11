@@ -39,6 +39,7 @@ $console
         $profilesTable = $toSchema->createTable('profiles');
         $profilesTable->addColumn('id', 'integer', array('autoincrement' => true));
         $profilesTable->addColumn('entity', 'string');
+        $profilesTable->addColumn('normalized_entity', 'string');
         $profilesTable->addColumn('name', 'string');
         $profilesTable->addColumn('avatar', 'string', array('default' => ''));
         $profilesTable->addColumn('location', 'string', array('default' => ''));
