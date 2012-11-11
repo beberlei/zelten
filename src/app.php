@@ -58,6 +58,7 @@ $app->register(new TentServiceProvider(), array(
 ));
 $app->register(new MonologServiceProvider(), array(
     'monolog.logfile' => sys_get_temp_dir() . '/zelten.log',
+    'monolog.level'   => \Monolog\Logger::WARNING,
 ));
 $app->register(new FormServiceProvider());
 $app->register(new SessionServiceProvider());
