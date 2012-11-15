@@ -268,7 +268,7 @@ class StreamRepository
                 $mentionNames = array("^" . $mention['entity'], "^" . $parts['host'], $shortname);
                 $message->content['text'] = str_replace(
                     $mentionNames,
-                    '<a class="label label-info user-details" href="' . $userLink .'">' . $profile['name'] . '</a>',
+                    '<a class="label label-info user-details" href="' . $userLink .'">' . isset($profile['name']) ? $profile['name'] : $mention['entity'] . '</a>',
                     $message->content['text']
                 );
             }
