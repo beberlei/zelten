@@ -138,6 +138,11 @@ footer {
 .people-list li {
     margin-bottom: 3px;
 }
+.content .people-list li  {
+    float: left;
+    width: 33%;
+    height: 60px;
+}
 .loading {
     background-position: center;
     background-repeat: no-repeat;
@@ -147,12 +152,18 @@ footer {
 
 div#header {
     background-color: #00C8FA;
-    height: 60px;
+    height: 70px;
     color: #ffffff;
     font-family: 'Overlock', cursive;
 }
 div#header .help-inline {
     color: #ffffff;
+}
+div#header .current-profile {
+    padding-top: 5px;
+}
+.popover {
+    width: 300px;
 }
 div#header .navbar-inner {
     background-color: #00C8FA;
@@ -221,6 +232,9 @@ form.stream-message-add-replyto {
 }
 .popover-user-details {
     width: 400px;
+}
+.popover .arrow {
+    top: 25px !important;
 }
 .notification-count {
     position: relative;
@@ -295,3 +309,4 @@ form.stream-message-add-replyto {
         padding:8px!important
     }
 }
+

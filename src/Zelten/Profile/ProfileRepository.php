@@ -59,7 +59,7 @@ class ProfileRepository
         'https://tent.io/types/info/core/v0.1.0' => array(
             'name'   => 'core',
             'fields' => array(
-                'entity' => 'entity',
+                'entity' => 'normalized_entity',
             ),
         ),
         'https://tent.io/types/info/basic/v0.1.0'  => array(
@@ -74,6 +74,13 @@ class ProfileRepository
             ),
         ),
     );
+
+    /**
+     * Local cache of profiles per request.
+     *
+     * @param array
+     */
+    private $profiles = array();
 
     public function __construct(Connection $conn, Client $tentClient)
     {
@@ -117,27 +124,31 @@ class ProfileRepository
      */
     public function getProfile($entityUrl)
     {
+        if (isset($this->profiles[$entityUrl])) {
+            return $this->profiles[$entityUrl];
+        }
+
+        /*$key = "profile_" . $entityUrl;
+        $data = apc_fetch($key);
+
+        if ($data) {
+            return $data;
+        }*/
+
         $this->conn->beginTransaction();
         try {
             $sql = 'SELECT * FROM profiles WHERE entity = ?';
             $row = $this->conn->fetchAssoc($sql, array($entityUrl));
 
-            if ($row && strtotime($row['updated'])-3600 < time()) {
+            if ($row && strtotime($row['updated'])+3600 > time()) {
                 $profile = $this->parseDatabaseProfile($row);
             } else {
-                $id = isset($row['id']) ? $row['id'] : null;
-
-                try {
-                    $userClient = $this->tentClient->getUserClient($entityUrl, false);
-                    $data       = $userClient->getProfile();
-                } catch(GuzzleException $e) {
-                    $data = array();
-                } catch(EntityNotFoundException $e) {
-                    $data = array();
-                }
-
-                $profile = $this->parseTentProfile($entityUrl, $data, $id);
+                $id      = isset($row['id']) ? $row['id'] : null;
+                $profile = $this->parseTentProfile($entityUrl, $id);
             }
+
+            $this->profiles[$entityUrl] = $profile;
+            //apc_store($key, $profile);
 
             $this->conn->commit();
         } catch(\Exception $e) {
@@ -166,13 +177,22 @@ class ProfileRepository
             }
         }
 
-        $profile['name'] = $profile['basic']['name'];
+        $profile['name'] = $profile['basic']['name'] ?: $row['entity'];
 
         return $profile;
     }
 
-    private function parseTentProfile($entity, $data, $id = false)
+    private function parseTentProfile($entity, $id = false)
     {
+        try {
+            $userClient = $this->tentClient->getUserClient($entity, false);
+            $data       = $userClient->getProfile();
+        } catch(GuzzleException $e) {
+            $data = array();
+        } catch(EntityNotFoundException $e) {
+            $data = array();
+        }
+
         $profile = array('name' => $entity, 'entity' => $this->fixUri($entity), 'uri' => $entity);
         $row     = array('updated' => date('Y-m-d H:i:s'));
 
@@ -197,10 +217,6 @@ class ProfileRepository
 
         if (!empty($profile['basic']['name'])) {
             $profile['name'] = $profile['basic']['name'];
-        }
-
-        if (!empty($profile['core']['entity'])) {
-            $profile['entity'] = $this->fixUri($profile['core']['entity']);
         }
 
         if (empty($row['entity'])) {
@@ -244,12 +260,16 @@ class ProfileRepository
             }
             $peoples = array_slice($peoples, 0, $limit);
         } else {
-            $sql = "SELECT * FROM followings f INNER JOIN profiles p ON p.id = f.following_id WHERE profile_id = ? LIMIT " . intval($limit);
+            $sql = "SELECT * FROM $table f INNER JOIN profiles p ON p.id = f.$column WHERE profile_id = ? LIMIT " . intval($limit);
             $rows = $this->conn->fetchAll($sql, array($profile['id']));
 
             $peoples = array();
             foreach ($rows as $row) {
-                $peoples[] = $this->parseDatabaseProfile($row);
+                if ($row && strtotime($row['updated'])+3600 > time()) {
+                    $peoples[] = $this->parseDatabaseProfile($row);
+                } else {
+                    $peoples[] = $this->parseTentProfile($row['entity'], $row['id']);
+                }
             }
         }
 

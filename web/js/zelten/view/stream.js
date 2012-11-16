@@ -63,8 +63,8 @@ define(
                 error: _.bind(this.checkNewMessagesError, this)
             });
         },
-        checkNewMessagesError: function(data, textStatus) {
-            if (textStatus == "abort") {
+        checkNewMessagesError: function(xhr, textStatus) {
+            if ( ! xhr.getAllResponseHeaders()) {
                 return;
             }
 

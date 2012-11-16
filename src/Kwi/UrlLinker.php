@@ -38,7 +38,7 @@ class UrlLinker
         [.,?!]?(?:\s|$)
     )Sxm';
 
-    const TRAILING_PUNCTUATION = ")'?.!,;:";
+    const PUNCTUATION = "()'?.!,;: \n";
 
     private $rexUrlLinker;
     /**
@@ -71,18 +71,25 @@ class UrlLinker
         while (preg_match(self::REGEXP_INLINE_LINK, $text, $match, PREG_OFFSET_CAPTURE, $position)) {
             list($url, $urlPosition) = $match[0];
 
-            $url = rtrim($url, self::TRAILING_PUNCTUATION);
+            $url = rtrim($url, self::PUNCTUATION);
 
-            if (ltrim($url) !== $url) {
-                $url = ltrim($url);
-                $urlPosition++;
-            }
+            $len = strlen($url) - strlen(ltrim($url, self::PUNCTUATION));
+            $url = ltrim($url, self::PUNCTUATION);
+            $urlPosition = $urlPosition + $len;
 
             // Add the text leading up to the URL.
             $html .= htmlspecialchars(substr($text, $position, $urlPosition - $position));
 
             // Skip tent mentions with ^
             if (substr($text, $urlPosition-1, 1) == "^") {
+                $html    .= htmlspecialchars($url);
+                $position = $urlPosition + strlen($url);
+                continue;
+            }
+
+            $urlParts = @parse_url($url);
+
+            if ($urlParts === false) {
                 $html    .= htmlspecialchars($url);
                 $position = $urlPosition + strlen($url);
                 continue;
@@ -97,7 +104,7 @@ class UrlLinker
                 'query' => '',
                 'fragment' => '',
                 'host' => '',
-                ), parse_url($url));
+                ), $urlParts);
 
             $scheme      = $urlParts['scheme'];
             $username    = $urlParts['username'];

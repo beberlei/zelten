@@ -8,16 +8,16 @@ use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
+use Silex\Provider\MonologServiceProvider;
 use TentPHP\Silex\TentServiceProvider;
 
 $cacheTokenFile = sys_get_temp_dir() . "/cache.token";
 if (file_exists($cacheTokenFile)) {
-    $cacheToken = file_get_contents($cacheTokenFile);
-    $cacheDir = sys_get_temp_dir() . "/" . $cacheToken;
+    $cacheToken = trim(file_get_contents($cacheTokenFile));
 } else {
     $cacheToken = filemtime(__DIR__ . "/../composer.json");
-    $cacheDir = __DIR__ . "/../cache";
 }
+$cacheDir = __DIR__ . "/../cache";
 
 $app = new Application();
 $app->register(new DoctrineServiceProvider(), array(
@@ -55,6 +55,10 @@ $app->register(new TentServiceProvider(), array(
             'read_permissions' => 'Read Permissions',
         ),
     )
+));
+$app->register(new MonologServiceProvider(), array(
+    'monolog.logfile' => sys_get_temp_dir() . '/zelten.log',
+    'monolog.level'   => \Monolog\Logger::WARNING,
 ));
 $app->register(new FormServiceProvider());
 $app->register(new SessionServiceProvider());

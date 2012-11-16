@@ -16,7 +16,12 @@ class Message
 
     public function getEntityShortname()
     {
-        return str_replace(array('https://', 'http://'), array('https-', 'http-'), $this->entity['entity']);
+        return $this->entity['entity'];
+    }
+
+    public function canBeReposted()
+    {
+        return in_array($this->type, array('status', 'essay'));
     }
 
     public function isLimited()

@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 abstract class BaseController implements ControllerProviderInterface
 {
+    private $entityUrl;
+
     public function isAuthenticated(Request $request)
     {
         $this->entityUrl = $request->getSession()->get('entity_url');
@@ -23,17 +25,19 @@ abstract class BaseController implements ControllerProviderInterface
         return in_array('application/json', $request->getAcceptableContentTypes());
     }
 
+    protected function hasCurrentEntity()
+    {
+        return $this->entityUrl !== null;
+    }
+
     protected function getCurrentEntity()
     {
-        if (!$this->entityUrl) {
-            throw new AccessDeniedHttpException();
-        }
         return $this->entityUrl;
     }
 
     protected function urlize($entity)
     {
-        return str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity);
+        return urldecode(str_replace(array('http-', 'https-'), array('http://', 'https://'), $entity));
     }
 }
 

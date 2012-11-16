@@ -1,0 +1,1 @@
+define(["zelten/view/notificationcount","zelten/view/user_profile"],function(e,t){$(document).ready(function(){var n=new e({url:Zelten.ApplicationOptions.base+"/stream/notifications/count",el:$("#notifications")});n.render();var r=new t({el:$(".current-profile")});r.render()})})

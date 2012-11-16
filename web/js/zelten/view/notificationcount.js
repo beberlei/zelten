@@ -7,9 +7,6 @@ define(["backbone"], function(Backbone) {
     var NotificationCountView = Backbone.View.extend({
         initialize: function(args) {
             this.countUrl = args.url;
-            this.$el.append(
-                '<span class="notification-count badge badge-info hidden-content">0</span>'
-            );
         },
         checkNewNotification: function() {
             $.ajax({
@@ -18,13 +15,10 @@ define(["backbone"], function(Backbone) {
             });
         },
         checkNewNotificationSuccess: function(data) {
-            if (data.count == 0) {
-                return;
-            }
-
-            this.$el.find('.notification-count').text(data.count).show();
+            this.$el.find('.count').text(data.count);
         },
         render: function() {
+            this.$el.find('.count').text("0");
             setInterval(_.bind(this.checkNewNotification, this), 30000);
             this.checkNewNotification();
         }

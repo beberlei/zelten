@@ -20,10 +20,6 @@ class Controller implements ControllerProviderInterface
         $controllers->get('/', function (Application $app, Request $request) {
             $entityUrl = $app['session']->get('entity_url');
 
-            if (!$entityUrl && in_array($request->server->get('HTTP_HOST'), array('zelten.eu1.frbit.net', 'www.zelten.cc'))) {
-                return new RedirectResponse('http://zelten.cc', 301);
-            }
-
             $stats = $app['db']->fetchAssoc(
                 'SELECT count(*) as total_users, sum(bookmarks) as total_bookmarks FROM users'
             );
@@ -85,9 +81,12 @@ class Controller implements ControllerProviderInterface
                 return new RedirectResponse($app['url_generator']->generate('homepage', array('error' => 'invaild_tent_entity')));
             }
 
-            $appData = $app['tent.client']->getApplication($entityUrl);
-            if (!in_array($callbackUrl, $appData['redirect_uris'])) {
-                $app['tent.client']->updateApplication($entityUrl);
+            try {
+                $appData = $app['tent.client']->getApplication($entityUrl);
+                if (!in_array($callbackUrl, $appData['redirect_uris'])) {
+                    $app['tent.client']->updateApplication($entityUrl);
+                }
+            } catch(\Exception $e) {
             }
 
             $sql = "SELECT * FROM users WHERE entity = ?";

@@ -55,16 +55,10 @@ class Controller extends BaseController
                     ->before(array($this, 'isAuthenticated'));
 
         $controllers->get('/{entity}/followers', array($this, 'followersAction'))
-                    ->bind('user_followers')
-                    ->before(array($this, 'isAuthenticated'));
+                    ->bind('user_followers');
 
         $controllers->get('/{entity}/following', array($this, 'followingAction'))
-                    ->bind('user_following')
-                    ->before(array($this, 'isAuthenticated'));
-
-        $controllers->get('/{entity}/avatar', array($this, 'imageAction'))
-                    ->bind('user_avatar')
-                    ->before(array($this, 'isAuthenticated'));
+                    ->bind('user_following');
 
         return $controllers;
     }
@@ -99,7 +93,7 @@ class Controller extends BaseController
     public function followersAction(Request $request, Application $app, $entity)
     {
         $entity            = $this->urlize($entity);
-        $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
+        $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 50);
         $profileRepository = $app['zelten.profile'];
         $followers         = $profileRepository->getFollowers($entity, $limit);
 
@@ -118,7 +112,7 @@ class Controller extends BaseController
     public function followingAction(Request $request, Application $app, $entity)
     {
         $entity = $this->urlize($entity);
-        $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 20);
+        $limit             = $request->query->get('limit', $request->isXmlHttpRequest() ? 5 : 50);
         $profileRepository = $app['zelten.profile'];
         $following         = $profileRepository->getFollowings($entity, $limit);
 
@@ -154,18 +148,6 @@ class Controller extends BaseController
         return new RedirectResponse($app['url_generator']->generate('stream_user', array(
             'entity' => $request->request->get('entity'),
         )));
-    }
-
-    public function imageAction(Request $request, Application $app, $entity)
-    {
-        $profileRepository = $app['zelten.profile'];
-        $profile           = $profileRepository->getProfile($this->urlize($entity));
-
-        if (strpos($profile['basic']['avatar'], 'http') === false) {
-            return new RedirectResponse($app['url_generator']->generate('homepage', array(), true) . "/zelten.png", 301);
-        }
-
-        return new RedirectResponse($profile['basic']['avatar'], 301);
     }
 }
 

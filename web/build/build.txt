@@ -30,7 +30,6 @@ zelten/collection.js
 zelten/collection/user.js
 zelten/collection/follower.js
 zelten/collection/following.js
-zelten/view/notificationcount.js
 stream.js
 
 stream_user.js
@@ -57,7 +56,6 @@ zelten/collection/user.js
 zelten/collection/follower.js
 zelten/collection/following.js
 zelten/view/userlist.js
-zelten/view/notificationcount.js
 stream_user.js
 
 bookmarks.js
@@ -66,10 +64,6 @@ underscore.js
 jquery.js
 backbone.js
 bookmarks.js
-
-notifications.js
-----------------
-notifications.js
 
 my_stream.js
 ----------------
@@ -95,9 +89,30 @@ zelten/collection/user.js
 zelten/collection/follower.js
 zelten/collection/following.js
 zelten/view/userlist.js
-zelten/view/notificationcount.js
 stream_user.js
 my_stream.js
+
+user_followers.js
+----------------
+jquery.js
+underscore.js
+backbone.js
+zelten/view/user.js
+bootstrap.js
+clickover.js
+zelten/view/userlink.js
+user_followers.js
+
+user_following.js
+----------------
+jquery.js
+underscore.js
+backbone.js
+zelten/view/user.js
+bootstrap.js
+clickover.js
+zelten/view/userlink.js
+user_following.js
 
 stream_notifications.js
 ----------------
@@ -122,6 +137,5 @@ zelten/collection.js
 zelten/collection/user.js
 zelten/collection/follower.js
 zelten/collection/following.js
-zelten/view/notificationcount.js
 stream.js
 stream_notifications.js

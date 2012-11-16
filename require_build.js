@@ -7,8 +7,9 @@
         {name: "stream"},
         {name: "stream_user"},
         {name: "bookmarks"},
-        {name: "notifications"},
         {name: "my_stream"},
+        {name: "user_followers"},
+        {name: "user_following"},
         {name: "stream_notifications"}
     ],
     shim: {

@@ -228,7 +228,7 @@ class StreamRepository
         $message->id          = $post['id'];
         $message->type        = $this->supportedTypes[$post['type']];
         $message->content     = $post['content'];
-        $message->entity      = $this->getPublicProfile($post['entity']);
+        $message->entity      = $this->getFullProfile($post['entity']);
         $message->app         = $post['app'];
         $message->mentions    = $post['mentions'];
         $message->permissions = $post['permissions'];
@@ -244,13 +244,13 @@ class StreamRepository
             $message->content['mentions']  = array();
 
             foreach ($message->mentions as $mention) {
-                $parts = parse_url($mention['entity']);
+                $parts = @parse_url($mention['entity']);
 
                 if (!isset($parts['host'])) {
                     continue;
                 }
 
-                $profile = $this->getPublicProfile($mention['entity']);
+                $profile = $this->getFullProfile($mention['entity']);
                 if (!empty($mention['post'])) {
                     $message->content['reply'] = array(
                         'post'   => $mention['post'],
@@ -263,7 +263,7 @@ class StreamRepository
                 }
 
                 $shortname = "^" . substr($parts['host'], 0, strpos($parts['host'], "."));
-                $userLink = $this->urlGenerator->generate('stream_user', array('entity' => $this->getEntityShortname($mention['entity'])));
+                $userLink = $this->urlGenerator->generate('stream_user', array('entity' => urlencode($mention['entity'])));
 
                 $mentionNames = array("^" . $mention['entity'], "^" . $parts['host'], $shortname);
                 $message->content['text'] = str_replace(
@@ -279,7 +279,7 @@ class StreamRepository
             }, $message->content['mentions']));
 
         } else if ($message->type == 'follower') {
-            $message->content['follower'] = $this->getPublicProfile($message->content['entity']);
+            $message->content['follower'] = $this->getFullProfile($message->content['entity']);
         } else if ($message->type == 'repost') {
 
             if (!empty($message->content['entity']) && !empty($message->content['id'])) {
@@ -306,29 +306,7 @@ class StreamRepository
 
     public function getFullProfile($entity)
     {
-        $key = "profile_" . $entity;
-        $data = apc_fetch($key);
-
-        if ($data) {
-            return $data;
-        }
-
-        $data = $this->profileRepository->getProfile($entity);
-
-        apc_store($key, $data, 3600);
-
-        return $data;
-    }
-
-    public function getPublicProfile($entity)
-    {
-        $profile = $this->getFullProfile($entity);
-
-        return array(
-            'entity' => $profile['entity'],
-            'name'   => $profile['name'],
-            'avatar' => isset($profile['basic']['avatar']) ? $profile['basic']['avatar'] : '/zelten.png'
-        );
+        return $this->profileRepository->getProfile($entity);
     }
 }
 

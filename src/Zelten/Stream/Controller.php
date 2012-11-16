@@ -32,13 +32,22 @@ class Controller extends BaseController
                     ->bind('stream')
                     ->before(array($this, 'isAuthenticated'));
 
+        $controllers->get('/u/0', array($this, 'myProfileAction'))
+                    ->bind('my_stream')
+                    ->before(array($this, 'isAuthenticated'));
+
+        $controllers->get('/u/{entity}', array($this, 'profileAction'))
+                    ->bind('stream_user');
+
+        $controllers->get('/u/{entity}/stream', array($this, 'userStreamAction'))
+                    ->bind('stream_user2');
+
         $controllers->post('/', array($this, 'postAction'))
                     ->bind('stream_write')
                     ->before(array($this, 'isAuthenticated'));
 
         $controllers->get('/u/{entity}/{id}', array($this, 'conversationAction'))
-                    ->bind('post_conversation')
-                    ->before(array($this, 'isAuthenticated'));
+                    ->bind('post_conversation');
 
         $controllers->post('/u/{entity}/{post}/favorite', array($this, 'favoriteAction'))
                     ->bind('post_favorite')
@@ -52,22 +61,17 @@ class Controller extends BaseController
                     ->bind('repost')
                     ->before(array($this, 'isAuthenticated'));
 
-        $controllers->get('/u/0', array($this, 'myProfileAction'))
-                    ->bind('my_stream')
-                    ->before(array($this, 'isAuthenticated'));
-
-        $controllers->get('/u/{entity}', array($this, 'profileAction'))
-                    ->bind('stream_user')
-                    ->before(array($this, 'isAuthenticated'));
-
         return $controllers;
     }
 
     public function conversationAction(Request $request, Application $app, $entity, $id)
     {
-        $entityUrl = $this->getCurrentEntity();
-
         $mentionedEntity = $this->urlize($entity);
+        // use either logged in entity, or the fetched entity for the client.
+        $entityUrl = $this->hasCurrentEntity()
+            ? $this->getCurrentEntity()
+            : $mentionedEntity;
+
         $criteria = array(
             //'mentioned_entity' => $mentionedEntity,
             'mentioned_post'   => $id,
@@ -75,7 +79,7 @@ class Controller extends BaseController
         );
 
         $stream   = $app['zelten.stream'];
-        $comments = array_reverse($stream->getMessages($entityUrl, $criteria));
+        $comments = array_reverse($stream->getMessages($entityUrl ?: $mentionedEntity, $criteria));
         $post     = $stream->getPost($mentionedEntity, $id);
 
         $parent = null;
@@ -195,6 +199,15 @@ class Controller extends BaseController
         $messages  = $this->getMessages($entityUrl, $request->query->get('criteria', array()), $app);
 
         return $app['twig']->render('stream.html', array('messages' => $messages, 'post_add' => true));
+    }
+
+    public function userStreamAction(Request $request, Application $app, $entity)
+    {
+        syslog(LOG_INFO, "Stream: " . $entity);
+        $entity = $this->urlize($entity);
+        $messages  = $this->getMessages($entity, $request->query->get('criteria', array()), $app);
+
+        return $app['twig']->render('stream.html', array('messages' => $messages, 'post_add' => false));
     }
 
     private function getMessages($entityUrl, $criteria, Application $app)

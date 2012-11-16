@@ -10,8 +10,6 @@ $app->post('/hook', function(Request $request) use ($app) {
     $post      = json_decode($request->getContent(), true);
     $entityUrl = $post['entity'];
 
-    error_log("Hook: " .$entityUrl . " - " . $post['type'] . ' ' . date('Y-m-d H:i', $post['published_at']));
-
     if ($request->query->get('hash') !== hash_hmac('sha256', $post['entity'], $app['appsecret'])) {
         return new Response('', 403);
     }
@@ -69,7 +67,8 @@ $app->error(function (\Exception $e, $code) use ($app) {
         return;
     }
 
-    error_log(get_class($e) . ": " . $e->getMessage() . " " . $e->getTraceAsString());
+
+    $app['monolog']->addError(sprintf('%s [%s:%d]: %s %s', get_class($e), $e->getFile(), $e->getLine(), $e->getMessage(), $e->getTraceAsString()));
 
     $page = 404 == $code ? '404.html' : '500.html';
 

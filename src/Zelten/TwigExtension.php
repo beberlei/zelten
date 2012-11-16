@@ -27,7 +27,7 @@ class TwigExtension extends \Twig_Extension
 
     public function currentEntity()
     {
-        return $this->app['session']->get('entity_url');
+        return $this->app['zelten.profile']->getProfile($this->app['session']->get('entity_url'));
     }
 
     public function isFavoriteMessage(Message $message)
