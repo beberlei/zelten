@@ -202,6 +202,7 @@ class StreamRepository
         );
 
         foreach ($posts as $post) {
+        	  // If this posts type is not supported by Zelten, bypass the post.
             if (!isset($this->supportedTypes[$post['type']])) {
                 continue;
             }
@@ -211,6 +212,7 @@ class StreamRepository
             }
             $result['last'] = array('id' => $post['id'], 'entity' => $post['entity']);
 
+						// Create a Zelten message from this Tent post
             $message = $this->createMessage($post);
             if ($message) {
                 $result['messages'][] = $message;
@@ -220,6 +222,12 @@ class StreamRepository
         return $result;
     }
 
+    /**
+     * Convert a Tent post into a Zelten message
+     *
+     * @param string $post
+     * @return Message
+     */
     private function createMessage($post)
     {
         $key     = sprintf('post_%s#%s#%s', $post['entity'], $post['entity'] == $this->currentEntity, $post['id']);
@@ -246,11 +254,13 @@ class StreamRepository
             foreach ($message->mentions as $mention) {
                 $parts = @parse_url($mention['entity']);
 
+                // Tent entities are valid URLs. If there is no host, it is not a valid URL.
                 if (!isset($parts['host'])) {
                     continue;
                 }
 
                 $profile = $this->getFullProfile($mention['entity']);
+                // If the mention contains a post id, this message is replying to that post id.
                 if (!empty($mention['post'])) {
                     $message->content['reply'] = array(
                         'post'   => $mention['post'],
@@ -258,17 +268,20 @@ class StreamRepository
                     );
                 }
 
+                // Add all mentions to the message unless the mentioned entity is the logged-in entity.
                 if ($mention['entity'] !== $this->currentEntity) {
                     $message->content['mentions'][] = $mention['entity'];
                 }
 
+                // In the post, replace each mention of this entity with a link to the Zelten profile page for the entity
                 $shortname = "^" . substr($parts['host'], 0, strpos($parts['host'], "."));
                 $userLink = $this->urlGenerator->generate('stream_user', array('entity' => urlencode($mention['entity'])));
 
+                // Entity formats to look for: ^https://daniel.tent.is, ^daniel.tent.is, ^daniel
                 $mentionNames = array("^" . $mention['entity'], "^" . $parts['host'], $shortname);
                 $message->content['text'] = str_replace(
                     $mentionNames,
-                    '<a class="label label-info user-details" href="' . $userLink .'">' . $profile['name'] . '</a>',
+                    '<a class="label label-info user-details" href="' . $userLink .'">' . isset($profile['name']) ? $profile['name'] : $mention['entity'] . '</a>',
                     $message->content['text']
                 );
             }
@@ -279,18 +292,26 @@ class StreamRepository
             }, $message->content['mentions']));
 
         } else if ($message->type == 'follower') {
+            
+            // For new follower notifications, retrieve their full profile
             $message->content['follower'] = $this->getFullProfile($message->content['entity']);
+            
         } else if ($message->type == 'repost') {
 
+            // For reposts, retrieve the original post
             if (!empty($message->content['entity']) && !empty($message->content['id'])) {
                 $message->content['original'] = $this->getPost($message->content['entity'], @$message->content['id']);
             }
 
+            // Determine if we were unable to retrieve the original post
             if (!isset($message->content['original'])) {
                 return;
             }
 
         } else if ($message->type == 'essay') {
+            
+            // For essays, allow access to the full text within the timeline. 
+            // Attempt to eliminate any threats hidden in the text.
             $message->content['body'] = $this->escaper->wash($message->content['body']);
         }
 
