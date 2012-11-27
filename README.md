@@ -1,10 +1,13 @@
 # Zelten
 
-A social client that runs on the Tent protocol. https://tent.io/
-Visit Zelten: http://zelten.cc
+Visit Zelten: [http://zelten.cc][zelten]
 
-This is open source, and not yet easily installable on any
-server.  If you want to do it, make sure to run:
+Zelten is a social client that communicates using the Tent 
+protocol. You can learn more about Tent at [https://tent.io/][tentio]
+
+Zelten is open source so feel free to contribute to the project. 
+Installing Zelten on a server is not yet easy.  If you want to try, 
+make sure to run:
 
     php console doctrine:schema:update
 
@@ -30,4 +33,5 @@ For example, when using Apache put the following in your Vhost:
 All the Mac secrets and OAuth tokens are saved in the database using
 Blowish encryption and are safe from database theft.
 
-
+[zelten]: http://zelten.cc "Zelten"
+[tentio]: https://tent.io/ "Tent.io"
