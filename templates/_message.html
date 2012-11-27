@@ -2,7 +2,7 @@
     data-published="{{ message.published|date('U') }}"
     {% if message.content.mentions is defined %}data-mentions="{{ message.content.mentions }}"{% endif %}>
     {% if message.type == "follower" %}
-    <div class="span1 hidden-phone">
+    <div class="span1">
         <a class="user-details" href="{{ path('stream_user', {'entity': message.content.follower.uri|url_encode}) }}"><img src="{% if message.content.follower.basic.avatar %}{{ message.content.follower.basic.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>
     </div>
     <div class="span11">
@@ -21,7 +21,7 @@
         </div>
     </div>
     {% else %}
-    <div class="span1 hidden-phone">
+    <div class="span1">
         <a class="user-details" href="{{ path('stream_user', {'entity': message.entity.uri|url_encode}) }}"><img src="{% if message.entity.basic.avatar %}{{ message.entity.basic.avatar}}{% else %}/zelten.png{% endif %}" height="90" width="90" class="img-polaroid" /></a>
     </div>
     <div class="span11">
