@@ -7,3 +7,19 @@ twitter_key:        ~
 twitter_secret:     ~
 app_secret:         OoH8eevahThahyiinge
 notification_url:   false
+
+zelten:
+    name:        Zelten (Development)
+    description: Bookmarks, Social Sync and other Tent related services
+    url:         http://zelten.local
+    redirect_uris:
+        - http://zelten.local/oauth/accept
+        - http://zelten.local/index_dev.php/oauth/accept
+    scopes:
+        read_posts:         Read Posts
+        write_posts:        Write Posts
+        read_groups:        Read Groups
+        write_groups:       Write Groups
+        read_followings:    List Followings
+        write_followings:   Follow New People
+        read_permissions:   Read Permissions

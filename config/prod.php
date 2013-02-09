@@ -35,6 +35,7 @@ $app['twitter.options'] = array(
 // CHANGE!!!
 $app['appsecret'] = $config->get('app_secret');
 DoctrineUserStorage::registerTentEncryptionStringType($app['appsecret']);
+$app['tent.application.options'] = $config->get('zelten');
 
 // only if the current request host equals the given host,
 // a notification url will be appended to the login url.

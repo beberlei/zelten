@@ -76,7 +76,6 @@ class Controller implements ControllerProviderInterface
                     'http://www.beberlei.de/tent/favorite/v0.0.1',
                 ), $notificationsUrl);
 
-
             } catch(\TentPHP\Exception\EntityNotFoundException $e) {
                 return new RedirectResponse($app['url_generator']->generate('homepage', array('error' => 'invaild_tent_entity')));
             }
