@@ -5,9 +5,6 @@ namespace Zelten\Stream;
 use TentPHP\PostCriteria;
 use TentPHP\Post;
 use TentPHP\Util\Mentions;
-use Kwi\UrlLinker;
-
-use Zelten\Util\Washtml;
 use Zelten\Util\String;
 
 class StreamRepository
@@ -15,8 +12,6 @@ class StreamRepository
     private $tentClient;
     private $urlGenerator;
     private $currentEntity;
-    private $linker;
-    private $escaper;
     private $mentions;
 
     private $supportedTypes = array(
@@ -34,16 +29,15 @@ class StreamRepository
     );
 
     private $profileRepository;
+    private $messageParser;
 
     public function __construct($tentClient, $urlGenerator, $profileRepository, $currentEntity)
     {
         $this->tentClient        = $tentClient;
-        $this->urlGenerator      = $urlGenerator;
         $this->currentEntity     = $currentEntity;
         $this->profileRepository = $profileRepository;
-        $this->linker            = new UrlLinker();
-        $this->escaper           = new Washtml(array('charset' => 'UTF-8'));
         $this->mentions          = new Mentions();
+        $this->messageParser     = new MessageParser($urlGenerator);
     }
 
     /**
@@ -232,91 +226,7 @@ class StreamRepository
     {
         $key     = sprintf('post_%s#%s#%s', $post['entity'], $post['entity'] == $this->currentEntity, $post['id']);
 
-        $message              = new Message();
-        $message->id          = $post['id'];
-        $message->type        = $this->supportedTypes[$post['type']];
-        $message->content     = $post['content'];
-        $message->entity      = $this->getFullProfile($post['entity']);
-        $message->app         = $post['app'];
-        $message->mentions    = $post['mentions'];
-        $message->permissions = $post['permissions'];
-        $message->published   = new \DateTime('@' . $post['published_at']);
-
-        // switch a favorite
-        if ($message->type == 'favorite') {
-            return $this->getPost($message->content['entity'], $message->content['post']);
-        }
-
-        if ($message->type == 'status') {
-            $message->content['text'] = nl2br($this->linker->parse($message->content['text']));
-            $message->content['mentions']  = array();
-
-            foreach ($message->mentions as $mention) {
-                $parts = @parse_url($mention['entity']);
-
-                // Tent entities are valid URLs. If there is no host, it is not a valid URL.
-                if (!isset($parts['host'])) {
-                    continue;
-                }
-
-                $profile = $this->getFullProfile($mention['entity']);
-                // If the mention contains a post id, this message is replying to that post id.
-                if (!empty($mention['post'])) {
-                    $message->content['reply'] = array(
-                        'post'   => $mention['post'],
-                        'entity' => $profile,
-                    );
-                }
-
-                // Add all mentions to the message unless the mentioned entity is the logged-in entity.
-                if ($mention['entity'] !== $this->currentEntity) {
-                    $message->content['mentions'][] = $mention['entity'];
-                }
-
-                // In the post, replace each mention of this entity with a link to the Zelten profile page for the entity
-                $shortname = "^" . substr($parts['host'], 0, strpos($parts['host'], "."));
-                $userLink = $this->urlGenerator->generate('stream_user', array('entity' => urlencode($mention['entity'])));
-
-                // Entity formats to look for: ^https://daniel.tent.is, ^daniel.tent.is, ^daniel
-                $mentionNames = array("^" . $mention['entity'], "^" . $parts['host'], $shortname);
-                $message->content['text'] = str_replace(
-                    $mentionNames,
-                    '<a class="label label-info user-details" href="' . $userLink .'">' . isset($profile['name']) ? $profile['name'] : $mention['entity'] . '</a>',
-                    $message->content['text']
-                );
-            }
-
-            $message->content['mentions'][] = $post['entity'];
-            $message->content['mentions'] = implode(" ", array_map(function ($mentionedEntity) {
-                return "^" . $mentionedEntity;
-            }, $message->content['mentions']));
-
-        } else if ($message->type == 'follower') {
-            if ($message->entity['uri'] !== $this->currentEntity) {
-                return;
-            }
-
-            // For new follower notifications, retrieve their full profile
-            $message->content['follower'] = $this->getFullProfile($message->content['entity']);
-
-        } else if ($message->type == 'repost') {
-
-            // For reposts, retrieve the original post
-            if (!empty($message->content['entity']) && !empty($message->content['id'])) {
-                $message->content['original'] = $this->getPost($message->content['entity'], @$message->content['id']);
-            }
-
-            // Determine if we were unable to retrieve the original post
-            if (!isset($message->content['original'])) {
-                return;
-            }
-
-        } else if ($message->type == 'essay') {
-
-            // For essays, allow access to the full text within the timeline.
-            // Attempt to eliminate any threats hidden in the text.
-            $message->content['body'] = $this->escaper->wash($message->content['body']);
-        }
+        $message = $this->messageParser->parse($post, $this->currentEntity, $this);
 
         apc_store($key, $message, 600);
 
