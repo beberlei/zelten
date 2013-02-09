@@ -57,7 +57,9 @@ to run Zelten.
 
 Here is a samle Apache Vhost to run Zelten. Make sure to adjust
 the ``path/to/zelten/web`` to point to the directory you put
-the Zelten source code in:
+the Zelten source code in.
+
+Put this file into ``/etc/apache2/sites-enabled/zelten``:
 
     <VirtualHost *:80>
         ServerAdmin webmaster@localhost
@@ -83,6 +85,10 @@ the Zelten source code in:
 
         CustomLog ${APACHE_LOG_DIR}/access.log combined
     </VirtualHost>
+
+Then open up ``/etc/hosts`` and add:
+
+    zelten.local    127.0.0.1
 
 ### Development
 
