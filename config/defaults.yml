@@ -8,6 +8,8 @@ twitter_secret:     ~
 app_secret:         OoH8eevahThahyiinge
 notification_url:   false
 
+xhprof: ~
+
 zelten:
     name:        Zelten (Development)
     description: Bookmarks, Social Sync and other Tent related services

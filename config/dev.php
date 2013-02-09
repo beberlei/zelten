@@ -31,7 +31,9 @@ $collectors['guzzle'] = $app->share(function ($app) {
 $app['data_collectors'] = $collectors;
 
 $app['tent.client.history'] = $app->share(function ($app) {
-    return new \Guzzle\Plugin\History\HistoryPlugin;
+    $plugin = new \Guzzle\Plugin\History\HistoryPlugin;
+    $plugin->setLimit(1000);
+    return $plugin;
 });
 $app['tent.http.client'] = $app->share($app->extend('tent.http.client', function($client, $app) {
     $client->addSubscriber($app['tent.client.history']);
