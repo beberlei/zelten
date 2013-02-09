@@ -1,0 +1,9 @@
+db_type:            pdo_mysql
+db_host:            localhost
+db_user:            root
+db_password:        ""
+db_name:            zelten
+twitter_key:        ~
+twitter_secret:     ~
+app_secret:         OoH8eevahThahyiinge
+notification_url:   false

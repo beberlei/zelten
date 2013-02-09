@@ -1,40 +1,42 @@
 <?php
 
-// configure your app for the production environment
+use Zelten\Config\YamlConfigLoader;
+use TentPHP\DBAL\DoctrineUserStorage;
 
-function envvar($name, $default)
-{
-    if (isset($_SERVER[$name])) {
-        return $_SERVER[$name];
-    }
+$parametersFile = __DIR__ . "/parameters.yml";
 
-    return $default;
+if ( ! file_exists($parametersFile)) {
+    throw new \RuntimeException("Parameters File 'config/parameters.yml' is missing. Copy the config/defaults.yml to config/parameters.yml and set all the required values.");
 }
 
-if (envvar('DB_DRIVER', 'pdo_msyql') == 'pdo_sqlite') {
+$loader = new YamlConfigLoader(__DIR__ . "/defaults.yml", $parametersFile);
+$config = $loader->create();
+
+if ($config->get('db_type') === 'pdo_sqlite') {
     $app['db.options'] = array(
         'driver' => 'pdo_sqlite',
         'path'   => __DIR__ . '/../zelten.db',
     );
 } else {
     $app['db.options'] = array(
-        'driver'   => 'pdo_mysql',
-        'user'     => envvar('DB_USER', 'root'),
-        'host'     => envvar('DB_HOST', 'localhost'),
-        'password' => envvar('DB_PASSWORD', ''),
-        'dbname'   => envvar('DB_NAME', 'zelten'),
+        'driver'   => $config->get('db_type'),
+        'host'     => $config->get('db_host'),
+        'user'     => $config->get('db_user'),
+        'password' => $config->get('db_password'),
+        'dbname'   => $config->get('db_name'),
     );
 }
 
 $app['twitter.options'] = array(
-    'key'    => envvar('TWITTER_KEY', null),
-    'secret' => envvar('TWITTER_SECRET', null),
+    'key'    => $config->get('twitter_key'),
+    'secret' => $config->get('twitter_secret'),
 );
 
 // CHANGE!!!
-$app['appsecret']            = envvar('APPSECRET', 'OoH8eevahThahyiinge');
-TentPHP\DBAL\DoctrineUserStorage::registerTentEncryptionStringType($app['appsecret']);
+$app['appsecret'] = $config->get('app_secret');
+DoctrineUserStorage::registerTentEncryptionStringType($app['appsecret']);
 
 // only if the current request host equals the given host,
 // a notification url will be appended to the login url.
-$app['notification_domain'] = envvar('NOTIFICATION_DOMAIN', false);
+$app['notification_domain'] = $config->get('notification_url');
+
