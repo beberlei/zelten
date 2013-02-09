@@ -3,10 +3,7 @@
 namespace Zelten\Stream;
 
 use TentPHP\PostCriteria;
-use TentPHP\Post;
 use TentPHP\Client;
-use TentPHP\Util\Mentions;
-use Zelten\Util\String;
 use Zelten\Profile\ProfileRepository;
 
 class StreamRepository
@@ -45,7 +42,7 @@ class StreamRepository
         $this->currentEntity     = $currentEntity;
         $this->profileRepository = $profileRepository;
         $this->messageParser     = $messageParser;
-        $this->mentions          = new Mentions();
+        $this->postBuilder       = new PostBuilder();
     }
 
     /**
@@ -58,52 +55,9 @@ class StreamRepository
     public function write($message, $mention = null, array $permissions = array())
     {
         $client = $this->tentClient->getUserClient($this->currentEntity, true);
+        $post   = $this->postBuilder->create($message, $mention, $permissions);
+        $data   = $client->createPost($post);
 
-        if (strlen($message) <= 256) {
-            $post = Post::create('https://tent.io/types/post/status/v0.1.0');
-            $post->setContent(array('text' => $message));
-        } else {
-            $message = String::autoParagraph($message);
-            $post = Post::create('https://tent.io/types/post/essay/v0.1.0');
-            $post->setContent(array(
-                'body'    => $message,
-                'excerpt' => String::getFirstParagraph($message)
-            ));
-        }
-
-        foreach ($permissions as $permission) {
-            switch(strtolower($permission)) {
-                case 'public':
-                case 'everybody':
-                    $post->markPublic();
-                    break;
-                default:
-                    $post->markVisibleEntity($this->mentions->normalize($permission, $this->currentEntity));
-                    break;
-            }
-        }
-
-        $alreadyMentioned = array();
-
-        if ($mention) {
-            $alreadyMentioned[$mention['entity']] = true;
-            $post->addMention($mention['entity'], $mention['post']);
-        }
-
-        $mentions = $this->mentions->extractMentions($message, $this->currentEntity);
-
-        foreach ($mentions as $mention) {
-            if ($mention['entity'] === $this->currentEntity ||
-                isset($alreadyMentioned[$mention['entity']])) {
-
-                continue;
-            }
-
-            $post->addMention($mention['entity']);
-            $alreadyMentioned[$mention['entity']] = true;
-        }
-
-        $data = $client->createPost($post);
         return $this->createMessage($data);
     }
 
@@ -112,15 +66,11 @@ class StreamRepository
      *
      * @param string $entity
      * @param string $post
-     * @return Message
+     * @return \Zelten\Stream\Message
      */
     public function repost($entity, $id)
     {
-        $client = $this->tentClient->getUserClient($this->currentEntity, true);
-
-        if (empty($entity) || empty($id)) {
-            throw new \RuntimeException("Repost content data missing.");
-        }
+        $post = $this->postBuilder->createRepost($entity, $id);
 
         $exists = $this->getPost($entity, $id);
 
@@ -128,11 +78,9 @@ class StreamRepository
             throw new \RuntimeException("Repost original post missing.");
         }
 
-        $post = Post::create('https://tent.io/types/post/repost/v0.1.0');
-        $post->setContent(array('entity' => $entity, 'id' => $id));
-        $post->markPublic();
+        $client = $this->tentClient->getUserClient($this->currentEntity, true);
+        $data   = $client->createPost($post);
 
-        $data = $client->createPost($post);
         return $this->createMessage($data);
     }
 
@@ -145,26 +93,16 @@ class StreamRepository
      */
     public function getPost($entityUrl, $id)
     {
-        $key     = sprintf('post_%s#%s#%s', $entityUrl, $entityUrl == $this->currentEntity, $id);
-        $message = apc_fetch($key, $fetched);
+        $client = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
 
-        if ($fetched) {
-            return $message;
-        }
-
-        try {
-            $client = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
-
-            return $this->createMessage($client->getPost($id));
-        } catch(\Exception $e) {
-            return;
-        }
+        return $this->createMessage($client->getPost($id));
     }
 
     public function getMessageCount($entity, array $criteria = array())
     {
         $criteria = $this->mergeMessageCriteria($criteria);
         $client   = $this->tentClient->getUserClient($entity, $entity == $this->currentEntity);
+
         return $client->getPostCount(new PostCriteria($criteria));
     }
 
@@ -179,11 +117,11 @@ class StreamRepository
         );
 
         $criteria = array_merge(array(
-                'post_types' => implode(",", $types),
-                'limit'      => 20,
-            ), $criteria);
+            'post_types' => implode(",", $types),
+            'limit'      => 20), $criteria);
 
         $supportedTypes = array_flip($this->supportedTypes);
+
         if (isset($supportedTypes[$criteria['post_types']])) {
             $criteria['post_types'] = $supportedTypes[$criteria['post_types']];
         }
@@ -203,7 +141,7 @@ class StreamRepository
     {
         $criteria = $this->mergeMessageCriteria($criteria);
         $client   = $this->tentClient->getUserClient($entityUrl, $entityUrl == $this->currentEntity);
-        $posts  = $client->getPosts(new PostCriteria($criteria));
+        $posts    = $client->getPosts(new PostCriteria($criteria));
 
         $result = array(
             'messages' => array(),
@@ -212,8 +150,7 @@ class StreamRepository
         );
 
         foreach ($posts as $post) {
-            // If this posts type is not supported by Zelten, bypass the post.
-            if (!isset($this->supportedTypes[$post['type']])) {
+            if ( ! $this->isSupportedPostType($post)) {
                 continue;
             }
 
@@ -222,7 +159,6 @@ class StreamRepository
             }
             $result['last'] = array('id' => $post['id'], 'entity' => $post['entity']);
 
-            // Create a Zelten message from this Tent post
             $message = $this->createMessage($post);
             if ($message) {
                 $result['messages'][] = $message;
@@ -233,6 +169,17 @@ class StreamRepository
     }
 
     /**
+     * Check if post is supported by Zelten
+     *
+     * @param array $post
+     * @return bool
+     */
+    private function isSupportedPostType(array $post)
+    {
+        return isset($this->supportedTypes[$post['type']]);
+    }
+
+    /**
      * Convert a Tent post into a Zelten message
      *
      * @param string $post
@@ -240,13 +187,7 @@ class StreamRepository
      */
     private function createMessage($post)
     {
-        $key     = sprintf('post_%s#%s#%s', $post['entity'], $post['entity'] == $this->currentEntity, $post['id']);
-
-        $message = $this->messageParser->parse($post, $this->currentEntity, $this);
-
-        apc_store($key, $message, 600);
-
-        return $message;
+        return $this->messageParser->parse($post, $this->currentEntity, $this);
     }
 
     public function getEntityShortname($url)
