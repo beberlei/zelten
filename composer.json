@@ -18,6 +18,7 @@
         "symfony/translation": "2.1.*",
         "symfony/twig-bridge": "2.1.*",
         "symfony/validator": "2.1.*",
+        "symfony/yaml": "2.1.*",
         "doctrine/dbal": "*",
         "guzzle/guzzle": "*",
         "beberlei/tent-php": "dev-master",

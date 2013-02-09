@@ -1,5 +1,5 @@
 {
-    "hash": "559116de1203f57922da226025ab1f5c",
+    "hash": "9edf6268aece50c190b661ab9c069a98",
     "packages": [
         {
             "name": "beberlei/tent-php",
@@ -25,9 +25,8 @@
             "suggest": {
                 "doctrine/dbal": "*"
             },
-            "time": "1352397963",
+            "time": "2012-11-08 18:06:03",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "TentPHP": "src/"
@@ -55,14 +54,13 @@
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "1350491397",
+            "time": "2012-10-17 16:29:57",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.4.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common\\": "lib/"
@@ -125,14 +123,12 @@
                 "php": ">=5.3.2",
                 "doctrine/common": ">=2.3-dev,<2.5-dev"
             },
-            "time": "1350322364",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.4.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\DBAL\\": "lib/"
@@ -168,7 +164,8 @@
                 "persistence",
                 "dbal",
                 "queryobject"
-            ]
+            ],
+            "time": "2012-10-15 17:32:44"
         },
         {
             "name": "guzzle/guzzle",
@@ -228,9 +225,7 @@
                 "zend/zend-cache": "2.0.0beta3",
                 "zend/zend-log": "2.0.0beta3"
             },
-            "time": "1351829108",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Guzzle\\Tests": "tests/",
@@ -261,7 +256,8 @@
                 "http client",
                 "client",
                 "web service"
-            ]
+            ],
+            "time": "2012-11-02 04:05:08"
         },
         {
             "name": "monolog/monolog",
@@ -288,7 +284,6 @@
             },
             "time": "2012-04-22 11:27:40",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Monolog": "src/"
@@ -329,14 +324,12 @@
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "1347278988",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Pimple": "lib/"
@@ -356,7 +349,8 @@
             "keywords": [
                 "dependency injection",
                 "container"
-            ]
+            ],
+            "time": "2012-09-10 12:09:48"
         },
         {
             "name": "ruudk/twitter-oauth",
@@ -375,9 +369,7 @@
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "1347886121",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "classmap": [
                     "src"
@@ -391,7 +383,8 @@
                 }
             ],
             "description": "PHP 5.3 version of abraham/twitteroauth",
-            "homepage": "http://github.com/ruudk/twitteroauth"
+            "homepage": "http://github.com/ruudk/twitteroauth",
+            "time": "2012-09-17 12:48:41"
         },
         {
             "name": "silex/silex",
@@ -439,14 +432,12 @@
                 "symfony/css-selector": ">=2.1,<2.3-dev",
                 "symfony/dom-crawler": ">=2.1,<2.3-dev"
             },
-            "time": "1351701053",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Silex": "src/"
@@ -470,7 +461,8 @@
             "homepage": "http://silex.sensiolabs.org",
             "keywords": [
                 "microframework"
-            ]
+            ],
+            "time": "2012-10-31 16:30:53"
         },
         {
             "name": "symfony/browser-kit",
@@ -498,14 +490,12 @@
             "suggest": {
                 "symfony/process": "2.1.*"
             },
-            "time": "1351170710",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\BrowserKit": ""
@@ -525,7 +515,8 @@
                 }
             ],
             "description": "Symfony BrowserKit Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-25 13:11:50"
         },
         {
             "name": "symfony/class-loader",
@@ -548,14 +539,12 @@
             "require-dev": {
                 "symfony/finder": "2.1.*"
             },
-            "time": "1351353561",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\ClassLoader": ""
@@ -575,7 +564,8 @@
                 }
             ],
             "description": "Symfony ClassLoader Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-27 15:59:21"
         },
         {
             "name": "symfony/config",
@@ -595,14 +585,12 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1350717030",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Config": ""
@@ -622,7 +610,8 @@
                 }
             ],
             "description": "Symfony Config Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-20 07:10:30"
         },
         {
             "name": "symfony/console",
@@ -642,14 +631,12 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1350916632",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Console": ""
@@ -669,7 +656,8 @@
                 }
             ],
             "description": "Symfony Console Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-22 14:37:12"
         },
         {
             "name": "symfony/css-selector",
@@ -689,14 +677,12 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1349363877",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\CssSelector": ""
@@ -716,7 +702,8 @@
                 }
             ],
             "description": "Symfony CssSelector Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-04 15:17:57"
         },
         {
             "name": "symfony/dom-crawler",
@@ -742,14 +729,13 @@
             "suggest": {
                 "symfony/css-selector": "2.1.*"
             },
-            "time": "1350594961",
+            "time": "2012-10-18 21:16:01",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\DomCrawler": ""
@@ -796,14 +782,12 @@
                 "symfony/dependency-injection": "2.1.*",
                 "symfony/http-kernel": "2.1.*"
             },
-            "time": "1349363877",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\EventDispatcher": ""
@@ -823,7 +807,8 @@
                 }
             ],
             "description": "Symfony EventDispatcher Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-04 15:17:57"
         },
         {
             "name": "symfony/finder",
@@ -843,14 +828,12 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1350717030",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Finder": ""
@@ -870,7 +853,8 @@
                 }
             ],
             "description": "Symfony Finder Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-20 07:10:30"
         },
         {
             "name": "symfony/form",
@@ -901,14 +885,12 @@
                 "symfony/validator": "2.1.*",
                 "symfony/http-foundation": "2.1.*"
             },
-            "time": "1351864459",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Form": ""
@@ -928,7 +910,8 @@
                 }
             ],
             "description": "Symfony Form Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-11-02 13:54:19"
         },
         {
             "name": "symfony/http-foundation",
@@ -948,14 +931,12 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1351854802",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\HttpFoundation": "",
@@ -976,7 +957,8 @@
                 }
             ],
             "description": "Symfony HttpFoundation Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-11-02 11:13:22"
         },
         {
             "name": "symfony/http-kernel",
@@ -1016,14 +998,13 @@
                 "symfony/dependency-injection": "2.1.*",
                 "symfony/finder": "2.1.*"
             },
-            "time": "1351590273",
+            "time": "2012-10-30 09:44:33",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\HttpKernel": ""
@@ -1066,14 +1047,12 @@
             "suggest": {
                 "ext-intl": ">=5.3.3"
             },
-            "time": "1350717030",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Locale": ""
@@ -1093,7 +1072,8 @@
                 }
             ],
             "description": "Symfony Locale Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-20 07:10:30"
         },
         {
             "name": "symfony/monolog-bridge",
@@ -1115,14 +1095,12 @@
                 "monolog/monolog": "1.*",
                 "symfony/http-kernel": "2.1.*"
             },
-            "time": "1350717030",
             "type": "symfony-bridge",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Bridge\\Monolog": ""
@@ -1142,7 +1120,8 @@
                 }
             ],
             "description": "Symfony Monolog Bridge",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-20 07:10:30"
         },
         {
             "name": "symfony/options-resolver",
@@ -1162,14 +1141,12 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1349363877",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\OptionsResolver": ""
@@ -1194,7 +1171,8 @@
                 "configuration",
                 "config",
                 "options"
-            ]
+            ],
+            "time": "2012-10-04 15:17:57"
         },
         {
             "name": "symfony/process",
@@ -1214,14 +1192,12 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "1350717030",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Process": ""
@@ -1241,7 +1217,8 @@
                 }
             ],
             "description": "Symfony Process Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-20 07:10:30"
         },
         {
             "name": "symfony/routing",
@@ -1272,14 +1249,13 @@
                 "symfony/config": "2.2.*",
                 "symfony/yaml": "2.2.*"
             },
-            "time": "1351466734",
+            "time": "2012-10-28 23:25:34",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Routing\\": ""
@@ -1337,14 +1313,12 @@
                 "symfony/validator": "2.1.*",
                 "symfony/routing": "2.1.*"
             },
-            "time": "1350916632",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Security": ""
@@ -1364,7 +1338,8 @@
                 }
             ],
             "description": "Symfony Security Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-22 14:37:12"
         },
         {
             "name": "symfony/translation",
@@ -1392,14 +1367,12 @@
                 "symfony/config": "2.1.*",
                 "symfony/yaml": "2.1.*"
             },
-            "time": "1350717030",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Translation": ""
@@ -1419,7 +1392,8 @@
                 }
             ],
             "description": "Symfony Translation Component",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-20 07:10:30"
         },
         {
             "name": "symfony/twig-bridge",
@@ -1456,14 +1430,12 @@
                 "symfony/yaml": "2.1.*",
                 "symfony/security": "2.1.*"
             },
-            "time": "1349363877",
             "type": "symfony-bridge",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Bridge\\Twig": ""
@@ -1483,7 +1455,8 @@
                 }
             ],
             "description": "Symfony Twig Bridge",
-            "homepage": "http://symfony.com"
+            "homepage": "http://symfony.com",
+            "time": "2012-10-04 15:17:57"
         },
         {
             "name": "symfony/validator",
@@ -1513,14 +1486,12 @@
                 "symfony/http-foundation": "2.1.*",
                 "symfony/yaml": "2.1.*"
             },
-            "time": "1350916632",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Validator": ""
@@ -1540,6 +1511,49 @@
                 }
             ],
             "description": "Symfony Validator Component",
+            "homepage": "http://symfony.com",
+            "time": "2012-10-22 14:37:12"
+        },
+        {
+            "name": "symfony/yaml",
+            "version": "2.1.x-dev",
+            "target-dir": "Symfony/Component/Yaml",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Yaml",
+                "reference": "882b70fb7072e3f1fa95d249fd527a4e3998dc1a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/882b70fb7072e3f1fa95d249fd527a4e3998dc1a",
+                "reference": "882b70fb7072e3f1fa95d249fd527a4e3998dc1a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "time": "2013-01-27 16:12:43",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Yaml": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com"
         },
         {
@@ -1559,14 +1573,12 @@
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "1351927661",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.11-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Twig_": "lib/"
@@ -1589,7 +1601,8 @@
             "homepage": "http://twig.sensiolabs.org",
             "keywords": [
                 "templating"
-            ]
+            ],
+            "time": "2012-11-03 07:27:41"
         }
     ],
     "packages-dev": null,
