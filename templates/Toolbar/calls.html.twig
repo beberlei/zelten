@@ -1,0 +1,6 @@
+<div class="guzzle">
+    <h2>Requests</h2>
+    {% for index,call in calls %}
+        {% include 'Toolbar/call.html.twig' with { 'call': call } %}
+    {% endfor %}
+</div>
