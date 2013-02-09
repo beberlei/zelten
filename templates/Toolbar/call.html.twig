@@ -1,6 +1,4 @@
 <div id="call_{{ index }}" class="request {{ call.request.method|lower }}">
-    <div class="status icon {% if call.error %}error{% else %}success{% endif %}"></div>
-
     <div class="summary" onclick="return showDetails(event, 'call_{{ index }}');">
         <h3>
             <span class="method">{{ call.request.method }}</span>
