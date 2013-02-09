@@ -64,7 +64,7 @@ class PostBuilder
     private function createPost($message)
     {
         if (strlen($message) <= 256) {
-            $this->createStatusPost($message);
+            return $this->createStatusPost($message);
         }
 
         return $this->createEssayPost($message);
