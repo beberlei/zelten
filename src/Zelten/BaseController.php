@@ -11,9 +11,14 @@ abstract class BaseController implements ControllerProviderInterface
 {
     private $entityUrl;
 
-    public function isAuthenticated(Request $request)
+    public function currentUser(Request $request)
     {
         $this->entityUrl = $request->getSession()->get('entity_url');
+    }
+
+    public function isAuthenticated(Request $request)
+    {
+        $this->currentUser($request);
 
         if (!$this->entityUrl) {
             return new RedirectResponse("/");

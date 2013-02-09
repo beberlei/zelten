@@ -37,17 +37,20 @@ class Controller extends BaseController
                     ->before(array($this, 'isAuthenticated'));
 
         $controllers->get('/u/{entity}', array($this, 'profileAction'))
-                    ->bind('stream_user');
+                    ->bind('stream_user')
+                    ->before(array($this, 'currentUser'));
 
         $controllers->get('/u/{entity}/stream', array($this, 'userStreamAction'))
-                    ->bind('stream_user2');
+                    ->bind('stream_user2')
+                    ->before(array($this, 'currentUser'));
 
         $controllers->post('/', array($this, 'postAction'))
                     ->bind('stream_write')
                     ->before(array($this, 'isAuthenticated'));
 
         $controllers->get('/u/{entity}/{id}', array($this, 'conversationAction'))
-                    ->bind('post_conversation');
+                    ->bind('post_conversation')
+                    ->before(array($this, 'currentUser'));
 
         $controllers->post('/u/{entity}/{post}/favorite', array($this, 'favoriteAction'))
                     ->bind('post_favorite')
