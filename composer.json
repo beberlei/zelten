@@ -2,30 +2,19 @@
     "name": "fabpot/silex-skeleton",
     "require": {
         "php": ">=5.3.3",
-        "silex/silex": "1.0.*",
+        "silex/silex": "~1.0@dev",
         "twig/twig": ">=1.8.0,<2.0-dev",
-        "monolog/monolog": ">=1.0.0,<1.2-dev",
-        "symfony/browser-kit": "2.1.*",
-        "symfony/class-loader": "2.1.*",
-        "symfony/config": "2.1.*",
-        "symfony/console": "2.1.*",
-        "symfony/css-selector": "2.1.*",
-        "symfony/finder": "2.1.*",
-        "symfony/form": "2.1.*",
-        "symfony/monolog-bridge": "2.1.*",
-        "symfony/process": "2.1.*",
-        "symfony/security": "2.1.*",
-        "symfony/translation": "2.1.*",
-        "symfony/twig-bridge": "2.1.*",
-        "symfony/validator": "2.1.*",
-        "symfony/yaml": "2.1.*",
+        "monolog/monolog": "@stable",
+        "symfony/symfony": "~2.2@dev",
         "doctrine/dbal": "*",
         "guzzle/guzzle": "*",
         "beberlei/tent-php": "dev-master",
         "ruudk/twitter-oauth": "dev-master"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master"
+        "mockery/mockery": "dev-master",
+        "silex/web-profiler": "~1.0@dev",
+        "phpunit/phpunit": "3.7.*"
     },
     "minimum-stability": "dev",
     "autoload": {

@@ -24,7 +24,9 @@ For now the installation is pretty technical using Git:
     git clone https://github.com/beberlei/zelten.git zelten
     cd zelten
     wget https://getcomposer.org/composer.phar
-    php composer.phar install
+    php composer.phar install --dev
+
+You can skip the "--dev" flag when installing for deployment.
 
 ### Configuration
 
@@ -81,6 +83,16 @@ the Zelten source code in:
 
         CustomLog ${APACHE_LOG_DIR}/access.log combined
     </VirtualHost>
+
+### Development
+
+You can run the tests by calling (requires --dev flag during composer install):
+
+    php bin/vendor/phpunit
+
+Load the application in a debugging mode with:
+
+    http://zelten.local/index_dev.php/
 
 ## Data
 
