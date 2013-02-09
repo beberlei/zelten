@@ -4,8 +4,10 @@ namespace Zelten\Stream;
 
 use TentPHP\PostCriteria;
 use TentPHP\Post;
+use TentPHP\Client;
 use TentPHP\Util\Mentions;
 use Zelten\Util\String;
+use Zelten\Profile\ProfileRepository;
 
 class StreamRepository
 {
@@ -31,7 +33,13 @@ class StreamRepository
     private $profileRepository;
     private $messageParser;
 
-    public function __construct($tentClient, $messageParser, $profileRepository, $currentEntity)
+    /**
+     * @param \TentPHP\Client $tentClient
+     * @param \Zelten\Stream\MessageParser $messageParser
+     * @param \Zelten\Profile\ProfileRepository $profileRepository
+     * @param string $currentEntity
+     */
+    public function __construct(Client $tentClient, MessageParser $messageParser, ProfileRepository $profileRepository, $currentEntity)
     {
         $this->tentClient        = $tentClient;
         $this->currentEntity     = $currentEntity;
@@ -183,6 +191,14 @@ class StreamRepository
         return $criteria;
     }
 
+    /**
+     * Get a list of messages on the stream of the given entity.
+     *
+     * @param string $entityUrl
+     * @param array $criteria
+     *
+     * @return \Zelten\Stream\Message[]
+     */
     public function getMessages($entityUrl, array $criteria = array())
     {
         $criteria = $this->mergeMessageCriteria($criteria);
