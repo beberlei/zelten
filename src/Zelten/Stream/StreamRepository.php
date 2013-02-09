@@ -292,6 +292,9 @@ class StreamRepository
             }, $message->content['mentions']));
 
         } else if ($message->type == 'follower') {
+            if ($message->entity['uri'] !== $this->currentEntity) {
+                return;
+            }
 
             // For new follower notifications, retrieve their full profile
             $message->content['follower'] = $this->getFullProfile($message->content['entity']);
