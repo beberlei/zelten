@@ -31,13 +31,13 @@ class StreamRepository
     private $profileRepository;
     private $messageParser;
 
-    public function __construct($tentClient, $urlGenerator, $profileRepository, $currentEntity)
+    public function __construct($tentClient, $messageParser, $profileRepository, $currentEntity)
     {
         $this->tentClient        = $tentClient;
         $this->currentEntity     = $currentEntity;
         $this->profileRepository = $profileRepository;
+        $this->messageParser     = $messageParser;
         $this->mentions          = new Mentions();
-        $this->messageParser     = new MessageParser($urlGenerator);
     }
 
     /**

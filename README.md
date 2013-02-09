@@ -17,6 +17,10 @@ To install Zelten follow the following step by step guide
 - Git
 - MySQL (not tested with other databases)
 
+On Ubuntu this is:
+
+    sudo apt-get install php5 php5-curl git msyql-server apache2
+
 ### Obtain the source code
 
 For now the installation is pretty technical using Git:

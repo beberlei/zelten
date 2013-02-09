@@ -88,10 +88,14 @@ $app['twitter'] = $app->share(function($app) {
     return new \TwitterOAuth\Api($options['key'], $options['secret']);
 });
 
+$app['zelten.stream.message_parser'] = $app->share(function ($app) {
+    return new \Zelten\Stream\MessageParser($app['url_generator']);
+});
+
 $app['zelten.stream'] = $app->share(function ($app) {
     return new \Zelten\Stream\StreamRepository(
         $app['tent.client'],
-        $app['url_generator'],
+        $app['zelten.stream.message_parser'],
         $app['zelten.profile'],
         $app['session']->get('entity_url')
     );
