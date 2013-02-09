@@ -206,9 +206,16 @@ class Controller extends BaseController
 
     public function userStreamAction(Request $request, Application $app, $entity)
     {
-        syslog(LOG_INFO, "Stream: " . $entity);
+        $criteria = $request->query->get('criteria', array(
+            'post_types' => 'https://tent.io/types/post/status/v0.1.0',
+        ));
         $entity = $this->urlize($entity);
-        $messages  = $this->getMessages($entity, $request->query->get('criteria', array()), $app);
+
+        if ($entity === $this->getCurrentEntity()) {
+            $criteria['entity'] = $entity;
+        }
+
+        $messages  = $this->getMessages($entity, $criteria, $app);
 
         return $app['twig']->render('stream.html', array('messages' => $messages, 'post_add' => false));
     }
