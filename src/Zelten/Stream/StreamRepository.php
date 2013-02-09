@@ -202,7 +202,7 @@ class StreamRepository
         );
 
         foreach ($posts as $post) {
-        	  // If this posts type is not supported by Zelten, bypass the post.
+            // If this posts type is not supported by Zelten, bypass the post.
             if (!isset($this->supportedTypes[$post['type']])) {
                 continue;
             }
@@ -212,7 +212,7 @@ class StreamRepository
             }
             $result['last'] = array('id' => $post['id'], 'entity' => $post['entity']);
 
-						// Create a Zelten message from this Tent post
+            // Create a Zelten message from this Tent post
             $message = $this->createMessage($post);
             if ($message) {
                 $result['messages'][] = $message;
@@ -292,10 +292,10 @@ class StreamRepository
             }, $message->content['mentions']));
 
         } else if ($message->type == 'follower') {
-            
+
             // For new follower notifications, retrieve their full profile
             $message->content['follower'] = $this->getFullProfile($message->content['entity']);
-            
+
         } else if ($message->type == 'repost') {
 
             // For reposts, retrieve the original post
@@ -309,8 +309,8 @@ class StreamRepository
             }
 
         } else if ($message->type == 'essay') {
-            
-            // For essays, allow access to the full text within the timeline. 
+
+            // For essays, allow access to the full text within the timeline.
             // Attempt to eliminate any threats hidden in the text.
             $message->content['body'] = $this->escaper->wash($message->content['body']);
         }

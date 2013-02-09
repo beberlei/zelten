@@ -194,7 +194,7 @@ class ProfileRepository
         }
 
         $profile = array('name' => $entity, 'entity' => $this->fixUri($entity), 'uri' => $entity);
-        $row     = array('updated' => date('Y-m-d H:i:s'));
+        $row     = array('updated' => date('Y-m-d H:i:s'), 'entity' => $entity);
 
         foreach ($this->supportedProfileTypes as $profileType => $profileData) {
             $name = $profileData['name'];
