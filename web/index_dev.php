@@ -36,6 +36,6 @@ if (extension_loaded('xhprof')) {
 
         // save the run under a namespace "xhprof_foo"
         $run_id = $xhprof_runs->save_run($xhprof_data, "zelten");
-        echo $app['xhprof']['url'] . "/index.php?run=$run_id&source=zelten\n";
+        echo '<div style="background-color:#fff;position:absolute;top:0;left:0;border:1px solid #000;z-index:1000"><a href="'.$app['xhprof']['url'] . '/index.php?run=' . $run_id . '&source=zelten">XHPROF</a></div>';
     }
 }
