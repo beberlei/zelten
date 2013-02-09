@@ -26,10 +26,13 @@ define(["backbone", "zelten/view/user", "clickover"], function(Backbone, UserVie
                     el: data
                 });
 
-                link.data('clickover')
-                    .tip()
-                    .find('.popover-content')
-                    .removeClass('loading').html(data);
+                var clickover = link.data('clickover');
+
+                if (clickover) {
+                    clickover.tip()
+                             .find('.popover-content')
+                             .removeClass('loading').html(data);
+                }
             });
         }
     });
