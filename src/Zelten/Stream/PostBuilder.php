@@ -37,6 +37,7 @@ class PostBuilder
 
         $post = Post::create('https://tent.io/types/post/repost/v0.1.0');
         $post->setContent(array('entity' => $entity, 'id' => $id));
+        $post->addMention($entity, $id);
         $post->markPublic();
 
         return $post;
