@@ -88,7 +88,7 @@ class MessageParser
                 $mentionNames = array("^" . $mention['entity'], "^" . $parts['host'], $shortname);
                 $message->content['text'] = str_replace(
                     $mentionNames,
-                    '<a class="label label-info user-details" href="' . $userLink .'">' . isset($profile['name']) ? $profile['name'] : $mention['entity'] . '</a>',
+                    '<a class="label label-info user-details" href="' . $userLink .'">' . (isset($profile['name']) ? $profile['name'] : $mention['entity']) . '</a>',
                     $message->content['text']
                 );
             }
@@ -97,7 +97,6 @@ class MessageParser
             $message->content['mentions'] = implode(" ", array_map(function ($mentionedEntity) {
                 return "^" . $mentionedEntity;
             }, $message->content['mentions']));
-
         } else if ($message->type == 'follower') {
             if ($message->entity['uri'] !== $currentEntity) {
                 return;
