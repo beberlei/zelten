@@ -19,7 +19,7 @@ To install Zelten follow the following step by step guide
 
 On Ubuntu this is:
 
-    sudo apt-get install php5 php5-curl git msyql-server apache2
+    sudo apt-get install php5 php5-curl git msyql-server apache2 php5-mysql
 
 ### Obtain the source code
 
@@ -103,6 +103,16 @@ You can run the tests by calling (requires --dev flag during composer install):
 Load the application in a debugging mode with:
 
     http://zelten.local/index_dev.php/
+
+### Building Javascript
+
+The javascript files are managed with require.js. In production we use a compiled version of the javascript files
+that are located in ``web/js``. The compiled code is in ``web/build``.
+
+You can build the optiimized compiled javascript with ``r.js``:
+
+    sudo npm install -g requirejs
+    r.js -o require_build.js
 
 ## Data
 
