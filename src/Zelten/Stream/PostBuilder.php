@@ -56,7 +56,7 @@ class PostBuilder
         $post = $this->createPost($message);
 
         $this->addPermissions($post, $permissions);
-        $this->addMentions($post, $mention);
+        $this->addMentions($post, $message, $mention);
 
         return $post;
     }
@@ -90,7 +90,7 @@ class PostBuilder
         return $post;
     }
 
-    private function addMentions(Post $post, $mention)
+    private function addMentions(Post $post, $message, $mention)
     {
         $alreadyMentioned = array();
 
