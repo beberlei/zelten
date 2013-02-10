@@ -1,1 +1,1 @@
-define(["zelten/collection/user"],function(e){var t=e.extend({path:"/profile/following"});return t})
+define(["zelten/collection/user"],function(e){var t=e.extend({path:"/profile/following"});return t});

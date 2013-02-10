@@ -1,1 +1,1 @@
-define(["zelten/model/user","zelten/collection"],function(e,t){var n=t.extend({model:e,url:function(){return this.getBasePath()+this.path},parse:function(e,t){return e.list}});return n})
+define(["zelten/model/user","zelten/collection"],function(e,t){var n=t.extend({model:e,url:function(){return this.getBasePath()+this.path},parse:function(e,t){return e.list}});return n});
